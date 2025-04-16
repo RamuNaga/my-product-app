@@ -1,0 +1,10 @@
+# Enforce LF line endings for all text files
+* text=auto eol=lf
+
+# Optional: Set for specific file types if needed
+*.ts   text
+*.js   text
+*.html text
+*.scss text
+*.json text
+*.md   text
