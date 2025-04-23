@@ -1,2 +1,15 @@
 ignoredBuiltDependencies:
+  - '@apollo/protobufjs'
+  - '@nestjs/core'
+  - '@parcel/watcher'
+  - '@prisma/client'
+  - '@prisma/engines'
+  - '@swc/core'
+  - cypress
+  - esbuild
+  - lmdb
+  - msgpackr-extract
   - nx
+  - prisma
+  - 'apps/*'
+  - 'libs/*'

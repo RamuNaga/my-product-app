@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "rootDir": ".",
+    "rootDir": "./",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -14,7 +14,12 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@my-product-app/prisma": ["libs/prisma/src/index.ts"],
+      "@my-product-app/prisma/generated": ["libs/prisma/generated/prisma"],
+      "@my-product-app/shared": ["libs/shared/src/index.ts"],
+      "@my-product-app/user": ["libs/user/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

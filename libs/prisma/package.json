@@ -1,0 +1,16 @@
+{
+  "name": "@my-product-app/prisma",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "dependencies": {
+    "@nestjs/common": "^11.0.20",
+    "@prisma/client": "^6.6.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.6.0"
+  }
+}
