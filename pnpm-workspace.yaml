@@ -11,5 +11,5 @@ ignoredBuiltDependencies:
   - msgpackr-extract
   - nx
   - prisma
-  - 'apps/*'
   - 'libs/*'
+  - 'apps/*'
