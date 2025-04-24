@@ -13,6 +13,11 @@ export class UserResolver {
     return this.userService.findAll();
   }
 
+  @Query(() => Boolean)
+  async isEmailAvailable(@Args('email') email: string): Promise<boolean> {
+    return this.userService.isEmailAvailable(email);
+  }
+
   @Mutation(() => User)
   async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
     return this.userService.createUser(createUserInput);
