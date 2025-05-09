@@ -91,5 +91,33 @@
       "style": "scss",
       "unitTestRunner": "jest"
     }
+  },
+  "projects": {
+    "prisma": {
+      "tags": ["type:shared", "type:buildable"]
+    },
+    "shared": {
+      "tags": ["type:shared", "type:buildable"]
+    },
+    "product": {
+      "tags": ["type:buildable"],
+      "implicitDependencies": ["prisma", "shared"]
+    },
+    "user": {
+      "tags": ["type:buildable"],
+      "implicitDependencies": ["prisma", "shared"]
+    }
+  },
+  "enforce-module-boundaries": {
+    "allowedDependencies": [
+      {
+        "sourceTag": "type:buildable",
+        "onlyDependOnLibsWithTags": ["type:buildable", "type:shared"]
+      },
+      {
+        "sourceTag": "type:shared",
+        "onlyDependOnLibsWithTags": ["type:shared"]
+      }
+    ]
   }
 }

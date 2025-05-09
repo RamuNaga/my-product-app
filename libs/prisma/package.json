@@ -5,12 +5,10 @@
   "type": "commonjs",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
-  "dependencies": {
-    "@nestjs/common": "^11.0.20",
-    "@prisma/client": "^6.6.0",
-    "tslib": "^2.3.0"
+  "scripts": {
+    "prisma:generate": "pnpm prisma generate --schema=libs/prisma/prisma/schema.prisma"
   },
-  "devDependencies": {
-    "prisma": "^6.6.0"
+  "dependencies": {
+    "tslib": "^2.3.0"
   }
 }

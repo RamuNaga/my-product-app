@@ -1,11 +1,11 @@
 import { Injectable, ConflictException } from '@nestjs/common';
-import { PrismaClient } from '../../../../prisma/generated/prisma';
 import { CreateUserInput } from '../dto/create-user.input';
 import { User } from '../graphql/user.model';
+import { PrismaService } from '@my-product-app/prisma';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaService) {}
 
   async createUser(createUserInput: CreateUserInput): Promise<User> {
     const { email } = createUserInput;

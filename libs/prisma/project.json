@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/prisma/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["type:buildable"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -20,6 +20,14 @@
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "libs/prisma/jest.config.ts"
+      }
+    },
+    "generate": {
+      "executor": "@nx/workspace:run-commands",
+      "options": {
+        "command": "pnpm prisma generate --schema=libs/prisma/prisma/schema.prisma",
+        "cwd": ".",
+        "parallel": false
       }
     }
   }

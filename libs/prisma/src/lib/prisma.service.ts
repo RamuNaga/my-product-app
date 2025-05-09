@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { PrismaClient } from '@my-product-app/prisma/generated';
+import { PrismaClient } from '@prisma/client';
 
 /**
  * PrismaService integrates the Prisma Client with Nest lifecycle hooks.

@@ -3,7 +3,8 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/backend/user-service/src",
   "projectType": "application",
-  "tags": [],
+  "tags": ["type:service"],
+  "dependencies": ["prisma", "shared"],
   "targets": {
     "serve": {
       "executor": "@nx/js:node",
@@ -19,6 +20,23 @@
         },
         "production": {
           "buildTarget": "backend-user-service:build:production"
+        }
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "outputPath": "dist/apps/backend/user-service",
+        "main": "apps/backend/user-service/src/main.ts",
+        "tsConfig": "apps/backend/user-service/tsconfig.app.json"
+      },
+      "configurations": {
+        "development": {
+          "sourceMap": true
+        },
+        "production": {
+          "sourceMap": false,
+          "optimization": true
         }
       }
     },
