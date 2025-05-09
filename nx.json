@@ -97,7 +97,8 @@
       "tags": ["type:shared", "type:buildable"]
     },
     "shared": {
-      "tags": ["type:shared", "type:buildable"]
+      "tags": ["type:shared", "type:buildable"],
+      "implicitDependencies": ["prisma", "shared"]
     },
     "product": {
       "tags": ["type:buildable"],

@@ -1,10 +1,10 @@
-import { PrismaModule } from '@my-product-app/prisma';
 import { Module } from '@nestjs/common';
-import { ProductService } from './service/product.service';
 import { ProductResolver } from './resolver/product.resolver';
+import { SharedModule } from '@my-product-app/shared';
+import { ProductService } from './service/product.service';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [SharedModule],
   controllers: [],
   providers: [ProductService, ProductResolver],
   exports: [],

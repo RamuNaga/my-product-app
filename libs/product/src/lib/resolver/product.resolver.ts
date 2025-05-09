@@ -1,43 +1,23 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-
+// src/product/resolver/product.resolver.ts
+import { Resolver } from '@nestjs/graphql';
+import { PrismaService } from '@my-product-app/prisma';
 import { Product } from '../graphql/product.model';
-import { ProductService } from '../service/product.service';
 import { CreateProductInput } from '../dto/create-product.input';
 import { UpdateProductInput } from '../dto/update-product.input';
+import { createBaseResolver } from '@my-product-app/shared'; // Importing the base resolver
+
+// Create the base resolver for Product with the provided arguments
+const BaseProductResolver = createBaseResolver(
+  'Product', // Suffix for the CRUD methods (e.g., 'createProduct', 'findOneProduct')
+  Product, // Return type (Product model)
+  CreateProductInput, // Create input type (CreateProductInput)
+  UpdateProductInput, // Update input type (UpdateProductInput)
+  (prisma) => prisma.product // Prisma model to use (product)
+);
 
 @Resolver(() => Product)
-export class ProductResolver {
-  constructor(private readonly productService: ProductService) {}
-
-  @Mutation(() => Product)
-  createProduct(
-    @Args('createProductInput') createProductInput: CreateProductInput
-  ) {
-    return this.productService.create(createProductInput);
-  }
-
-  @Query(() => [Product], { name: 'products' })
-  findAll() {
-    return this.productService.findAll();
-  }
-
-  @Query(() => Product, { name: 'product' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.productService.findOne(id);
-  }
-
-  @Mutation(() => Product)
-  updateProduct(
-    @Args('updateProductInput') updateProductInput: UpdateProductInput
-  ) {
-    return this.productService.update(
-      updateProductInput.id,
-      updateProductInput
-    );
-  }
-
-  @Mutation(() => Product)
-  removeProduct(@Args('id', { type: () => Int }) id: number) {
-    return this.productService.remove(id);
+export class ProductResolver extends BaseProductResolver {
+  constructor(public override prisma: PrismaService) {
+    super(prisma); // Pass prisma to the base resolver constructor
   }
 }

@@ -4,6 +4,6 @@ import { PrismaModule } from '@my-product-app/prisma';
 @Module({
   imports: [PrismaModule],
   providers: [],
-  exports: [],
+  exports: [PrismaModule],
 })
 export class SharedModule {}

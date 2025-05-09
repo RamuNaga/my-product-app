@@ -1,3 +1,4 @@
+// src/shared/graphql/base.resolver.ts
 import { Query, Mutation, Args, Resolver, ID } from '@nestjs/graphql';
 import { PrismaService } from '@my-product-app/prisma';
 
