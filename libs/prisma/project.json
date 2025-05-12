@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/prisma/src",
   "projectType": "library",
-  "tags": ["type:buildable"],
+  "tags": ["type:shared", "type:buildable"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",

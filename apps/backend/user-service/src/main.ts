@@ -1,30 +1,14 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
-import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-
 import { AppModule } from './app/app.module';
+import { bootstrapMicroservice } from '@my-product-app/shared';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.TCP,
-    options: {
-      host: process.env.MICROSERVICE_HOST,
-      port: Number(process.env.USER_SERVICE_PORT) || 8877,
-    },
+async function startUserService() {
+  console.log('startUserService calling');
+  await bootstrapMicroservice(AppModule, {
+    hostEnv: 'MICROSERVICE_HOST',
+    portEnv: 'USER_SERVICE_PORT',
+    fallbackPort: 3003, // Matches .env config
+    serviceName: 'User Service',
   });
-  await app.startAllMicroservices(); // important!
-  await app.listen(process.env.USER_SERVICE_PORT || 8877);
-  console.log(
-    `🚀 Gateway is running on http://localhost:${
-      process.env.USER_SERVICE_PORT || 8877
-    }`
-  );
 }
 
-bootstrap();
+startUserService();

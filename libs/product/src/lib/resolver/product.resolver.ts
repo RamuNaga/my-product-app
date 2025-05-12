@@ -12,7 +12,7 @@ const BaseProductResolver = createBaseResolver(
   Product, // Return type (Product model)
   CreateProductInput, // Create input type (CreateProductInput)
   UpdateProductInput, // Update input type (UpdateProductInput)
-  (prisma) => prisma.product // Prisma model to use (product)
+  (prisma: PrismaService) => prisma.product // Prisma model to use (product)
 );
 
 @Resolver(() => Product)

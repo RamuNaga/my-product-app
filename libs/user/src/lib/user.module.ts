@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { UserService } from './service/user.service';
-import { PrismaModule } from '@my-product-app/prisma'; // Use Nx import path alias
 import { UserResolver } from './resolver/user.resolver';
+import { SharedModule } from '@my-product-app/shared';
 
 @Module({
-  imports: [PrismaModule], // 👈 Important
+  imports: [SharedModule], // 👈 Important
   providers: [UserService, UserResolver],
   exports: [UserService],
 })

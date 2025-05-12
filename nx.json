@@ -93,20 +93,33 @@
     }
   },
   "projects": {
+    "api-gateway": {
+      "tags": ["gateway"],
+      "implicitDependencies": ["shared", "product", "user"]
+    },
+
     "prisma": {
       "tags": ["type:shared", "type:buildable"]
     },
     "shared": {
       "tags": ["type:shared", "type:buildable"],
-      "implicitDependencies": ["prisma", "shared"]
+      "implicitDependencies": ["prisma"]
     },
     "product": {
-      "tags": ["type:buildable"],
+      "tags": ["type:product-service", "type:buildable"],
       "implicitDependencies": ["prisma", "shared"]
     },
     "user": {
-      "tags": ["type:buildable"],
+      "tags": ["type:user-service", "type:buildable"],
       "implicitDependencies": ["prisma", "shared"]
+    },
+    "backend-product-service": {
+      "tags": ["type:product-service"],
+      "implicitDependencies": ["prisma", "shared", "product"]
+    },
+    "backend-user-service": {
+      "tags": ["type:user-service"],
+      "implicitDependencies": ["prisma", "shared", "user"]
     }
   },
   "enforce-module-boundaries": {
@@ -118,6 +131,18 @@
       {
         "sourceTag": "type:shared",
         "onlyDependOnLibsWithTags": ["type:shared"]
+      },
+      {
+        "sourceTag": "gateway",
+        "onlyDependOnLibsWithTags": ["shared", "product", "user"]
+      },
+      {
+        "sourceTag": "type:product-service",
+        "onlyDependOnLibsWithTags": ["type:shared", "type:buildable"]
+      },
+      {
+        "sourceTag": "type:user-service",
+        "onlyDependOnLibsWithTags": ["type:shared", "type:buildable"]
       }
     ]
   }

@@ -1,22 +1,14 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
-import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-
 import { AppModule } from './app/app.module';
+import { bootstrapMicroservice } from '@my-product-app/shared';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 3000;
-  await app.listen(port);
-  Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
-  );
+async function startProductService() {
+  console.log('startProductService calling');
+  await bootstrapMicroservice(AppModule, {
+    hostEnv: 'MICROSERVICE_HOST',
+    portEnv: 'PRODUCT_SERVICE_PORT',
+    fallbackPort: 8888,
+    serviceName: 'Product Service',
+  });
 }
 
-bootstrap();
+startProductService();

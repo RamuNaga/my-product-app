@@ -1,27 +1,15 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-
 import { AppModule } from './app/app.module';
+import { bootstrapMicroservice } from '@my-product-app/shared';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.TCP,
-    options: {
-      host: process.env.MICROSERVICE_HOST,
-      port: Number(process.env.MICROSERVICE_PORT),
-    },
+async function startApiGateway() {
+  console.log('start  ApiGateway calling');
+
+  await bootstrapMicroservice(AppModule, {
+    hostEnv: 'MICROSERVICE_HOST', // Environment variable for host, typically '127.0.0.1'
+    portEnv: 'MICROSERVICE_PORT', // Environment variable for microservice port
+    fallbackPort: 3000, // Default port for API Gateway if environment variable not set
+    serviceName: 'API Gateway', // Name of the service for logging or other purposes
   });
-  await app.startAllMicroservices(); // important!
-  await app.listen(process.env.MICROSERVICE_PORT || 3000);
-  console.log(
-    `🚀 Gateway is running on http://localhost:${process.env.PORT || 3000}`
-  );
 }
 
-bootstrap();
+startApiGateway();
