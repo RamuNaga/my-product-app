@@ -1,8 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  getData(): { message: string } {
-    return { message: 'Hello API' };
+  constructor(
+    @Inject('PRODUCT_SERVICE') private readonly productService: any
+  ) {}
+
+  getData() {
+    return this.productService.getUserData();
   }
 }

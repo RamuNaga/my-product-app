@@ -6,6 +6,14 @@ import { AppService } from './app.service';
 @Module({
   imports: [],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'PRODUCT_SERVICE',
+      useValue: {
+        getUserData: () => ({ message: 'Hello API' }), // basic stub
+      },
+    },
+  ],
 })
 export class AppModule {}

@@ -23,6 +23,14 @@ import { UserModule } from '@my-product-app/user';
     MicroserviceModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'USER_SERVICE',
+      useValue: {
+        getUserData: () => ({ message: 'Hello API' }), // basic stub
+      },
+    },
+  ],
 })
 export class AppModule {}

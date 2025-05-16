@@ -3,10 +3,17 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "start:all": "concurrently -n gateway,product,user -c blue,green,magenta \"nx serve api-gateway\" \"nx serve backend-product-service\" \"nx serve backend-user-service\"",
+    "build:all": "nx run-many --target=build --projects=api-gateway,backend-product-service,backend-user-service --parallel",
     "prisma:generate": "pnpm prisma generate --schema=libs/prisma/prisma/schema.prisma",
     "prisma:prepare": "nx run-many --target=generate --projects=prisma && nx build prisma && nx build user",
     "clean": "rimraf dist",
-    "build": "nx build"
+    "build": "nx build",
+    "test": "nx run-many --target=test --all",
+    "lint": "nx run-many --target=lint --all",
+    "format": "nx format:write",
+    "format:check": "nx format:check",
+    "graphql:generate": "nx run user:graphql-schema"
   },
   "private": true,
   "dependencies": {
@@ -67,6 +74,7 @@
     "@types/node": "18.16.9",
     "@typescript-eslint/utils": "^8.19.0",
     "angular-eslint": "^19.2.0",
+    "concurrently": "^9.1.2",
     "cypress": "^14.2.1",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",

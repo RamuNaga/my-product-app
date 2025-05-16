@@ -2,7 +2,12 @@
   "name": "@my-product-app/product",
   "version": "0.0.1",
   "dependencies": {
-    "tslib": "^2.3.0"
+    "@nestjs/common": "^11.1.0",
+    "@nestjs/graphql": "^13.1.0",
+    "class-validator": "^0.14.1",
+    "tslib": "^2.3.0",
+    "@my-product-app/prisma": "workspace:*",
+    "@my-product-app/shared": "workspace:*"
   },
   "type": "commonjs",
   "main": "./src/index.js",

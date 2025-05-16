@@ -1,14 +1,11 @@
 {
-  "name": "@my-product-app/libs",
+  "name": "@my-product-app/logger",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
-    "@nestjs/common": "^11.1.0",
-    "@nestjs/graphql": "^13.1.0",
-    "class-validator": "^0.14.1",
     "tslib": "^2.3.0"
   }
 }

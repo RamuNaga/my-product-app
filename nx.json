@@ -93,11 +93,6 @@
     }
   },
   "projects": {
-    "api-gateway": {
-      "tags": ["gateway"],
-      "implicitDependencies": ["shared", "product", "user"]
-    },
-
     "prisma": {
       "tags": ["type:shared", "type:buildable"]
     },
@@ -105,20 +100,28 @@
       "tags": ["type:shared", "type:buildable"],
       "implicitDependencies": ["prisma"]
     },
+    "logger": {
+      "tags": ["type:shared", "type:buildable", "scope:logger"],
+      "implicitDependencies": []
+    },
     "product": {
-      "tags": ["type:product-service", "type:buildable"],
+      "tags": ["type:product-service", "type:buildable", "scope:product"],
       "implicitDependencies": ["prisma", "shared"]
     },
     "user": {
-      "tags": ["type:user-service", "type:buildable"],
+      "tags": ["type:user-service", "type:buildable", "scope:user"],
       "implicitDependencies": ["prisma", "shared"]
     },
+    "api-gateway": {
+      "tags": ["gateway"],
+      "implicitDependencies": ["shared", "product", "user"]
+    },
     "backend-product-service": {
-      "tags": ["type:product-service"],
+      "tags": ["type:product-service", "scope:product"],
       "implicitDependencies": ["prisma", "shared", "product"]
     },
     "backend-user-service": {
-      "tags": ["type:user-service"],
+      "tags": ["type:user-service", "scope:user"],
       "implicitDependencies": ["prisma", "shared", "user"]
     }
   },
@@ -134,7 +137,7 @@
       },
       {
         "sourceTag": "gateway",
-        "onlyDependOnLibsWithTags": ["shared", "product", "user"]
+        "onlyDependOnLibsWithTags": ["type:shared", "type:buildable"]
       },
       {
         "sourceTag": "type:product-service",
@@ -143,6 +146,10 @@
       {
         "sourceTag": "type:user-service",
         "onlyDependOnLibsWithTags": ["type:shared", "type:buildable"]
+      },
+      {
+        "sourceTag": "scope:logger",
+        "onlyDependOnLibsWithTags": []
       }
     ]
   }

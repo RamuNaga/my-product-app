@@ -25,6 +25,7 @@
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@my-product-app/prisma": ["libs/prisma/src/index.ts"],
+      "@my-product-app/logger": ["libs/logger/src/index.ts"],
       "@my-product-app/product": ["libs/product/src/index.ts"],
       "@my-product-app/shared": ["libs/shared/src/index.ts"],
       "@my-product-app/shared/*": ["libs/shared/src/lib/*"],

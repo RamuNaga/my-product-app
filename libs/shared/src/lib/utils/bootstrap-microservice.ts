@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { INestApplication } from '@nestjs/common';
+import { AppLogger, LoggingInterceptor } from '@my-product-app/logger';
 
 interface BootstrapOptions {
   hostEnv: string;
@@ -15,6 +16,10 @@ export async function bootstrapMicroservice(
 ): Promise<INestApplication> {
   try {
     const app = await NestFactory.create(AppModule);
+    // Inject AppLogger
+    const logger = app.get(AppLogger);
+    app.useLogger(logger);
+    app.useGlobalInterceptors(new LoggingInterceptor(logger));
 
     const host = process.env[options.hostEnv] || 'localhost';
     const port = Number(process.env[options.portEnv]) || options.fallbackPort;

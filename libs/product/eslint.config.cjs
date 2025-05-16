@@ -12,7 +12,7 @@ module.exports = [
           enforceBuildableLibDependency: true,
           depConstraints: [
             {
-              sourceTag: 'type:buildable',
+              sourceTag: 'type:product-service',
               onlyDependOnLibsWithTags: ['type:shared', 'type:buildable'],
             },
           ],

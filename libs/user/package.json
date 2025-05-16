@@ -7,6 +7,10 @@
   "types": "./src/index.d.ts",
   "dependencies": {
     "tslib": "^2.3.0",
-    "@my-product-app/prisma": "workspace:*"
+    "@nestjs/common": "^11.1.0",
+    "@nestjs/graphql": "^13.1.0",
+    "class-validator": "^0.14.1",
+    "@my-product-app/prisma": "workspace:*",
+    "@my-product-app/shared": "workspace:*"
   }
 }

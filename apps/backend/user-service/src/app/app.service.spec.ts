@@ -1,16 +1,25 @@
 import { Test } from '@nestjs/testing';
-
 import { AppService } from './app.service';
 
 describe('AppService', () => {
   let service: AppService;
 
+  const mockUserService = {
+    getUserData: jest.fn().mockReturnValue({ message: 'Hello API' }),
+  };
+
   beforeAll(async () => {
-    const app = await Test.createTestingModule({
-      providers: [AppService],
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        AppService,
+        {
+          provide: 'USER_SERVICE',
+          useValue: mockUserService,
+        },
+      ],
     }).compile();
 
-    service = app.get<AppService>(AppService);
+    service = moduleRef.get<AppService>(AppService);
   });
 
   describe('getData', () => {
