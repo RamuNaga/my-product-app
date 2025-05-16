@@ -8,12 +8,14 @@ import { GraphQLConfigModule } from './config/graphql.module';
 import { MicroserviceModule } from './config/microservice.module';
 import { ProductModule } from '@my-product-app/product';
 import { UserModule } from '@my-product-app/user';
+import { SharedModule } from '@my-product-app/shared';
 
 @Module({
   imports: [
     GraphQLConfigModule,
     ProductModule,
     UserModule,
+    SharedModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [
@@ -26,7 +28,7 @@ import { UserModule } from '@my-product-app/user';
   providers: [
     AppService,
     {
-      provide: 'USER_SERVICE',
+      provide: 'GATEWAY_SERVICE',
       useValue: {
         getUserData: () => ({ message: 'Hello API' }), // basic stub
       },
