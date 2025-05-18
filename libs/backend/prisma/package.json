@@ -1,0 +1,16 @@
+{
+  "name": "@my-product-app/prisma",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "scripts": {
+    "prisma:generate": "pnpm prisma generate --schema=libs/backend/prisma/prisma/schema.prisma"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0",
+    "@nestjs/common": "^11.1.0",
+    "@prisma/client": "^6.7.0"
+  }
+}

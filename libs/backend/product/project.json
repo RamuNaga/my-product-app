@@ -1,0 +1,27 @@
+{
+  "name": "product",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/backend/product/src",
+  "projectType": "library",
+  "tags": ["type:product-service", "type:buildable"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/product",
+        "tsConfig": "libs/backend/product/tsconfig.lib.json",
+        "packageJson": "libs/backend/product/package.json",
+        "main": "libs/backend/product/src/index.ts",
+        "assets": ["libs/backend/product/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/backend/product/jest.config.ts"
+      }
+    }
+  }
+}
