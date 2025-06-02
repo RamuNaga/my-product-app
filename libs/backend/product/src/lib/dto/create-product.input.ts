@@ -1,6 +1,6 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsNotEmpty, IsOptional, Length } from 'class-validator';
-import { BaseCreateInput } from '@my-product-app/shared';
+import { BaseCreateInput } from '@my-product-app/backend-shared';
 
 @InputType()
 export class CreateProductInput extends BaseCreateInput {

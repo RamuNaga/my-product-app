@@ -7,3 +7,5 @@ export * from './lib/graphql/base.resolver';
 export * from './lib/graphql/type';
 export * from './lib/utils/graphql-input.mixin';
 export * from './lib/config/graphql-config';
+export * from './lib/guards/jwt-auth.guard';
+export * from './lib/interceptors/response.interceptor';

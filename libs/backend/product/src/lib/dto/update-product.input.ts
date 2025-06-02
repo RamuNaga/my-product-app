@@ -9,8 +9,8 @@ export class UpdateProductInput extends PartialType(CreateProductInput) {
 
 // import { InputType, PartialType } from '@nestjs/graphql';
 // import { CreateProductInput } from './create-product.input';
-// import { BaseUpdateInput } from '@my-product-app/shared';
-// import { MergeInputTypes } from '@my-product-app/shared';
+// import { BaseUpdateInput } from '@my-product-app/backend-shared';
+// import { MergeInputTypes } from '@my-product-app/backend-shared';
 
 // const PartialProductInput = PartialType(CreateProductInput);
 

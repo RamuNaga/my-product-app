@@ -8,7 +8,7 @@ import { GraphQLConfigModule } from './config/graphql.module';
 import { MicroserviceModule } from './config/microservice.module';
 import { ProductModule } from '@my-product-app/product';
 import { UserModule } from '@my-product-app/user';
-import { SharedModule } from '@my-product-app/shared';
+import { SharedModule } from '@my-product-app/backend-shared';
 
 @Module({
   imports: [

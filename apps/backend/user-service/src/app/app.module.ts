@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { SharedModule } from '@my-product-app/shared';
+import { SharedModule } from '@my-product-app/backend-shared';
 
 @Module({
   imports: [SharedModule],

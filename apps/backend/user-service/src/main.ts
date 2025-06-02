@@ -1,5 +1,5 @@
 import { AppModule } from './app/app.module';
-import { bootstrapMicroservice } from '@my-product-app/shared';
+import { bootstrapMicroservice } from '@my-product-app/backend-shared';
 
 async function startUserService() {
   console.log('startUserService calling');

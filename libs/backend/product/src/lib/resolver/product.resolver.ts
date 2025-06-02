@@ -4,7 +4,7 @@ import { PrismaService } from '@my-product-app/prisma';
 import { Product } from '../graphql/product.model';
 import { CreateProductInput } from '../dto/create-product.input';
 import { UpdateProductInput } from '../dto/update-product.input';
-import { createBaseResolver } from '@my-product-app/shared'; // Importing the base resolver
+import { createBaseResolver } from '@my-product-app/backend-shared'; // Importing the base resolver
 
 // Create the base resolver for Product with the provided arguments
 const BaseProductResolver = createBaseResolver(

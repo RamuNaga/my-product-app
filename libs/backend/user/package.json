@@ -11,6 +11,6 @@
     "@nestjs/graphql": "^13.1.0",
     "class-validator": "^0.14.1",
     "@my-product-app/prisma": "workspace:*",
-    "@my-product-app/shared": "workspace:*"
+    "@my-product-app/backend-shared": "workspace:*"
   }
 }

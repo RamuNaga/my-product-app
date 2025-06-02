@@ -9,7 +9,7 @@ module.exports = [
         'error',
         {
           allow: [
-            '^@my-product-app/shared',
+            '^@my-product-app/backend-shared',
             '^@my-product-app/product',
             '^@my-product-app/user',
           ],
