@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcomeComponent } from './nx-welcome.component';
+import { SignupComponent } from '@my-product-app/ui';
 
 @Component({
-  imports: [NxWelcomeComponent, RouterModule],
+  imports: [SignupComponent, RouterModule],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

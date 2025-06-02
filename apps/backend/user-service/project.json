@@ -3,8 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/backend/user-service/src",
   "projectType": "application",
-  "tags": ["type:user-service", "type:buildable"],
-  "dependencies": ["prisma", "shared", "user"],
+  "tags": ["type:service", "scope:backend", "area:user"],
   "targets": {
     "serve": {
       "executor": "@nx/js:node",

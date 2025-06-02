@@ -1,1 +1,97 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+$my-density: (
+  scale: 0,
+);
+
+$my-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      use-system-variables: true,
+    ),
+    typography: (
+      plain-family: 'Roboto',
+      use-system-variables: true,
+    ),
+    density: $my-density,
+  )
+);
+
+@include mat.core();
+
+html {
+  color-scheme: light;
+  background-color: var(--mat-sys-secondary);
+  font-family: Roboto, sans-serif;
+  @include mat.all-component-themes($my-theme);
+  @include mat.system-level-colors($my-theme);
+  @include mat.system-level-typography($my-theme);
+}
+
+/* Custom card styling */
+.card {
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+/* Typography helpers */
+.typography {
+  font: var(--mat-sys-body-medium);
+}
+
+.typography-detailed {
+  font-family: var(--mat-sys-body-medium-font);
+  font-size: var(--mat-sys-body-medium-size);
+  line-height: var(--mat-sys-body-medium-line-height);
+  font-weight: var(--mat-sys-body-medium-weight);
+  letter-spacing: var(--mat-sys-body-medium-tracking);
+}
+
+/* Elevation */
+.elevated-card {
+  box-shadow: var(--mat-sys-level3);
+}
+
+/* Override Material theme variables if needed */
+.custom-theme-container {
+  @include mat.theme-overrides(
+    (
+      primary: #ebdcff,
+      on-primary: #230f46,
+      body-medium: 500 1.15rem/1.3rem Arial,
+      corner-large: 32px,
+      level3: 0 4px 6px 1px var(--mat-sys-surface-dim),
+    )
+  );
+}
+
+/* Additional form field styling */
+.full-width {
+  width: 100%;
+}
+
+/* Ensure floating label color is visible */
+.mat-mdc-floating-label {
+  color: rgba(0, 0, 0, 0.87);
+  font-weight: 500;
+}
+
+/* Optional: customize mat-error message */
+.mat-mdc-form-field-subscript-wrapper .mat-mdc-error {
+  font-size: 0.75rem;
+  color: #f44336; // Material red for error
+}
+@media (max-width: 600px) {
+  .signup-card {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+
+  .form-actions {
+    justify-content: center;
+  }
+}

@@ -3,7 +3,8 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/backend/logger/src",
   "projectType": "library",
-  "tags": ["type:shared", "type:buildable", "scope:logger"],
+  "tags": ["type:lib", "scope:backend", "area:logger"],
+
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",

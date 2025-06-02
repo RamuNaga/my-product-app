@@ -1,0 +1,19 @@
+<mat-form-field appearance="fill" class="full-width" floatLabel="auto">
+  <mat-label>{{ label }}</mat-label>
+  <input
+    matInput
+    [placeholder]="placeholder"
+    [type]="type"
+    [formControl]="control"
+    [required]="required"
+    (blur)="onTouched()"
+  />
+  <mat-error *ngIf="control.invalid && control.touched">
+    <ng-container *ngIf="control.errors?.['required']">
+      This field is required
+    </ng-container>
+    <ng-container *ngIf="control.errors?.['email']">
+      Invalid email format
+    </ng-container>
+  </mat-error>
+</mat-form-field>

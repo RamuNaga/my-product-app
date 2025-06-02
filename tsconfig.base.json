@@ -29,6 +29,8 @@
       "@my-product-app/product": ["libs/backend/product/src/index.ts"],
       "@my-product-app/shared": ["libs/backend/shared/src/index.ts"],
       "@my-product-app/shared/*": ["libs/shared/src/lib/*"],
+      "@my-product-app/ui": ["libs/frontend/ui/src/index.ts"],
+      "@my-product-app/ui/styles": ["libs/frontend/ui/styles/theme"],
       "@my-product-app/user": ["libs/backend/user/src/index.ts"]
     }
   },

@@ -90,65 +90,77 @@
       "linter": "eslint",
       "style": "scss",
       "unitTestRunner": "jest"
+    },
+    "@nx/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nx/angular:component": {
+      "style": "scss"
     }
   },
   "projects": {
+    "logger": {
+      "tags": ["type:lib", "scope:backend", "area:logger"]
+    },
     "prisma": {
-      "tags": ["type:shared", "type:buildable"]
+      "tags": ["type:lib", "scope:backend", "area:prisma"]
     },
     "shared": {
-      "tags": ["type:shared", "type:buildable"],
+      "tags": ["type:lib", "scope:backend", "area:shared"],
       "implicitDependencies": ["prisma"]
     },
-    "logger": {
-      "tags": ["type:shared", "type:buildable", "scope:logger"],
-      "implicitDependencies": []
-    },
     "product": {
-      "tags": ["type:product-service", "type:buildable", "scope:product"],
+      "tags": ["type:feature", "scope:backend", "area:product"],
       "implicitDependencies": ["prisma", "shared"]
     },
     "user": {
-      "tags": ["type:user-service", "type:buildable", "scope:user"],
+      "tags": ["type:feature", "scope:backend", "area:user"],
       "implicitDependencies": ["prisma", "shared"]
     },
     "api-gateway": {
-      "tags": ["gateway"],
+      "tags": ["type:gateway", "scope:backend", "area:gateway"],
       "implicitDependencies": ["shared", "product", "user"]
     },
     "backend-product-service": {
-      "tags": ["type:product-service", "scope:product"],
+      "tags": ["type:service", "scope:backend", "area:product"],
       "implicitDependencies": ["prisma", "shared", "product"]
     },
     "backend-user-service": {
-      "tags": ["type:user-service", "scope:user"],
+      "tags": ["type:service", "scope:backend", "area:user"],
       "implicitDependencies": ["prisma", "shared", "user"]
+    },
+    "frontend": {
+      "tags": ["type:app", "scope:frontend"]
+    },
+    "ui": {
+      "tags": ["type:ui", "scope:frontend", "platform:angular"]
     }
   },
   "enforce-module-boundaries": {
     "allowedDependencies": [
       {
-        "sourceTag": "type:buildable",
-        "onlyDependOnLibsWithTags": ["type:buildable", "type:shared"]
+        "sourceTag": "scope:backend",
+        "onlyDependOnLibsWithTags": ["scope:backend"]
       },
       {
-        "sourceTag": "type:shared",
-        "onlyDependOnLibsWithTags": ["type:shared"]
+        "sourceTag": "type:app",
+        "onlyDependOnLibsWithTags": ["type:shared", "type:feature"]
       },
       {
-        "sourceTag": "gateway",
-        "onlyDependOnLibsWithTags": ["type:shared", "type:buildable"]
+        "sourceTag": "type:service",
+        "onlyDependOnLibsWithTags": ["type:feature", "type:lib"]
       },
       {
-        "sourceTag": "type:product-service",
-        "onlyDependOnLibsWithTags": ["type:shared", "type:buildable"]
+        "sourceTag": "type:feature",
+        "onlyDependOnLibsWithTags": ["type:lib"]
       },
       {
-        "sourceTag": "type:user-service",
-        "onlyDependOnLibsWithTags": ["type:shared", "type:buildable"]
+        "sourceTag": "type:gateway",
+        "onlyDependOnLibsWithTags": ["type:lib", "type:feature"]
       },
       {
-        "sourceTag": "scope:logger",
+        "sourceTag": "area:logger",
         "onlyDependOnLibsWithTags": []
       }
     ]
