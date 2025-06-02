@@ -1,6 +1,6 @@
 .signup-container {
-  background-color: var(--mat-sys-secondary);
-  color: var(--mat-sys-on-secondary);
+  background-color: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,8 +9,8 @@
 }
 
 .signup-card {
-  background-color: var(--mat-sys-secondary-container);
-  color: var(--mat-sys-on-secondary-container);
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
   padding: 2rem;
   border-radius: 24px;
   box-shadow: var(--mat-sys-level3);
