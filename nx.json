@@ -106,7 +106,7 @@
     "prisma": {
       "tags": ["type:lib", "scope:backend", "area:prisma"]
     },
-    "shared": {
+    "backend-shared": {
       "tags": ["type:lib", "scope:backend", "area:shared"],
       "implicitDependencies": ["prisma"]
     },
@@ -133,6 +133,9 @@
     "frontend": {
       "tags": ["type:app", "scope:frontend"]
     },
+    "frontend-shared": {
+      "tags": ["type:shared", "scope:frontend"]
+    },
     "ui": {
       "tags": ["type:ui", "scope:frontend", "platform:angular"]
     }
@@ -142,6 +145,10 @@
       {
         "sourceTag": "scope:backend",
         "onlyDependOnLibsWithTags": ["scope:backend"]
+      },
+      {
+        "sourceTag": "scope:frontend",
+        "onlyDependOnLibsWithTags": ["scope:frontend"]
       },
       {
         "sourceTag": "type:app",
