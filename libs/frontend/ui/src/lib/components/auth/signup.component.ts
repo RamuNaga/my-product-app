@@ -13,6 +13,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { SelectFieldComponent } from '../form-controls/select-field.component';
 
+//import { AuthService } from '@my-product-app/frontend-shared'; // adjust path as needed
+//import { tap } from 'rxjs/operators';
+
 @Component({
   selector: 'lib-ui-signup',
   templateUrl: './signup.component.html',
@@ -36,7 +39,7 @@ export class SignupComponent {
     { label: 'Operator', value: 'operator' },
     { label: 'Manager', value: 'manager' },
   ];
-
+  //  private authService: AuthService
   constructor(private fb: FormBuilder) {
     this.signupForm = this.fb.group({
       username: ['', Validators.required],
@@ -47,7 +50,7 @@ export class SignupComponent {
     });
   }
 
-  // Getters to cast AbstractControl to FormControl for child components
+  // FormControl getters
   get usernameControl(): FormControl {
     return this.signupForm.get('username') as FormControl;
   }
@@ -69,9 +72,23 @@ export class SignupComponent {
   }
 
   onSubmit() {
-    if (this.signupForm.valid) {
-      console.log('Signup data:', this.signupForm.value);
-      // Handle signup logic here
-    }
+    //   if (this.signupForm.valid) {
+    //     const { username, email, password, role } = this.signupForm.value;
+    //     // Prepare variables in the shape your GraphQL mutation expects
+    //     const createUserInput = { username, email, password, role };
+    //     this.authService
+    //       .signup({ createUserInput })
+    //       .pipe(
+    //         tap((user) => {
+    //           console.log('User signed up:', user);
+    //           // maybe reset form or navigate away here
+    //         })
+    //       )
+    //       .subscribe({
+    //         error: (err) => console.error('Signup error:', err),
+    //       });
+    //   } else {
+    //     this.signupForm.markAllAsTouched();
+    //   }
   }
 }

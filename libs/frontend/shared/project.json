@@ -4,7 +4,13 @@
   "sourceRoot": "libs/frontend/shared/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": [],
+  "tags": [
+    "type:shared",
+    "type:generated",
+    "type:buildable",
+    "platform:angular",
+    "scope:frontend"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/angular:package",

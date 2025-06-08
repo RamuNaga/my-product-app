@@ -31,6 +31,7 @@ module.exports = [
               sourceTag: 'type:feature',
               onlyDependOnLibsWithTags: [
                 'type:shared',
+                'type:ui',
                 'type:feature',
                 'type:buildable',
               ],

@@ -4,7 +4,7 @@
   "projectType": "application",
   "prefix": "app",
   "sourceRoot": "apps/frontend/src",
-  "tags": [],
+  "tags": ["type:app", "scope:frontend"],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
@@ -17,15 +17,17 @@
         "tsConfig": "apps/frontend/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
+          "apps/frontend/src/favicon.ico",
           {
             "glob": "**/*",
-            "input": "apps/frontend/public"
+            "input": "apps/frontend/src/assets",
+            "output": "/assets"
           }
         ],
         "styles": ["apps/frontend/src/styles.scss"],
         "scripts": [],
         "stylePreprocessorOptions": {
-          "includePaths": ["libs/ui/src/lib/styles"]
+          "includePaths": ["libs/frontend/ui/src/lib/styles"]
         }
       },
       "configurations": {
@@ -54,6 +56,9 @@
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "proxyConfig": "apps/frontend/proxy.conf.json"
+      },
       "configurations": {
         "production": {
           "buildTarget": "frontend:build:production"

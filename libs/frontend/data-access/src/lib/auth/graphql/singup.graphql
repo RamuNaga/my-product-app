@@ -1,0 +1,9 @@
+mutation Signup($createUserInput: CreateUserInput!) {
+  createUser(createUserInput: $createUserInput) {
+    id
+    email
+    username
+    role
+    createdAt
+  }
+}

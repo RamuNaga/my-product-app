@@ -136,6 +136,9 @@
     "frontend-shared": {
       "tags": ["type:shared", "scope:frontend"]
     },
+    "frontend-data-access": {
+      "implicitDependencies": ["frontend-shared"]
+    },
     "ui": {
       "tags": ["type:ui", "scope:frontend", "platform:angular"]
     }

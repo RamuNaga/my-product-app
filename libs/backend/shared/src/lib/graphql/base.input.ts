@@ -3,8 +3,8 @@ import { Field, InputType, ID } from '@nestjs/graphql';
 @InputType()
 export abstract class BaseCreateInput {
   // Add shared create fields here if needed
-  @Field(() => String)
-  name!: string;
+  // @Field(() => String)
+  // name!: string;
 }
 
 @InputType()

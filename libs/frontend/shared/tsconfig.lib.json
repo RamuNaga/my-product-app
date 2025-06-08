@@ -1,17 +1,24 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc",
+    "outDir": "../../../dist/out-tsc/libs/frontend/shared",
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
     "types": []
   },
+  // "exclude": [
+  //   "src/**/*.spec.ts",
+  //   "src/test-setup.ts",
+  //   "jest.config.ts",
+  //   "src/**/*.test.ts"
+  // ],
   "exclude": [
-    "src/**/*.spec.ts",
-    "src/test-setup.ts",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/*.ngtypecheck.ts",
     "jest.config.ts",
-    "src/**/*.test.ts"
+    "src/test-setup.ts"
   ],
   "include": ["src/**/*.ts"]
 }
