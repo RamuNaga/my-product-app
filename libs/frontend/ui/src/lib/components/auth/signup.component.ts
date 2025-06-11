@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -13,14 +13,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { SelectFieldComponent } from '../form-controls/select-field.component';
 
-//import { AuthService } from '@my-product-app/frontend-shared'; // adjust path as needed
-//import { tap } from 'rxjs/operators';
+import { AuthService } from '@my-product-app/frontend-data-access'; // adjust path as needed
+import { tap } from 'rxjs/operators';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'lib-ui-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
-  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -29,17 +29,19 @@ import { SelectFieldComponent } from '../form-controls/select-field.component';
     MatSelectModule,
     InputFieldComponent,
     SelectFieldComponent,
+    MatButtonModule,
   ],
 })
 export class SignupComponent {
   signupForm: FormGroup;
+  private readonly authService = inject(AuthService);
 
   roles = [
     { label: 'Admin', value: 'admin' },
     { label: 'Operator', value: 'operator' },
     { label: 'Manager', value: 'manager' },
   ];
-  //  private authService: AuthService
+
   constructor(private fb: FormBuilder) {
     this.signupForm = this.fb.group({
       username: ['', Validators.required],
@@ -72,23 +74,23 @@ export class SignupComponent {
   }
 
   onSubmit() {
-    //   if (this.signupForm.valid) {
-    //     const { username, email, password, role } = this.signupForm.value;
-    //     // Prepare variables in the shape your GraphQL mutation expects
-    //     const createUserInput = { username, email, password, role };
-    //     this.authService
-    //       .signup({ createUserInput })
-    //       .pipe(
-    //         tap((user) => {
-    //           console.log('User signed up:', user);
-    //           // maybe reset form or navigate away here
-    //         })
-    //       )
-    //       .subscribe({
-    //         error: (err) => console.error('Signup error:', err),
-    //       });
-    //   } else {
-    //     this.signupForm.markAllAsTouched();
-    //   }
+    if (this.signupForm.valid) {
+      const { username, email, password, role } = this.signupForm.value;
+      // Prepare variables in the shape your GraphQL mutation expects
+      const createUserInput = { username, email, password, role };
+      this.authService
+        .signup({ createUserInput })
+        .pipe(
+          tap((user) => {
+            console.log('User signed up:', user);
+            // maybe reset form or navigate away here
+          })
+        )
+        .subscribe({
+          error: (err) => console.error('Signup error:', err),
+        });
+    } else {
+      this.signupForm.markAllAsTouched();
+    }
   }
 }

@@ -32,11 +32,23 @@ export type CreateUserInput = {
   username: Scalars['String']['input'];
 };
 
+export type LoginInput = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+export type LoginResponse = {
+  __typename?: 'LoginResponse';
+  accessToken: Scalars['String']['output'];
+  user: User;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createProduct: Product;
   createUser: User;
   deleteProduct: Product;
+  login: LoginResponse;
   updateProduct: Product;
 };
 
@@ -53,6 +65,11 @@ export type MutationCreateUserArgs = {
 
 export type MutationDeleteProductArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationLoginArgs = {
+  loginInput: LoginInput;
 };
 
 
@@ -110,11 +127,17 @@ export type User = {
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
-  password: Scalars['String']['output'];
   role: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   username: Scalars['String']['output'];
 };
+
+export type LoginMutationVariables = Exact<{
+  loginInput: LoginInput;
+}>;
+
+
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginResponse', accessToken: string, user: { __typename?: 'User', id: number, email: string, username: string, role: string } } };
 
 export type SignupMutationVariables = Exact<{
   createUserInput: CreateUserInput;
@@ -123,6 +146,30 @@ export type SignupMutationVariables = Exact<{
 
 export type SignupMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: number, email: string, username: string, role: string, createdAt: any } };
 
+export const LoginDocument = gql`
+    mutation Login($loginInput: LoginInput!) {
+  login(loginInput: $loginInput) {
+    accessToken
+    user {
+      id
+      email
+      username
+      role
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class LoginGQL extends Apollo.Mutation<LoginMutation, LoginMutationVariables> {
+    document = LoginDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const SignupDocument = gql`
     mutation Signup($createUserInput: CreateUserInput!) {
   createUser(createUserInput: $createUserInput) {

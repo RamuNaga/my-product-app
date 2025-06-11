@@ -1,64 +1,60 @@
-<div class="signup-container">
-  <div class="signup-card">
-    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="signup-form">
-      <div class="form-field">
-        <lib-input-field
-          [control]="usernameControl"
-          label="Username"
-          placeholder="Enter username"
-          [required]="true"
-        ></lib-input-field>
-      </div>
-
-      <div class="form-field">
-        <lib-input-field
-          [control]="emailControl"
-          label="Email"
-          placeholder="Enter email"
-          [required]="true"
-          type="email"
-        ></lib-input-field>
-      </div>
-
-      <div class="form-field">
-        <lib-input-field
-          [control]="passwordControl"
-          label="Password"
-          placeholder="Enter password"
-          [required]="true"
-          type="password"
-        ></lib-input-field>
-      </div>
-
-      <div class="form-field">
-        <lib-input-field
-          [control]="confirmPasswordControl"
-          label="Confirm Password"
-          placeholder="Confirm your password"
-          [required]="true"
-          type="password"
-        ></lib-input-field>
-      </div>
-
-      <div class="form-field">
-        <lib-select-field
-          [control]="roleControl"
-          label="Role"
-          [options]="roles"
-          [required]="true"
-        ></lib-select-field>
-      </div>
-
-      <div class="form-actions">
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="signupForm.invalid"
-        >
-          Sign Up
-        </button>
-      </div>
-    </form>
+<form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="auth-form">
+  <div class="form-field">
+    <lib-input-field
+      [control]="usernameControl"
+      label="Username"
+      placeholder="Enter username"
+      [required]="true"
+    ></lib-input-field>
   </div>
-</div>
+
+  <div class="form-field">
+    <lib-input-field
+      [control]="emailControl"
+      label="Email"
+      placeholder="Enter email"
+      [required]="true"
+      type="email"
+    ></lib-input-field>
+  </div>
+
+  <div class="form-field">
+    <lib-input-field
+      [control]="passwordControl"
+      label="Password"
+      placeholder="Enter password"
+      [required]="true"
+      type="password"
+    ></lib-input-field>
+  </div>
+
+  <div class="form-field">
+    <lib-input-field
+      [control]="confirmPasswordControl"
+      label="Confirm Password"
+      placeholder="Confirm your password"
+      [required]="true"
+      type="password"
+    ></lib-input-field>
+  </div>
+
+  <div class="form-field">
+    <lib-select-field
+      [control]="roleControl"
+      label="Role"
+      [options]="roles"
+      [required]="true"
+    ></lib-select-field>
+  </div>
+
+  <div class="form-actions">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="signupForm.invalid"
+    >
+      Sign Up
+    </button>
+  </div>
+</form>

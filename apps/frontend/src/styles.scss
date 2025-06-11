@@ -1,9 +1,12 @@
+// 1. Import Material theming utilities
 @use '@angular/material' as mat;
 
+// 2. Define density scale (optional but valid)
 $my-density: (
   scale: 0,
 );
 
+// 3. Define theme configuration
 $my-theme: mat.define-theme(
   (
     color: (
@@ -13,7 +16,7 @@ $my-theme: mat.define-theme(
     ),
     typography: (
       plain-family: 'Roboto',
-      brand-family: Open Sans,
+      brand-family: 'Open Sans',
       bold-weight: 900,
       medium-weight: 500,
       regular-weight: 300,
@@ -23,30 +26,57 @@ $my-theme: mat.define-theme(
   )
 );
 
+// 4. Include Material base styles
 @include mat.core();
 
-html {
+// 5. Apply global box-sizing
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// 6. Global styles (html/body)
+html,
+body {
+  margin: 0;
+  padding: 0;
+  max-width: 100vw;
+  overflow-x: hidden;
+  height: 100%;
+  font-family: Roboto, sans-serif;
   color-scheme: light;
   background-color: var(--mat-sys-secondary);
-  font-family: Roboto, sans-serif;
+
+  // 7. Apply Material theme tokens
   @include mat.all-component-themes($my-theme);
   @include mat.system-level-colors($my-theme);
   @include mat.system-level-typography($my-theme);
 }
 
-/* Custom card styling */
+// 8. Root component layout
+app-root {
+  display: block;
+  height: 100%;
+}
+
+// ---------------------------------------------
+// 9. Shared Component Styling
+// ---------------------------------------------
+
+// Card style
 .card {
   background-color: var(--mat-sys-primary-container);
   color: var(--mat-sys-on-primary-container);
   padding: 1rem;
   border-radius: 12px;
+  box-shadow: var(--mat-sys-level3);
 }
 
-/* Typography helpers */
+// Text helpers
 .typography {
   font: var(--mat-sys-body-medium);
 }
-
 .typography-detailed {
   font-family: var(--mat-sys-body-medium-font);
   font-size: var(--mat-sys-body-medium-size);
@@ -55,12 +85,38 @@ html {
   letter-spacing: var(--mat-sys-body-medium-tracking);
 }
 
-/* Elevation */
-.elevated-card {
-  box-shadow: var(--mat-sys-level3);
+// Full-width utilities
+.full-width,
+.form-field {
+  width: 100%;
 }
 
-/* Override Material theme variables if needed */
+// Form button container
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+// Override Material floating label
+.mat-mdc-floating-label {
+  color: rgba(0, 0, 0, 0.87);
+  font-weight: 500;
+}
+
+// Error text styles
+.mat-mdc-form-field-subscript-wrapper .mat-mdc-error {
+  font-size: 0.75rem;
+  color: #f44336;
+}
+
+// Scroll and tab content fix
+.mat-mdc-tab-body-content {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+// Custom theme overrides
 .custom-theme-container {
   @include mat.theme-overrides(
     (
@@ -73,29 +129,16 @@ html {
   );
 }
 
-/* Additional form field styling */
-.full-width {
-  width: 100%;
-}
-
-/* Ensure floating label color is visible */
-.mat-mdc-floating-label {
-  color: rgba(0, 0, 0, 0.87);
-  font-weight: 500;
-}
-
-/* Optional: customize mat-error message */
-.mat-mdc-form-field-subscript-wrapper .mat-mdc-error {
-  font-size: 0.75rem;
-  color: #f44336; // Material red for error
-}
+// ---------------------------------------------
+// 10. Responsive Tweaks
+// ---------------------------------------------
 @media (max-width: 600px) {
-  .signup-card {
+  .auth-card {
     padding: 1.5rem;
     border-radius: 16px;
   }
 
   .form-actions {
-    justify-content: center;
+    margin-top: 1rem;
   }
 }

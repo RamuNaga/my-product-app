@@ -12,16 +12,16 @@ import { SharedModule } from '@my-product-app/backend-shared';
 
 @Module({
   imports: [
-    GraphQLConfigModule,
-    ProductModule,
-    UserModule,
-    SharedModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [
         path.resolve(__dirname, '../../../../../.env'), // root .env
       ],
     }),
+    SharedModule,
+    GraphQLConfigModule,
+    ProductModule,
+    UserModule,
     MicroserviceModule,
   ],
   controllers: [AppController],

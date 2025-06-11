@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SignupComponent } from '@my-product-app/ui';
+import { AuthFormComponent } from '@my-product-app/frontend-ui';
 
 @Component({
-  imports: [SignupComponent, RouterModule],
+  imports: [AuthFormComponent, RouterModule],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

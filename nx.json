@@ -137,10 +137,12 @@
       "tags": ["type:shared", "scope:frontend"]
     },
     "frontend-data-access": {
+      "tags": ["type:lib", "scope:frontend"],
       "implicitDependencies": ["frontend-shared"]
     },
     "ui": {
-      "tags": ["type:ui", "scope:frontend", "platform:angular"]
+      "tags": ["type:ui", "scope:frontend", "platform:angular"],
+      "implicitDependencies": ["frontend-data-access", "frontend-shared"]
     }
   },
   "enforce-module-boundaries": {

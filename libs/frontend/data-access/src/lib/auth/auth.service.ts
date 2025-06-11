@@ -4,6 +4,9 @@ import {
   SignupMutation,
   SignupMutationVariables,
   SignupDocument,
+  LoginMutationVariables,
+  LoginMutation,
+  LoginDocument,
 } from '@my-product-app/frontend-shared';
 
 import { Observable } from 'rxjs';
@@ -29,6 +32,21 @@ export class AuthService {
             return result.data.createUser;
           }
           throw new Error('No data returned from signup mutation');
+        })
+      );
+  }
+  login(variables: LoginMutationVariables): Observable<LoginMutation['login']> {
+    return this.apollo
+      .mutate<LoginMutation, LoginMutationVariables>({
+        mutation: LoginDocument,
+        variables,
+      })
+      .pipe(
+        map((result) => {
+          if (result.data) {
+            return result.data.login;
+          }
+          throw new Error('No data returned from login mutation');
         })
       );
   }

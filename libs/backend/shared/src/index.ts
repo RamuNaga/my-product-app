@@ -8,4 +8,7 @@ export * from './lib/graphql/type';
 export * from './lib/utils/graphql-input.mixin';
 export * from './lib/config/graphql-config';
 export * from './lib/guards/jwt-auth.guard';
+export * from './lib/auth/jwt.constants';
+export * from './lib/auth/jwt.module';
+export * from './lib/auth/jwt.strategy';
 export * from './lib/interceptors/response.interceptor';

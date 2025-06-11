@@ -24,17 +24,21 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
+      "@my-product-app/frontend-shared": ["dist/libs/frontend/shared"],
+      "@my-product-app/frontend-data-access": [
+        "dist/libs/frontend/data-access"
+      ],
+      "@my-product-app/frontend-ui": ["dist/libs/frontend/ui"],
+      "@my-product-app/frontend-ui/styles": [
+        "dist/libs/frontend/ui/styles/theme"
+      ],
+
+      "@my-product-app/prisma": ["libs/backend/prisma/src/index.ts"],
+      "@my-product-app/logger": ["libs/backend/logger/src/index.ts"],
       "@my-product-app/backend-shared": ["libs/backend/shared/src/index.ts"],
       "@my-product-app/backend-shared/*": ["libs/backend/shared/src/lib/*"],
-      "@my-product-app/logger": ["libs/backend/logger/src/index.ts"],
-      "@my-product-app/prisma": ["libs/backend/prisma/src/index.ts"],
       "@my-product-app/product": ["libs/backend/product/src/index.ts"],
-      "@my-product-app/user": ["libs/backend/user/src/index.ts"],
-
-      "@my-product-app/frontend-ui/styles": ["libs/frontend/ui/styles/theme"],
-      "@my-product-app/frontend-ui": ["dist/libs/frontend/ui"],
-      "@my-product-app/frontend-shared": ["dist/libs/frontend/shared"],
-      "@my-product-app/frontend-data-access": ["dist/libs/frontend/data-access"]
+      "@my-product-app/user": ["libs/backend/user/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

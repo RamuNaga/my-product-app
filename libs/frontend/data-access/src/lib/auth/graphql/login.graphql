@@ -1,13 +1,11 @@
-input LoginInput {
-  email: String!
-  password: String!
-}
-
-type AuthPayload {
-  accessToken: String!
-  user: User!
-}
-
-type Mutation {
-  login(loginInput: LoginInput!): AuthPayload!
+mutation Login($loginInput: LoginInput!) {
+  login(loginInput: $loginInput) {
+    accessToken
+    user {
+      id
+      email
+      username
+      role
+    }
+  }
 }

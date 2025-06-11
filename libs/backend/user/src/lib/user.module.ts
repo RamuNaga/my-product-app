@@ -5,15 +5,8 @@ import { SharedModule } from '@my-product-app/backend-shared';
 import { PrismaService } from '@my-product-app/prisma';
 
 @Module({
-  imports: [SharedModule], // 👈 Important
-  providers: [
-    UserService,
-    UserResolver,
-    {
-      provide: PrismaService,
-      useValue: {}, // stub or mock
-    },
-  ],
+  imports: [SharedModule],
+  providers: [UserService, UserResolver, PrismaService],
   exports: [UserService],
 })
 export class UserModule {}
