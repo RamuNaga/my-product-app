@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc",
     "declaration": true,
-    "types": ["node"],
+    "types": ["node", "express", "multer"],
+
     "target": "es2021",
     "strictNullChecks": true,
     "noImplicitAny": true,
@@ -14,6 +15,6 @@
   "include": [
     "src/**/*.ts",
     "../../../libs/prisma/generated/prisma/index.d.ts"
-  ], // Ensure this path points to your generated Prisma client
+  ],
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }

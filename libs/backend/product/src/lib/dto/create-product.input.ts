@@ -16,4 +16,8 @@ export class CreateProductInput extends BaseCreateInput {
   @Field({ nullable: true }) // Marking the field as optional
   @IsOptional() // Validator to ensure optionality
   description!: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  image?: string;
 }

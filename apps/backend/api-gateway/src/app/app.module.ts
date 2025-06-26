@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import * as path from 'path';
@@ -9,6 +8,7 @@ import { MicroserviceModule } from './config/microservice.module';
 import { ProductModule } from '@my-product-app/product';
 import { UserModule } from '@my-product-app/user';
 import { SharedModule } from '@my-product-app/backend-shared';
+import { ProductController } from './controllers/product.controller';
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ import { SharedModule } from '@my-product-app/backend-shared';
     UserModule,
     MicroserviceModule,
   ],
-  controllers: [AppController],
+  controllers: [ProductController],
   providers: [
     AppService,
     {

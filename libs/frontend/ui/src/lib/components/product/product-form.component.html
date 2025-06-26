@@ -1,0 +1,59 @@
+<div class="form-container">
+  <mat-card class="form-card">
+    <form
+      [formGroup]="productForm"
+      (ngSubmit)="onSubmit()"
+      class="product-form"
+    >
+      <div class="form-field">
+        <lib-input-field
+          [control]="productCodeControl"
+          label="Product Code"
+          placeholder="Enter product code"
+          [required]="true"
+          type="text"
+        ></lib-input-field>
+      </div>
+
+      <div class="form-field">
+        <lib-input-field
+          [control]="nameControl"
+          label="Product Name"
+          placeholder="Enter product name"
+          [required]="true"
+          type="text"
+        ></lib-input-field>
+      </div>
+
+      <div class="form-field">
+        <lib-input-field
+          [control]="descriptionControl"
+          label="Description"
+          placeholder="Enter description"
+          [required]="true"
+          type="text"
+        ></lib-input-field>
+      </div>
+
+      <div class="form-field">
+        <lib-ui-product-image-upload
+          [uploadUrl]="productImageUploadUrl"
+          [formData]="productForm.value"
+          (imageUploaded)="onImageUploaded($event)"
+        >
+        </lib-ui-product-image-upload>
+      </div>
+
+      <div class="form-actions">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="productForm.invalid || !imageUrl"
+        >
+          Save Product
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

@@ -1,4 +1,6 @@
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { INestApplication } from '@nestjs/common';
 import { AppLoggerService, LoggingInterceptor } from '@my-product-app/logger';
@@ -26,7 +28,19 @@ export async function bootstrapMicroservice(
   options: BootstrapOptions
 ): Promise<INestApplication> {
   try {
-    const app = await NestFactory.create(AppModule);
+    //const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+    // 👇 ✅ Serve static assets from uploads folder
+    app.useStaticAssets(join(__dirname, '..', '..', '..', '..', 'uploads'), {
+      prefix: '/uploads',
+    });
+    // Enable CORS here
+    app.enableCors({
+      origin: 'http://localhost:4200', // adjust as needed for your frontend URL
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      credentials: true, // if you want to allow cookies/auth headers
+    });
 
     const logger = await tryGetLogger(app);
     if (logger) {

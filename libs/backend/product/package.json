@@ -9,6 +9,9 @@
     "@my-product-app/prisma": "workspace:*",
     "@my-product-app/backend-shared": "workspace:*"
   },
+  "devDependencies": {
+    "@types/multer": "^1.4.13"
+  },
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
