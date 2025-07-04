@@ -18,7 +18,7 @@ import { Observable } from 'rxjs';
 
 const uploadPath = join(__dirname, '../../../../uploads/products');
 
-// Ensure the folder exists
+// Ensure directory exists
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
 }
@@ -47,26 +47,30 @@ export class ProductController {
   )
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body() body: any
+    @Body()
+    body: {
+      productcode: string;
+      name: string;
+      description?: string;
+    }
   ) {
     if (!file) {
       throw new HttpException('File is required', HttpStatus.BAD_REQUEST);
     }
 
     try {
-      //  Convert absolute file path to relative public URL
-      // Example: E:\project\uploads\products\file.png -> /uploads/products/file.png
-      const parts = file.path.split(sep); // handles Windows `\` and Unix `/`
+      //  Convert file path to relative public URL
+      const parts = file.path.split(sep);
       const uploadsIndex = parts.lastIndexOf('uploads');
       const relativePath = '/' + parts.slice(uploadsIndex).join('/');
-      console.log('@62 relativePath', relativePath);
 
+      //  Send to product microservice
       const result = await this.productClient
         .send(
           { cmd: 'create_product' },
           {
             ...body,
-            imagePath: relativePath, // Send only relative path
+            imagePath: relativePath, // relative URL path
           }
         )
         .toPromise();
@@ -74,8 +78,10 @@ export class ProductController {
       return result;
     } catch (err) {
       console.error('Microservice call failed:', err);
+
+      //  Delete file if microservice fails
       try {
-        fs.unlinkSync(file.path); // Clean up file if save failed
+        fs.unlinkSync(file.path);
       } catch (unlinkErr) {
         console.warn(
           'Failed to delete file after microservice error',

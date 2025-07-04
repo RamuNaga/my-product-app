@@ -1,10 +1,6 @@
 <div class="form-container">
   <mat-card class="form-card">
-    <form
-      [formGroup]="productForm"
-      (ngSubmit)="onSubmit()"
-      class="product-form"
-    >
+    <form [formGroup]="productForm" class="product-form">
       <div class="form-field">
         <lib-input-field
           [control]="productCodeControl"
@@ -39,6 +35,7 @@
         <lib-ui-product-image-upload
           [uploadUrl]="productImageUploadUrl"
           [formData]="productForm.value"
+          #imageUploader
           (imageUploaded)="onImageUploaded($event)"
         >
         </lib-ui-product-image-upload>
@@ -49,7 +46,8 @@
           mat-raised-button
           color="primary"
           type="submit"
-          [disabled]="productForm.invalid || !imageUrl"
+          [disabled]="productForm.invalid"
+          (click)="onSubmit(imageUploader)"
         >
           Save Product
         </button>

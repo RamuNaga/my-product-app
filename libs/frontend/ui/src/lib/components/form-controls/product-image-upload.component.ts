@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'lib-ui-product-image-upload',
@@ -12,32 +12,45 @@ export class ProductImageUploadComponent {
 
   @Output() imageUploaded = new EventEmitter<string>();
 
+  private selectedFile: File | null = null;
+
   constructor(private http: HttpClient) {}
 
   onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (!file) return;
+    this.selectedFile = event.target.files[0];
+  }
 
-    const uploadData = new FormData();
-    uploadData.append('file', file);
-
-    // Append extra form fields to FormData
-    if (this.formData) {
-      for (const key of Object.keys(this.formData)) {
-        uploadData.append(key, this.formData[key]);
+  /** 👇 Manually called by parent on submit */
+  uploadFile(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      if (!this.selectedFile) {
+        return reject('No file selected');
       }
-    }
 
-    this.http.post(this.uploadUrl, uploadData).subscribe({
-      next: (res: any) => {
-        console.log('Upload success', res);
-        if (res && res.imagePath) {
-          this.imageUploaded.emit(res.imagePath); // send image path back to parent
+      const uploadData = new FormData();
+      uploadData.append('file', this.selectedFile);
+
+      if (this.formData) {
+        for (const key of Object.keys(this.formData)) {
+          uploadData.append(key, this.formData[key]);
         }
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Upload failed', error);
-      },
+      }
+
+      this.http.post(this.uploadUrl, uploadData).subscribe({
+        next: (res: any) => {
+          const imagePath = res?.imagePath ?? res?.image ?? null;
+          if (imagePath) {
+            this.imageUploaded.emit(imagePath);
+            resolve(imagePath);
+          } else {
+            reject('Image path missing in response');
+          }
+        },
+        error: (err) => {
+          console.error('Upload error:', err);
+          reject(err);
+        },
+      });
     });
   }
 }

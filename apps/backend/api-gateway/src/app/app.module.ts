@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import * as path from 'path';
 
@@ -25,14 +24,6 @@ import { ProductController } from './controllers/product.controller';
     MicroserviceModule,
   ],
   controllers: [ProductController],
-  providers: [
-    AppService,
-    {
-      provide: 'GATEWAY_SERVICE',
-      useValue: {
-        getUserData: () => ({ message: 'Hello API' }), // basic stub
-      },
-    },
-  ],
+  providers: [],
 })
 export class AppModule {}

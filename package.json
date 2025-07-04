@@ -21,7 +21,10 @@
     "serve:backend": "concurrently \"nx serve api-gateway\" \"nx serve backend-product-service\" \"nx serve backend-user-service\"",
     "serve:frontend": "nx serve frontend",
     "dev": "concurrently \"npm run serve:backend\" \"npm run serve:frontend\"",
-    "watch:libs": "concurrently \"nx build logger --watch\" \"nx build prisma --watch\" \"nx build product --watch\" \"nx build backend-shared --watch\" \"nx build user --watch\""
+    "watch:libs": "concurrently \"nx build logger --watch\" \"nx build prisma --watch\" \"nx build backend-shared --watch\" \"nx build user --watch\" \"nx build product --watch\"",
+    "watch:frontend-Ui": "concurrently  \"nx build ui --watch\"",
+    "watch:frontend-shared": "concurrently  \"nx build frontend-shared --watch\"",
+    "watch:frontend-data-access": "concurrently  \"nx build frontend-data-access --watch\""
   },
   "private": true,
   "dependencies": {

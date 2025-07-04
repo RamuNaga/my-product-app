@@ -40,7 +40,6 @@ export class ProductFormComponent implements OnInit {
 
   productForm: FormGroup;
   imageUrl: string | null = null;
-  //productImageUploadUrl = `${this.uploadBaseUrl}/products/upload`;
 
   productCodeControl = new FormControl('', [Validators.required]);
   nameControl = new FormControl('', [Validators.required]);
@@ -76,17 +75,28 @@ export class ProductFormComponent implements OnInit {
     console.log('this.imageUrl', this.imageUrl);
   }
 
-  onSubmit() {
-    if (this.productForm.valid && this.imageUrl) {
-      const formValue = this.productForm.value;
-
-      const payload = {
-        ...formValue,
-        image: this.imageUrl,
-      };
-
-      console.log('Submitting product:', payload);
-      // TODO: Send GraphQL mutation or REST POST here
+  onSubmit(imageUploader: ProductImageUploadComponent) {
+    if (this.productForm.invalid) {
+      console.warn('Form invalid');
+      return;
     }
+
+    imageUploader
+      .uploadFile()
+      .then((imageUrl: string) => {
+        const formValue = this.productForm.value;
+
+        const payload = {
+          ...formValue,
+          image: imageUrl,
+        };
+
+        console.log('Submitting product:', payload);
+
+        // TODO: Send this payload to backend (GraphQL or REST)
+      })
+      .catch((err) => {
+        console.error('Image upload failed:', err);
+      });
   }
 }
