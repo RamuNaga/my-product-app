@@ -21,6 +21,7 @@ export type Scalars = {
 
 export type CreateProductInput = {
   description?: InputMaybe<Scalars['String']['input']>;
+  image?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   productcode: Scalars['String']['input'];
 };
@@ -92,6 +93,7 @@ export type Product = {
   createdAt: Scalars['DateTime']['output'];
   description: Scalars['String']['output'];
   id: Scalars['Int']['output'];
+  image: Scalars['String']['output'];
   name: Scalars['String']['output'];
   productcode: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
@@ -118,6 +120,7 @@ export type QueryIsEmailAvailableArgs = {
 export type UpdateProductInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
+  image?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   productcode?: InputMaybe<Scalars['String']['input']>;
 };

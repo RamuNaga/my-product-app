@@ -3,6 +3,7 @@ import {
   Component,
   effect,
   ElementRef,
+  inject,
   input,
   output,
   signal,
@@ -28,12 +29,13 @@ export class ProductImageUploadComponent {
 
   fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
 
-  fileSelected = output<File | string>();
+  fileSelected = output<{ file: File; previewUrl: string } | string>();
 
   previewUrl = signal<string | null>(null);
   internalFile = signal<File | null>(null);
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {
+  constructor() {
     // Automatically react when resetTrigger changes
     effect(() => {
       const trigger = this.resetTrigger();
@@ -60,7 +62,7 @@ export class ProductImageUploadComponent {
       const file = inputEl.files[0];
       this.internalFile.set(file);
       this.previewUrl.set(URL.createObjectURL(file));
-      this.fileSelected.emit(file);
+      this.fileSelected.emit({ file, previewUrl: this.previewUrl()! });
     }
   }
 

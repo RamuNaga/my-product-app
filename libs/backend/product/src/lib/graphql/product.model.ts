@@ -15,6 +15,9 @@ export class Product {
   description!: string;
 
   @Field()
+  image!: string;
+
+  @Field()
   createdAt!: Date;
 
   @Field()

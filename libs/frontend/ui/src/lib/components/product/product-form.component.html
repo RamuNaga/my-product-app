@@ -1,3 +1,9 @@
+<!-- Loader shown while loading -->
+@if (productStore.isLoading()) {
+<div class="loader-container">
+  <lib-ui-material-loader></lib-ui-material-loader>
+</div>
+}
 <div class="form-container">
   <mat-card class="form-card">
     <form
@@ -7,7 +13,7 @@
     >
       <div class="form-field">
         <lib-input-field
-          [control]="productCodeControl"
+          [control]="productcodeControl"
           label="Product Code"
           placeholder="Enter product code"
           [required]="true"
@@ -39,9 +45,8 @@
         <lib-ui-product-image-upload
           [uploadUrl]="productImageUploadUrl()"
           [formData]="productForm.value"
-          [resetTrigger]="resetImageTrigger()"
+          [resetTrigger]="productStore.resetTrigger()"
           (fileSelected)="onFileSelected($event)"
-          #imageUploader
         ></lib-ui-product-image-upload>
       </div>
 
@@ -50,7 +55,11 @@
           mat-raised-button
           color="primary"
           type="submit"
-          [disabled]="productForm.invalid || !selectedFile() || isLoading()"
+          [disabled]="
+            productForm.invalid ||
+            !productStore.selectedFile() ||
+            productStore.isLoading()
+          "
         >
           Save
         </button>
@@ -58,9 +67,3 @@
     </form>
   </mat-card>
 </div>
-
-@defer (when isLoading()) {
-<div class="loader-container">
-  <lib-ui-material-loader></lib-ui-material-loader>
-</div>
-}
