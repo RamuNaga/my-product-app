@@ -22,18 +22,14 @@ import {
   `,
 })
 export class ProductImageUploadComponent {
-  // ✅ Inputs as signals
   uploadUrl = input<string>('');
   formData = input<Record<string, unknown>>({});
   resetTrigger = input<number>(0);
 
-  // ✅ ViewChild as signal accessor (Angular 17+)
   fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
 
-  // ✅ Output signal
   fileSelected = output<File | string>();
 
-  // ✅ Internal signals
   previewUrl = signal<string | null>(null);
   internalFile = signal<File | null>(null);
 
@@ -64,7 +60,7 @@ export class ProductImageUploadComponent {
       const file = inputEl.files[0];
       this.internalFile.set(file);
       this.previewUrl.set(URL.createObjectURL(file));
-      this.fileSelected.emit(file); // 👈 Emit File type
+      this.fileSelected.emit(file);
     }
   }
 
@@ -90,7 +86,7 @@ export class ProductImageUploadComponent {
         next: (res: any) => {
           const imagePath = res?.imagePath ?? res?.image ?? null;
           if (imagePath) {
-            this.fileSelected.emit(imagePath); // 👈 Emit string if path is needed
+            this.fileSelected.emit(imagePath);
             resolve(imagePath);
           } else {
             reject('Image path missing in response');

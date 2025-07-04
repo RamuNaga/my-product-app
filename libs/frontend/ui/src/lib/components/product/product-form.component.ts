@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   input,
   signal,
@@ -43,13 +42,10 @@ import { HttpClient } from '@angular/common/http';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductFormComponent {
-  // ✅ Input as signal
   uploadBaseUrl = input<string>('');
 
-  // ✅ Reactive form remains (Angular signals forms coming in future)
   productForm: FormGroup;
 
-  // ✅ Signal state
   isLoading = signal(false);
   resetImageTrigger = signal(0);
   selectedFile = signal<File | null>(null);
@@ -57,7 +53,6 @@ export class ProductFormComponent {
 
   private readonly http = inject(HttpClient);
 
-  // ✅ Individual controls
   productCodeControl = new FormControl('', [Validators.required]);
   nameControl = new FormControl('', [Validators.required]);
   descriptionControl = new FormControl('', [Validators.required]);
@@ -68,15 +63,8 @@ export class ProductFormComponent {
       name: this.nameControl,
       description: this.descriptionControl,
     });
-
-    // Log when upload URL changes (optional)
-    effect(() => {
-      console.log('uploadBaseUrl:', this.uploadBaseUrl());
-      console.log('Upload URL:', this.productImageUploadUrl());
-    });
   }
 
-  // ✅ Use computed for derived value
   productImageUploadUrl = computed(() => {
     return `${this.uploadBaseUrl()}/products/upload`;
   });
