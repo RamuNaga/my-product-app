@@ -1,6 +1,10 @@
 <div class="form-container">
   <mat-card class="form-card">
-    <form [formGroup]="productForm" class="product-form">
+    <form
+      [formGroup]="productForm"
+      class="product-form"
+      (ngSubmit)="onSubmit()"
+    >
       <div class="form-field">
         <lib-input-field
           [control]="productCodeControl"
@@ -33,12 +37,12 @@
 
       <div class="form-field">
         <lib-ui-product-image-upload
-          [uploadUrl]="productImageUploadUrl"
+          [uploadUrl]="productImageUploadUrl()"
           [formData]="productForm.value"
+          [resetTrigger]="resetImageTrigger()"
+          (fileSelected)="onFileSelected($event)"
           #imageUploader
-          (imageUploaded)="onImageUploaded($event)"
-        >
-        </lib-ui-product-image-upload>
+        ></lib-ui-product-image-upload>
       </div>
 
       <div class="form-actions">
@@ -46,12 +50,17 @@
           mat-raised-button
           color="primary"
           type="submit"
-          [disabled]="productForm.invalid"
-          (click)="onSubmit(imageUploader)"
+          [disabled]="productForm.invalid || !selectedFile() || isLoading()"
         >
-          Save Product
+          Save
         </button>
       </div>
     </form>
   </mat-card>
 </div>
+
+@defer (when isLoading()) {
+<div class="loader-container">
+  <lib-ui-material-loader></lib-ui-material-loader>
+</div>
+}
