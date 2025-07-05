@@ -6,4 +6,4 @@ import { ProductModule } from '@my-product-app/product';
   imports: [ProductModule],
   controllers: [ProductMessageHandler],
 })
-export class AppModule {}
+export class ProductServiceModule {}

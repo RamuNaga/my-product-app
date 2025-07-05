@@ -31,7 +31,7 @@ export async function bootstrapMicroservice(
     //const app = await NestFactory.create(AppModule);
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-    // 👇 ✅ Serve static assets from uploads folder
+    // Serve static assets from uploads folder
     app.useStaticAssets(join(__dirname, '..', '..', '..', '..', 'uploads'), {
       prefix: '/uploads',
     });

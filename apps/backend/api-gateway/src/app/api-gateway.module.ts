@@ -26,4 +26,4 @@ import { ProductController } from './controllers/product.controller';
   controllers: [ProductController],
   providers: [],
 })
-export class AppModule {}
+export class ApiGatewayModule {}
