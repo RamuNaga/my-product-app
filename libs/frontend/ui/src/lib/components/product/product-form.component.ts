@@ -21,8 +21,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { ProductImageUploadComponent } from '../form-controls/product-image-upload.component';
 import { MatCardModule } from '@angular/material/card';
 import { MaterialLoaderComponent } from '../loader/loader.component';
-import { HttpClient } from '@angular/common/http';
-import { Product, ProductResponse, ProductStore } from '@my-product-app/frontend-shared';
+import {
+  HttpService,
+  ProductResponse,
+  ProductStore,
+} from '@my-product-app/frontend-shared';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-product-form',
@@ -46,8 +50,8 @@ export class ProductFormComponent {
   uploadBaseUrl = input<string>('');
   readonly resetImageTrigger = signal(0);
   private readonly fb = inject(FormBuilder);
-  private readonly http = inject(HttpClient);
   readonly productStore = inject(ProductStore);
+  readonly httpService = inject(HttpService);
 
   readonly productForm: FormGroup = this.fb.group({
     productcode: new FormControl('', [Validators.required]),
@@ -124,16 +128,17 @@ export class ProductFormComponent {
           uploadData.append(key, value.toString());
         }
       });
-      console.log('uploadData', uploadData);
       try {
-        const res = await this.http
-          .post<ProductResponse>(this.productImageUploadUrl(), uploadData)
-          .toPromise();
+        const res = await firstValueFrom(
+          this.httpService.post<ProductResponse>(
+            this.productImageUploadUrl(),
+            uploadData
+          )
+        );
 
         console.log('Submitted successfully:', res);
         this.productForm.reset();
         this.productStore.reset();
-        this.resetImageTrigger.update((v) => v + 1);
       } catch (err) {
         console.error('Submission failed:', err);
       } finally {
