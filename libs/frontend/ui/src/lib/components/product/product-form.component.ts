@@ -100,26 +100,48 @@ export class ProductFormComponent {
       this.productStore.updateField('image', event.previewUrl);
     }
   }
-
   async onSubmit() {
-    if (!this.productForm.valid) {
-      this.snackBar.open('Please fill all required fields.', 'Close', {
-        duration: 3000,
-        panelClass: ['snackbar-warning'],
-      });
-      return;
-    }
-
-    if (!this.productStore.selectedFile()) {
-      this.snackBar.open('Please upload a product image.', 'Close', {
-        duration: 3000,
-        panelClass: ['snackbar-warning'],
-      });
-      return;
-    }
+    if (!this.isFormValid()) return;
 
     this.productStore.setLoading(true);
 
+    const formData = this.buildFormData();
+
+    try {
+      const res = await firstValueFrom(
+        this.httpService.post<ProductCreateResponse>(
+          this.productImageUploadUrl(),
+          formData
+        )
+      );
+
+      this.handleResponse(res);
+    } catch (err: unknown) {
+      const message =
+        (err as any)?.error?.message ||
+        'Something went wrong. Please try again.';
+      this.showSnackbar(message, 'snackbar-error');
+      console.error('Submission failed:', err);
+    } finally {
+      this.productStore.setLoading(false);
+    }
+  }
+
+  private isFormValid(): boolean {
+    if (!this.productForm.valid) {
+      this.showSnackbar('Please fill all required fields.', 'snackbar-warning');
+      return false;
+    }
+
+    if (!this.productStore.selectedFile()) {
+      this.showSnackbar('Please upload a product image.', 'snackbar-warning');
+      return false;
+    }
+
+    return true;
+  }
+
+  private buildFormData(): FormData {
     const uploadData = new FormData();
     uploadData.append('file', this.productStore.selectedFile()!);
 
@@ -130,48 +152,27 @@ export class ProductFormComponent {
       }
     });
 
-    try {
-      const res = await firstValueFrom(
-        this.httpService.post<ProductCreateResponse>(
-          this.productImageUploadUrl(),
-          uploadData
-        )
+    return uploadData;
+  }
+
+  private handleResponse(res: ProductCreateResponse) {
+    if (res.status === 'error') {
+      this.showSnackbar(
+        res.message || 'Failed to submit product.',
+        'snackbar-error'
       );
-
-      console.log('Submitted successfully:', res);
-
-      if (res.status === 'error') {
-        this.snackBar.open(
-          res.message || 'Failed to submit product.',
-          'Close',
-          {
-            duration: 5000,
-            panelClass: ['snackbar-error'],
-          }
-        );
-        return;
-      }
-
-      this.productForm.reset();
-      this.productStore.reset();
-
-      this.snackBar.open('Product submitted successfully!', 'Close', {
-        duration: 3000,
-        panelClass: ['snackbar-success'],
-      });
-    } catch (err: unknown) {
-      const message =
-        (err as any)?.error?.message ||
-        'Something went wrong. Please try again.';
-
-      this.snackBar.open(message, 'Close', {
-        duration: 5000,
-        panelClass: ['snackbar-error'],
-      });
-
-      console.error('Submission failed:', err);
-    } finally {
-      this.productStore.setLoading(false);
+      return;
     }
+
+    this.productForm.reset();
+    this.productStore.reset();
+    this.showSnackbar('Product submitted successfully!', 'snackbar-success');
+  }
+
+  private showSnackbar(message: string, panelClass: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      panelClass: [panelClass],
+    });
   }
 }
