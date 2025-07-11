@@ -50,6 +50,13 @@ export class AuthInterceptor implements HttpInterceptor {
           case 404:
             console.error('Not Found:', error.message);
             break;
+          case 409:
+            console.error(
+              'Product code already exists. Please use a different one:',
+              error.message
+            );
+            alert('Product code already exists. Please use a different one.');
+            break;
           case 500:
             console.error('Server Error:', error.message);
             break;

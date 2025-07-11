@@ -3,7 +3,6 @@ import {
   Component,
   computed,
   inject,
-  input,
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -20,11 +19,13 @@ import { InputFieldComponent } from '../form-controls/input-field.component';
 import { MatButtonModule } from '@angular/material/button';
 import { ProductImageUploadComponent } from '../form-controls/product-image-upload.component';
 import { MatCardModule } from '@angular/material/card';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MaterialLoaderComponent } from '../loader/loader.component';
 import {
   HttpService,
-  ProductResponse,
+  ProductCreateResponse,
   ProductStore,
+  RuntimeConfigStore,
 } from '@my-product-app/frontend-shared';
 import { firstValueFrom } from 'rxjs';
 
@@ -39,6 +40,7 @@ import { firstValueFrom } from 'rxjs';
     MatInputModule,
     InputFieldComponent,
     MatButtonModule,
+    MatSnackBarModule,
     ProductImageUploadComponent,
     MaterialLoaderComponent,
   ],
@@ -47,11 +49,12 @@ import { firstValueFrom } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductFormComponent {
-  uploadBaseUrl = input<string>('');
+  readonly runtimeConfigStore = inject(RuntimeConfigStore);
   readonly resetImageTrigger = signal(0);
   private readonly fb = inject(FormBuilder);
   readonly productStore = inject(ProductStore);
   readonly httpService = inject(HttpService);
+  private readonly snackBar = inject(MatSnackBar);
 
   readonly productForm: FormGroup = this.fb.group({
     productcode: new FormControl('', [Validators.required]),
@@ -60,26 +63,10 @@ export class ProductFormComponent {
   });
 
   readonly productImageUploadUrl = computed(
-    () => `${this.uploadBaseUrl()}/products/upload`
+    () => `${this.runtimeConfigStore.apiUrl()}/products/upload`
   );
 
-  // constructor() {
-  // // Convert form.valueChanges Observable into a signal with the current form value as initial
-  // const formValueSignal = toSignal(this.productForm.valueChanges, {
-  //   initialValue: this.productForm.value,
-  // });
-
-  // effect(() => {
-  //   const value = formValueSignal();
-
-  //   // Update productStore fields whenever form changes
-  //   this.productStore.updateField('productcode', value.productcode);
-  //   this.productStore.updateField('name', value.name);
-  //   this.productStore.updateField('description', value.description);
-  // });
-
   constructor() {
-    // Sync form changes with store
     this.productForm.get('productcode')?.valueChanges.subscribe((value) => {
       this.productStore.updateField('productcode', value);
     });
@@ -115,35 +102,76 @@ export class ProductFormComponent {
   }
 
   async onSubmit() {
-    if (this.productForm.valid && this.productStore.selectedFile()) {
-      this.productStore.setLoading(true);
-
-      const uploadData = new FormData();
-      uploadData.append('file', this.productStore.selectedFile()!);
-
-      const product = this.productStore.product();
-
-      Object.entries(product).forEach(([key, value]) => {
-        if (key !== 'image' && value != null) {
-          uploadData.append(key, value.toString());
-        }
+    if (!this.productForm.valid) {
+      this.snackBar.open('Please fill all required fields.', 'Close', {
+        duration: 3000,
+        panelClass: ['snackbar-warning'],
       });
-      try {
-        const res = await firstValueFrom(
-          this.httpService.post<ProductResponse>(
-            this.productImageUploadUrl(),
-            uploadData
-          )
-        );
+      return;
+    }
 
-        console.log('Submitted successfully:', res);
-        this.productForm.reset();
-        this.productStore.reset();
-      } catch (err) {
-        console.error('Submission failed:', err);
-      } finally {
-        this.productStore.setLoading(false);
+    if (!this.productStore.selectedFile()) {
+      this.snackBar.open('Please upload a product image.', 'Close', {
+        duration: 3000,
+        panelClass: ['snackbar-warning'],
+      });
+      return;
+    }
+
+    this.productStore.setLoading(true);
+
+    const uploadData = new FormData();
+    uploadData.append('file', this.productStore.selectedFile()!);
+
+    const product = this.productStore.product();
+    Object.entries(product).forEach(([key, value]) => {
+      if (key !== 'image' && value != null) {
+        uploadData.append(key, value.toString());
       }
+    });
+
+    try {
+      const res = await firstValueFrom(
+        this.httpService.post<ProductCreateResponse>(
+          this.productImageUploadUrl(),
+          uploadData
+        )
+      );
+
+      console.log('Submitted successfully:', res);
+
+      if (res.status === 'error') {
+        this.snackBar.open(
+          res.message || 'Failed to submit product.',
+          'Close',
+          {
+            duration: 5000,
+            panelClass: ['snackbar-error'],
+          }
+        );
+        return;
+      }
+
+      this.productForm.reset();
+      this.productStore.reset();
+
+      this.snackBar.open('Product submitted successfully!', 'Close', {
+        duration: 3000,
+        panelClass: ['snackbar-success'],
+      });
+    } catch (err: unknown) {
+      const message =
+        (err as any)?.error?.message ||
+        'Something went wrong. Please try again.';
+
+      this.snackBar.open(message, 'Close', {
+        duration: 5000,
+        panelClass: ['snackbar-error'],
+      });
+
+      console.error('Submission failed:', err);
+    } finally {
+      this.productStore.setLoading(false);
     }
   }
 }

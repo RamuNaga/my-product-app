@@ -1,4 +1,3 @@
-// apps/backend/product-service/src/app/product-message.handler.ts
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ProductService } from '@my-product-app/product';
@@ -8,14 +7,41 @@ export class ProductMessageHandler {
   constructor(private readonly productService: ProductService) {}
 
   @MessagePattern({ cmd: 'create_product' })
-  create(@Payload() data: any) {
+  async create(@Payload() data: any) {
     const { productcode, name, description, imagePath } = data;
-    return this.productService.create({
-      productcode,
-      name,
-      description,
-      image: imagePath ?? null,
-    });
+
+    try {
+      const product = await this.productService.create({
+        productcode,
+        name,
+        description,
+        image: imagePath ?? null,
+      });
+
+      return { status: 'success', data: product };
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : (error as any)?.message ||
+            (error as any)?.response?.message ||
+            'Internal server error';
+      console.log('ProductMessageHandler   message', message);
+      if (message === 'Product code already exists') {
+        return {
+          status: 'error',
+          message,
+          statusCode: 409,
+        };
+      }
+
+      // Keep this generic fallback
+      return {
+        status: 'error',
+        message: 'Internal server error',
+        statusCode: 500,
+      };
+    }
   }
 
   @MessagePattern({ cmd: 'get_all_products' })

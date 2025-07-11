@@ -4,7 +4,6 @@ import {
   AuthFormComponent,
   ProductFormComponent,
 } from '@my-product-app/frontend-ui';
-import { environment } from '../environments/environments';
 
 @Component({
   imports: [AuthFormComponent, ProductFormComponent, RouterModule],
@@ -14,5 +13,4 @@ import { environment } from '../environments/environments';
 })
 export class AppComponent {
   title = 'frontend';
-  uploadBaseUrl = environment.apiUrl;
 }

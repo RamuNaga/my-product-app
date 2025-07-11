@@ -17,8 +17,6 @@ import * as fs from 'fs';
 import { Observable } from 'rxjs';
 
 const uploadPath = join(__dirname, '../../../../uploads/products');
-
-// Ensure directory exists
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
 }
@@ -39,7 +37,7 @@ export class ProductController {
             Date.now() + '-' + Math.round(Math.random() * 1e9);
           cb(
             null,
-            file.fieldname + '-' + uniqueSuffix + extname(file.originalname)
+            `${file.fieldname}-${uniqueSuffix}${extname(file.originalname)}`
           );
         },
       }),
@@ -58,35 +56,31 @@ export class ProductController {
       throw new HttpException('File is required', HttpStatus.BAD_REQUEST);
     }
 
-    try {
-      //  Convert file path to relative public URL
-      const parts = file.path.split(sep);
-      const uploadsIndex = parts.lastIndexOf('uploads');
-      const relativePath = '/' + parts.slice(uploadsIndex).join('/');
+    const relativePath = '/' + file.path.split(sep).slice(-3).join('/');
 
-      //  Send to product microservice
+    try {
       const result = await this.productClient
-        .send(
-          { cmd: 'create_product' },
-          {
-            ...body,
-            imagePath: relativePath, // relative URL path
-          }
-        )
+        .send({ cmd: 'create_product' }, { ...body, imagePath: relativePath })
         .toPromise();
 
       return result;
     } catch (err) {
-      console.error('Microservice call failed:', err);
+      const message =
+        err instanceof Error
+          ? err.message
+          : (err as any)?.message ||
+            (err as any)?.response?.message ||
+            'Internal server error';
+      console.log('ProductController  message', message);
 
-      //  Delete file if microservice fails
       try {
         fs.unlinkSync(file.path);
-      } catch (unlinkErr) {
-        console.warn(
-          'Failed to delete file after microservice error',
-          unlinkErr
-        );
+      } catch {
+        console.warn('Failed to delete file after microservice error', err);
+      }
+
+      if (message === 'Product code already exists') {
+        throw new HttpException(message, HttpStatus.CONFLICT);
       }
 
       throw new HttpException(
