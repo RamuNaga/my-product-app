@@ -15,14 +15,52 @@ model User {
   role      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+   // Relations
+  CreatedWorkOrders  WorkOrder[]  @relation("CreatedWorkOrders")
+  ApprovedWorkOrders WorkOrder[]  @relation("ApprovedWorkOrders")
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  productcode String   @unique
+  id          Int          @id @default(autoincrement())
+  productcode String       @unique
   name        String
   description String
   image       String? 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  WorkOrders  WorkOrder[]
 }
+
+
+model WorkOrder {
+  id              Int       @id @default(autoincrement())
+  productId       Int
+  product         Product   @relation(fields: [productId], references: [id])
+  clientLocation  String
+  vendorOrClient  String
+  quantity        Int
+  productWeight   String
+  createdDate     DateTime  @default(now())
+  deliveryDate    DateTime
+  updateDate      DateTime  @updatedAt
+  description     String?
+  status          String
+  createdById     Int
+  approvedById    Int?
+  priority        String?
+  attachments     String[]
+  assignedTo      String?
+  comments        String?
+
+  // Relations
+  createdBy       User      @relation("CreatedWorkOrders", fields: [createdById], references: [id])
+  approvedBy      User?     @relation("ApprovedWorkOrders", fields: [approvedById], references: [id])
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([status])
+}
+
+
