@@ -40,7 +40,8 @@
       "@my-product-app/logger": ["libs/backend/logger/src/index.ts"],
       "@my-product-app/prisma": ["libs/backend/prisma/src/index.ts"],
       "@my-product-app/product": ["libs/backend/product/src/index.ts"],
-      "@my-product-app/user": ["libs/backend/user/src/index.ts"]
+      "@my-product-app/user": ["libs/backend/user/src/index.ts"],
+      "@my-product-app/workorder": ["libs/backend/workorder/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
