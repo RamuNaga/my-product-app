@@ -37,6 +37,8 @@
       "@my-product-app/frontend-ui/styles": [
         "dist/libs/frontend/ui/styles/theme"
       ],
+      "@my-product-app/frontend-ui/*": ["libs/frontend/ui/src/lib/*"],
+      "@my-product-app/frontend-shared/*": ["libs/frontend/shared/src/lib/*"],
       "@my-product-app/logger": ["libs/backend/logger/src/index.ts"],
       "@my-product-app/prisma": ["libs/backend/prisma/src/index.ts"],
       "@my-product-app/product": ["libs/backend/product/src/index.ts"],

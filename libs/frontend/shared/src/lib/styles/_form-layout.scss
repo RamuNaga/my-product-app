@@ -1,4 +1,5 @@
 // _form-layout.scss
+
 .form-container {
   display: flex;
   justify-content: center;
@@ -7,6 +8,7 @@
   min-height: 100vh;
   background-color: var(--mat-sys-secondary-container);
   color: var(--mat-sys-on-secondary-container);
+  overflow: hidden;
 }
 
 .form-card {
@@ -17,8 +19,9 @@
   padding: 2rem;
   border-radius: 24px;
   box-shadow: var(--mat-sys-level3);
-  max-height: 90vh;
-  height: 100%;
+  height: auto; // Remove fixed height
+  max-height: none; // Ensure it's not constrained
+  overflow: visible; // Ensure child content doesn’t overflow
 }
 
 .form-actions {
@@ -29,6 +32,7 @@
 
 .form-field {
   width: 100%;
+  padding-top: 10px;
 }
 
 .form-layout {
@@ -37,13 +41,18 @@
   gap: 1.5rem;
 }
 
-/* Tab & scroll tweaks */
+/* Kill internal tab scroll and fix padding */
 ::ng-deep .mat-mdc-tab-body-content {
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  max-height: 70vh;
-  padding-right: 0.5rem;
+  overflow: visible !important;
+  max-height: none !important;
+  padding-right: 0 !important;
   scroll-behavior: smooth;
+}
+
+/* Add padding-bottom below the tab header to avoid content crowding */
+::ng-deep .mat-tab-group .mat-tab-header {
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
 @media (max-width: 600px) {

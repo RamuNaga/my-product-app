@@ -14,6 +14,7 @@ import { InputFieldComponent } from '../form-controls/input-field.component';
 import { AuthService } from '@my-product-app/frontend-data-access';
 import { tap } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'lib-ui-login',
@@ -32,6 +33,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class LoginComponent {
   loginForm: FormGroup;
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   constructor(private fb: FormBuilder) {
     this.loginForm = this.fb.group({
@@ -59,6 +61,14 @@ export class LoginComponent {
         .pipe(
           tap((result) => {
             console.log('Login success:', result);
+            const { accessToken, user } = result;
+
+            // Store token and user in localStorage
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('user', JSON.stringify(user));
+
+            // Navigate to Shell (home)
+            this.router.navigate(['/home']);
             // Navigate or handle success here
           })
         )

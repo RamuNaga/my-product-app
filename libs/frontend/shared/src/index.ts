@@ -6,3 +6,4 @@ export * from './lib/state/product/product.store';
 export * from './lib/state/product/product.model';
 export * from './lib/env-config/env-config.model';
 export * from './lib/env-config/runtime-config.store';
+export * from './lib/material/material.module';

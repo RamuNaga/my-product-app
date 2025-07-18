@@ -1,12 +1,14 @@
-// 1. Import Material theming utilities
 @use '@angular/material' as mat;
 
-// 2. Define density scale (optional but valid)
+// 1. Include Angular Material core styles first
+@include mat.core();
+
+// 2. Define density scale (optional)
 $my-density: (
   scale: 0,
 );
 
-// 3. Define theme configuration
+// 3. Define your Material theme configuration
 $my-theme: mat.define-theme(
   (
     color: (
@@ -26,17 +28,26 @@ $my-theme: mat.define-theme(
   )
 );
 
-// 4. Include Material base styles
-@include mat.core();
+// 4. Apply Material theme tokens AFTER core styles
+:root {
+  @include mat.all-component-themes($my-theme);
+  @include mat.system-level-colors($my-theme);
+  @include mat.system-level-typography($my-theme);
+}
 
-// 5. Apply global box-sizing
+// 5. Apply Tailwind components and utilities AFTER Material styles
+//    **IMPORTANT:** Do NOT use `@tailwind base;` here to prevent resetting Material styles
+@tailwind components;
+@tailwind utilities;
+
+// 6. Global box-sizing for consistent layout
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-// 6. Global styles (html/body)
+// 7. Global styles for html and body
 html,
 body {
   margin: 0;
@@ -47,14 +58,9 @@ body {
   font-family: Roboto, sans-serif;
   color-scheme: light;
   background-color: var(--mat-sys-secondary);
-
-  // 7. Apply Material theme tokens
-  @include mat.all-component-themes($my-theme);
-  @include mat.system-level-colors($my-theme);
-  @include mat.system-level-typography($my-theme);
 }
 
-// 8. Root component layout
+// 8. Root app layout
 app-root {
   display: block;
   height: 100%;
@@ -64,7 +70,6 @@ app-root {
 // 9. Shared Component Styling
 // ---------------------------------------------
 
-// Card style
 .card {
   background-color: var(--mat-sys-primary-container);
   color: var(--mat-sys-on-primary-container);
@@ -73,10 +78,10 @@ app-root {
   box-shadow: var(--mat-sys-level3);
 }
 
-// Text helpers
 .typography {
   font: var(--mat-sys-body-medium);
 }
+
 .typography-detailed {
   font-family: var(--mat-sys-body-medium-font);
   font-size: var(--mat-sys-body-medium-size);
@@ -85,23 +90,28 @@ app-root {
   letter-spacing: var(--mat-sys-body-medium-tracking);
 }
 
-// Full-width utilities
 .full-width,
 .form-field {
   width: 100%;
 }
 
-// Form button container
 .form-actions {
   display: flex;
   justify-content: center;
   margin-top: 1rem;
 }
 
-// Override Material floating label
+// Override Angular Material floating label color and weight
 .mat-mdc-floating-label {
   color: rgba(0, 0, 0, 0.87);
   font-weight: 500;
+}
+.mat-mdc-tab-label-container {
+  padding-bottom: 15px;
+}
+.mat-mdc-tab-body.mat-mdc-tab-body-active {
+  overflow: hidden !important;
+  padding-bottom: 5px;
 }
 
 // Error text styles
@@ -110,13 +120,20 @@ app-root {
   color: #f44336;
 }
 
-// Scroll and tab content fix
+// Fix scroll/tab content overflow
 .mat-mdc-tab-body-content {
   overflow-x: hidden !important;
   overflow-y: auto !important;
 }
 
-// Custom theme overrides
+// Remove outlines and box shadows on form fields for cleaner look
+::ng-deep .mat-mdc-form-field-outline,
+::ng-deep .mdc-notched-outline {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+// Custom theme overrides container
 .custom-theme-container {
   @include mat.theme-overrides(
     (
@@ -130,7 +147,7 @@ app-root {
 }
 
 // ---------------------------------------------
-// 10. Responsive Tweaks
+// 10. Responsive tweaks
 // ---------------------------------------------
 @media (max-width: 600px) {
   .auth-card {

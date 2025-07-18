@@ -8,3 +8,5 @@ export * from './lib/components/product/product-form.component';
 export * from './lib/components/layout/header.component';
 export * from './lib/components/layout/footer.component';
 export * from './lib/components/layout/sidenav.component';
+export * from './lib/components/layout/shell.component';
+export * from './lib/components/dashboard/dashboard.component';

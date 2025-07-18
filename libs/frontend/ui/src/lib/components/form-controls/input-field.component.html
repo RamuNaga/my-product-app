@@ -7,6 +7,7 @@
     [formControl]="control"
     [required]="required"
     (blur)="onTouched()"
+    class="p-2 rounded border border-gray-300 focus:border-indigo-500"
   />
   <mat-error *ngIf="control.invalid && control.touched">
     <ng-container *ngIf="control.errors?.['required']">

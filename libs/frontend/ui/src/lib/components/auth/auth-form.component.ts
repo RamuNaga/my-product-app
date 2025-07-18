@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { SignupComponent } from './signup.component';
 import { LoginComponent } from './login.component';
+import { TailwindHostComponent } from '../tailwind-host/tailwind-host.component';
 
 @Component({
   selector: 'lib-auth-form',
@@ -20,6 +21,7 @@ import { LoginComponent } from './login.component';
     MatButtonModule,
     SignupComponent,
     LoginComponent,
+    TailwindHostComponent,
   ],
   templateUrl: './auth-form.component.html',
   styleUrl: './auth-form.component.scss',

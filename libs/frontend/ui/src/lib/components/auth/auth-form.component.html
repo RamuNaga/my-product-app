@@ -1,5 +1,7 @@
-<div class="form-container">
-  <mat-card class="form-card">
+<lib-tailwind-host>
+  <mat-card
+    class="form-card p-6 max-w-md w-full bg-green-500 text-white rounded-lg shadow-md"
+  >
     <mat-tab-group [(selectedIndex)]="selectedTabIndex">
       <mat-tab label="Login">
         <lib-ui-login></lib-ui-login>
@@ -9,4 +11,4 @@
       </mat-tab>
     </mat-tab-group>
   </mat-card>
-</div>
+</lib-tailwind-host>
