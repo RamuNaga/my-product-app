@@ -4,10 +4,10 @@ import {
   NG_VALUE_ACCESSOR,
   FormControl,
 } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+
 import { ReactiveFormsModule } from '@angular/forms'; // Required for FormControl usage
 import { NgIf } from '@angular/common';
+import { MaterialModule } from '@my-product-app/frontend-shared';
 
 @Component({
   selector: 'lib-input-field',
@@ -21,7 +21,7 @@ import { NgIf } from '@angular/common';
     },
   ],
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, NgIf],
+  imports: [MaterialModule, ReactiveFormsModule, NgIf],
 })
 export class InputFieldComponent implements ControlValueAccessor {
   @Input() label = '';

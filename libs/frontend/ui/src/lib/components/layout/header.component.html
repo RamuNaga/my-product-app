@@ -1,6 +1,8 @@
-<mat-toolbar color="primary">
-  <span>My Product App</span>
-  <span class="spacer"></span>
+<mat-toolbar class="w-full bg-gray-700 text-white flex justify-between px-4">
+  <button mat-icon-button (click)="drawer.toggle()" *ngIf="drawer">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span class="text-lg font-semibold">My Product App</span>
   <button mat-icon-button>
     <mat-icon>account_circle</mat-icon>
   </button>

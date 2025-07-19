@@ -1,11 +1,16 @@
-<mat-sidenav-container class="app-container">
-  <mat-sidenav mode="side" opened>
+<mat-sidenav-container class="app-container h-screen">
+  <!-- Side Navigation -->
+  <mat-sidenav #drawer mode="side" opened class="w-64 bg-gray-800 text-white">
     <lib-sidenav />
   </mat-sidenav>
 
-  <mat-sidenav-content>
-    <lib-header></lib-header>
-    <main class="main-content">
+  <!-- Main Content -->
+  <mat-sidenav-content class="flex flex-col h-full">
+    <!-- Header -->
+    <lib-header [drawer]="drawer"></lib-header>
+
+    <!-- Page Content -->
+    <main class="main-content flex-1 overflow-auto p-4 bg-gray-100">
       <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>

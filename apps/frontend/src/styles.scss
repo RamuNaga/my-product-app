@@ -117,7 +117,17 @@ app-root {
 // Error text styles
 .mat-mdc-form-field-subscript-wrapper .mat-mdc-error {
   font-size: 0.75rem;
-  color: #f44336;
+  color: #ec5b51;
+}
+
+.mat-toolbar.custom-bg {
+  background-color: #333f48 !important;
+  color: white;
+}
+.mat-icon-bg {
+  background-color: #333f48 !important; /* Tailwind's green-500 hex */
+  border-radius: 50%;
+  color: white;
 }
 
 // Fix scroll/tab content overflow
