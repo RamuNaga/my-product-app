@@ -1,0 +1,10 @@
+query findAllProduct {
+  products {
+    id
+    productcode
+    name
+    description
+    image
+    createdAt
+  }
+}

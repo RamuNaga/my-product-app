@@ -133,6 +133,14 @@
     "frontend": {
       "tags": ["type:app", "scope:frontend"]
     },
+    "frontend-graphql-types": {
+      "tags": [
+        "type:graphql-types",
+        "type:generated",
+        "type:buildable",
+        "scope:frontend"
+      ]
+    },
     "frontend-shared": {
       "tags": ["type:shared", "scope:frontend"]
     },
@@ -174,6 +182,14 @@
       {
         "sourceTag": "area:logger",
         "onlyDependOnLibsWithTags": []
+      },
+      {
+        "sourceTag": "type:graphql-types",
+        "onlyDependOnLibsWithTags": [
+          "type:graphql-types",
+          "type:shared",
+          "type:buildable"
+        ]
       }
     ]
   }

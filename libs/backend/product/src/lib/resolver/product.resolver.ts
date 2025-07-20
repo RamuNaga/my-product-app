@@ -1,5 +1,5 @@
 // src/product/resolver/product.resolver.ts
-import { Resolver } from '@nestjs/graphql';
+import { Query, Resolver } from '@nestjs/graphql';
 import { PrismaService } from '@my-product-app/prisma';
 import { Product } from '../graphql/product.model';
 import { CreateProductInput } from '../dto/create-product.input';
@@ -19,5 +19,14 @@ const BaseProductResolver = createBaseResolver(
 export class ProductResolver extends BaseProductResolver {
   constructor(public override prisma: PrismaService) {
     super(prisma); // Pass prisma to the base resolver constructor
+  }
+
+  @Query(() => [Product])
+  async products(): Promise<Product[]> {
+    const products = await this.prisma.product.findMany();
+    return products.map((p) => ({
+      ...p,
+      image: p.image ?? '',
+    }));
   }
 }

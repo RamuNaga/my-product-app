@@ -14,8 +14,8 @@ export class Product {
   @Field()
   description!: string;
 
-  @Field()
-  image!: string;
+  @Field(() => String, { nullable: true })
+  image?: string | null;
 
   @Field()
   createdAt!: Date;

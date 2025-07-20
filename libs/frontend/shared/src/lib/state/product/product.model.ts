@@ -1,4 +1,4 @@
-import { Product } from '../../generated/graphql';
+import { Product } from '@my-product-app/frontend-graphql-types';
 
 export type ProductFormModel = Omit<
   Product,

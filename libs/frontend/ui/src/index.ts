@@ -10,3 +10,7 @@ export * from './lib/components/layout/footer.component';
 export * from './lib/components/layout/sidenav.component';
 export * from './lib/components/layout/shell.component';
 export * from './lib/components/dashboard/dashboard.component';
+export * from './lib/components/product/product-list.component';
+export * from './lib/components/product/product-shell.component';
+export * from './lib/components/product/product.routes.const';
+export * from './lib/components/product/product.routes';

@@ -31,6 +31,7 @@ module.exports = [
         {
           enforceBuildableLibDependency: true,
           allow: [
+            '^@my-product-app/frontend-graphql-types',
             '^@my-product-app/frontend-shared',
             '^@my-product-app/frontend-ui',
             '^@my-product-app/frontend-data-access',

@@ -1,8 +1,34 @@
 <mat-nav-list>
-  <a mat-list-item class="hover:bg-gray-500" routerLink="/">Dashboard</a>
-  <a mat-list-item class="hover:bg-gray-500" routerLink="/products">Products</a>
-  <a mat-list-item class="hover:bg-gray-500" routerLink="/work-orders"
+  <a
+    mat-list-item
+    class="hover:bg-green-200"
+    [routerLink]="['/', routes.HOME, routes.DASHBOARD]"
+    routerLinkActive="active-link"
+    [routerLinkActiveOptions]="{ exact: true }"
+    >Dashboard</a
+  >
+  <a
+    mat-list-item
+    class="hover:bg-green-200"
+    [routerLink]="['/', routes.HOME, routes.PRODUCTS]"
+    routerLinkActive="active-link"
+    [routerLinkActiveOptions]="{ exact: true }"
+    >Products</a
+  >
+  <a
+    mat-list-item
+    class="hover:bg-green-200"
+    [routerLink]="['/', routes.HOME, routes.WORK_ORDERS]"
+    routerLinkActive="bg-green-500"
+    [routerLinkActiveOptions]="{ exact: true }"
     >Work Orders</a
   >
-  <a mat-list-item class="hover:bg-gray-500" routerLink="/sauces">Sauces</a>
+  <a
+    mat-list-item
+    class="hover:bg-green-200"
+    [routerLink]="['/', routes.HOME, routes.SAUCES]"
+    routerLinkActive="bg-green-500"
+    [routerLinkActiveOptions]="{ exact: true }"
+    >Sauces</a
+  >
 </mat-nav-list>

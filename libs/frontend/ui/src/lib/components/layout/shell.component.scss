@@ -17,12 +17,10 @@ mat-sidenav-content {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  color: #f3f4f6;
 }
 
 .main-content {
   flex: 1;
   overflow-y: auto;
   padding: 1rem;
-  background-color: #f3f4f6; // Tailwind gray-100
 }

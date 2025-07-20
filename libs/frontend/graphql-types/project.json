@@ -1,0 +1,33 @@
+{
+  "name": "frontend-graphql-types",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/frontend/graphql-types/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": [
+    "type:graphql-types",
+    "type:generated",
+    "type:buildable",
+    "scope:frontend"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "tsConfig": "libs/frontend/graphql-types/tsconfig.lib.json",
+        "project": "libs/frontend/graphql-types/ng-package.json"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/frontend/graphql-types/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

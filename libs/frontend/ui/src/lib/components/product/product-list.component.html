@@ -1,0 +1,26 @@
+@if (store.isLoading()) {
+<mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
+<p>Loading products...</p>
+} @else { @if (store.errorMessage()) {
+<mat-error>{{ store.errorMessage() }}</mat-error>
+} @else { @if (store.isDeferReady()) {
+<div class="product-grid">
+  <mat-card *ngFor="let product of store.products()" class="product-card">
+    <mat-card-header>
+      <mat-card-title>{{ product.name }}</mat-card-title>
+      <mat-card-subtitle>{{ product.productcode }}</mat-card-subtitle>
+    </mat-card-header>
+
+    @if (product.image) {
+    <img mat-card-image [src]="product.image" alt="{{ product.name }}" />
+    }
+
+    <mat-card-content>
+      <p>{{ product.description }}</p>
+    </mat-card-content>
+  </mat-card>
+</div>
+} @else {
+<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+<p>Rendering product list...</p>
+} } }

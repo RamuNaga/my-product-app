@@ -1,7 +1,7 @@
 ::ng-deep .mat-mdc-list-item .mdc-list-item__primary-text {
   color: white !important;
 }
-
-::ng-deep .mat-list-item:hover {
-  background-color: #6b7280; /* Tailwind gray-500 */
+::ng-deep .active-link {
+  background-color: #22c55e !important;
+  color: white !important;
 }

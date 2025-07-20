@@ -7,7 +7,7 @@ import {
   LoginMutationVariables,
   LoginMutation,
   LoginDocument,
-} from '@my-product-app/frontend-shared';
+} from '@my-product-app/frontend-graphql-types';
 
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

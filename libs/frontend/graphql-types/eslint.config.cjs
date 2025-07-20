@@ -5,7 +5,6 @@ module.exports = [
   ...baseConfig,
   ...nx.configs['flat/angular'],
   ...nx.configs['flat/angular-template'],
-
   {
     files: ['**/*.ts'],
     rules: {
@@ -29,15 +28,15 @@ module.exports = [
         'error',
         {
           enforceBuildableLibDependency: true,
-          allow: [
-            '^@my-product-app/frontend-graphql-types',
-            '^@my-product-app/frontend-data-access',
-            '^@my-product-app/frontend-shared',
-          ], // explicitly allow imports from shared lib
+          allow: ['^@my-product-app/frontend-graphql-types'], // allow self imports
           depConstraints: [
             {
-              sourceTag: 'type:shared',
-              onlyDependOnLibsWithTags: ['type:shared', 'type:buildable'],
+              sourceTag: 'type:graphql-types',
+              onlyDependOnLibsWithTags: [
+                'type:graphql-types',
+                'type:shared',
+                'type:buildable',
+              ],
             },
             {
               sourceTag: 'scope:frontend',
@@ -46,14 +45,7 @@ module.exports = [
                 'type:shared',
                 'type:ui',
                 'platform:angular',
-              ],
-            },
-            {
-              sourceTag: 'platform:angular',
-              onlyDependOnLibsWithTags: [
-                'platform:angular',
-                'type:shared',
-                'type:ui',
+                'type:graphql-types',
               ],
             },
           ],
@@ -63,6 +55,7 @@ module.exports = [
   },
   {
     files: ['**/*.html'],
+    // Override or add rules here
     rules: {},
   },
 ];

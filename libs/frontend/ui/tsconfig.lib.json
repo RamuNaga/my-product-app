@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsclibs/frontend/ui",
+    "outDir": "../../../dist/out-tsc/libs/frontend/ui",
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
@@ -15,5 +15,12 @@
     "jest.config.ts",
     "src/test-setup.ts"
   ],
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "angularCompilerOptions": {
+    "experimentalTemplateReactivity": true,
+    "controlFlow": true,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
 }

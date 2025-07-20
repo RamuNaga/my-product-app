@@ -9,7 +9,9 @@
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "noPropertyAccessFromIndexSignature": true
+    "noPropertyAccessFromIndexSignature": true,
+    "experimentalTemplateReactivity": true,
+    "controlFlow": true
   },
   "files": [],
   "include": [],
@@ -20,5 +22,13 @@
     {
       "path": "./tsconfig.spec.json"
     }
-  ]
+  ],
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true,
+    "experimentalTemplateReactivity": true,
+    "controlFlow": true
+  }
 }

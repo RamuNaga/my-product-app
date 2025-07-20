@@ -93,7 +93,7 @@ export type Product = {
   createdAt: Scalars['DateTime']['output'];
   description: Scalars['String']['output'];
   id: Scalars['Int']['output'];
-  image: Scalars['String']['output'];
+  image?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   productcode: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
@@ -105,6 +105,7 @@ export type Query = {
   findOneProduct: Product;
   getAllUsers: Array<User>;
   isEmailAvailable: Scalars['Boolean']['output'];
+  products: Array<Product>;
 };
 
 
@@ -149,6 +150,11 @@ export type SignupMutationVariables = Exact<{
 
 export type SignupMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: number, email: string, username: string, role: string, createdAt: any } };
 
+export type FindAllProductQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FindAllProductQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', id: number, productcode: string, name: string, description: string, image?: string | null, createdAt: any }> };
+
 export const LoginDocument = gql`
     mutation Login($loginInput: LoginInput!) {
   login(loginInput: $loginInput) {
@@ -190,6 +196,29 @@ export const SignupDocument = gql`
   })
   export class SignupGQL extends Apollo.Mutation<SignupMutation, SignupMutationVariables> {
     document = SignupDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const FindAllProductDocument = gql`
+    query findAllProduct {
+  products {
+    id
+    productcode
+    name
+    description
+    image
+    createdAt
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class FindAllProductGQL extends Apollo.Query<FindAllProductQuery, FindAllProductQueryVariables> {
+    document = FindAllProductDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
