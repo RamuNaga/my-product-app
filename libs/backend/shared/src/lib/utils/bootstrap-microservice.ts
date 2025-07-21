@@ -32,7 +32,11 @@ export async function bootstrapMicroservice(
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
     // Serve static assets from uploads folder
-    app.useStaticAssets(join(__dirname, '..', '..', '..', '..', 'uploads'), {
+    // app.useStaticAssets(join(__dirname, '..', '..', '..', '..', 'uploads'), {
+    //   prefix: '/uploads',
+    // });
+    // NEW:
+    app.useStaticAssets(join(process.cwd(), 'uploads'), {
       prefix: '/uploads',
     });
     // Enable CORS here

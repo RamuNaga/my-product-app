@@ -10,7 +10,7 @@ export class WorkorderResolver {
   constructor(private readonly workorderService: WorkorderService) {}
 
   @Mutation(() => Workorder)
-  createWorkorder(
+  createWorkOrder(
     @Args('input') input: CreateWorkorderInput,
     @CurrentUser() user: any
   ) {

@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { MaterialModule } from '@my-product-app/frontend-shared';
+import {
+  MaterialModule,
+  ProductListStore,
+} from '@my-product-app/frontend-shared';
 
 @Component({
   selector: 'lib-product-shell',
@@ -10,13 +13,14 @@ import { MaterialModule } from '@my-product-app/frontend-shared';
   templateUrl: './product-shell.component.html',
   styleUrls: ['./product-shell.component.scss'],
 })
-export class ProductShellComponent {
+export class ProductShellComponent implements OnInit {
   readonly tabs = [
     { label: 'Product List', path: 'list' },
-    { label: 'Create Product', path: 'create' },
+    { label: 'Create Product', path: 'form' },
   ];
 
   selectedIndex = signal(0);
+  store = inject(ProductListStore);
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
@@ -24,6 +28,11 @@ export class ProductShellComponent {
     this.selectedIndex.set(index);
     const selectedTab = this.tabs[index];
     this.router.navigate([selectedTab.path], { relativeTo: this.route });
+    // If switching to list tab, refresh product list store
+    if (selectedTab.path === 'list') {
+      console.log(selectedTab.path + 'calling');
+      this.store.refreshProducts(); // inject ProductListStore in this component!
+    }
   }
 
   // Update selected tab based on route changes (optional but recommended)

@@ -3,7 +3,7 @@ import { InputType, Field, Int } from '@nestjs/graphql';
 @InputType()
 export class CreateWorkorderInput {
   @Field()
-  productCode!: string;
+  productId!: number;
 
   @Field()
   clientLocation!: string;

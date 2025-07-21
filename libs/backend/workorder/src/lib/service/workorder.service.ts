@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@my-product-app/prisma';
 import { CreateWorkorderInput } from '../dto/create-workoder.input';
 import { UpdateWorkorderInput } from '../dto/update-workorder.input';
+import { ApproveWorkorderInput } from '../dto/approve-workorder.input';
 
 @Injectable()
 export class WorkorderService {
@@ -9,7 +10,7 @@ export class WorkorderService {
 
   async create(data: CreateWorkorderInput, userId: number) {
     const product = await this.prisma.product.findUnique({
-      where: { productcode: data.productCode },
+      where: { id: data.productId },
     });
 
     if (!product) {
@@ -28,6 +29,26 @@ export class WorkorderService {
         createdById: userId,
         status: 'Requested',
       },
+    });
+  }
+
+  async approveWorkorder(input: ApproveWorkorderInput, approvedById: number) {
+    const { id, priority, attachments, assignedTo, comments, status } = input;
+
+    const updateData: any = {
+      status,
+      approvedById, // required field, always include
+      updateDate: new Date(),
+    };
+
+    if (priority !== undefined) updateData.priority = priority;
+    if (attachments !== undefined) updateData.attachments = attachments; // nullable is ok
+    if (assignedTo !== undefined) updateData.assignedTo = assignedTo;
+    if (comments !== undefined) updateData.comments = comments;
+
+    return this.prisma.workOrder.update({
+      where: { id },
+      data: updateData,
     });
   }
 

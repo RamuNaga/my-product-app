@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { APP_ROUTES, MaterialModule } from '@my-product-app/frontend-shared';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'lib-sidenav',
@@ -13,4 +13,8 @@ import { RouterModule } from '@angular/router';
 })
 export class SidenavComponent {
   routes = APP_ROUTES;
+  readonly router = inject(Router);
+  isActive(route: string): boolean {
+    return this.router.url.startsWith(route);
+  }
 }

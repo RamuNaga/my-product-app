@@ -5,6 +5,7 @@ export type ProductFormModel = Omit<
   'id' | 'createdAt' | 'updatedAt' | '__typename'
 >;
 
+export type ProductListModel = Omit<Product, 'updatedAt' | '__typename'>;
 export type ProductResponse = Omit<Product, '__typename'>;
 
 export type ProductSuccessResponse = {

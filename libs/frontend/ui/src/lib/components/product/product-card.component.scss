@@ -1,0 +1,15 @@
+.product-card {
+  max-width: 300px;
+  margin: 1rem;
+}
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.product-title {
+  font-size: 14px;
+  font-weight: bold;
+}

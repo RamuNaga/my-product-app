@@ -1,18 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import {
   MaterialModule,
   ProductListStore,
 } from '@my-product-app/frontend-shared';
+import { ProductCardComponent } from './product-card.component';
+import { ProductListModel as Product } from '@my-product-app/frontend-shared';
 
 @Component({
   selector: 'lib-product-list',
   standalone: true,
-  imports: [CommonModule, MaterialModule],
+  imports: [CommonModule, MaterialModule, ProductCardComponent],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductListComponent {
+export class ProductListComponent implements OnInit {
   store = inject(ProductListStore);
 
   products = this.store.products;
@@ -20,9 +28,22 @@ export class ProductListComponent {
   errorMessage = this.store.errorMessage;
   isDeferReady = this.store.isDeferReady;
 
-  constructor() {
-    effect(() => {
-      this.store.loadProducts();
-    });
+  ngOnInit(): void {
+    this.store.loadProducts();
+  }
+
+  onEdit(product: Product) {
+    // handle edit
+    console.log(product);
+  }
+
+  onDelete(id: number) {
+    // handle delete
+    console.log(id);
+  }
+
+  onWorkOrder(product: Product) {
+    // handle work order
+    console.log(product);
   }
 }

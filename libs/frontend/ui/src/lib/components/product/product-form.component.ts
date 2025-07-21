@@ -24,6 +24,7 @@ import { MaterialLoaderComponent } from '../loader/loader.component';
 import {
   HttpService,
   ProductCreateResponse,
+  ProductListStore,
   ProductStore,
   RuntimeConfigStore,
 } from '@my-product-app/frontend-shared';
@@ -55,6 +56,7 @@ export class ProductFormComponent {
   readonly productStore = inject(ProductStore);
   readonly httpService = inject(HttpService);
   private readonly snackBar = inject(MatSnackBar);
+  readonly productListStore = inject(ProductListStore);
 
   readonly productForm: FormGroup = this.fb.group({
     productcode: new FormControl('', [Validators.required]),
@@ -162,6 +164,10 @@ export class ProductFormComponent {
         'snackbar-error'
       );
       return;
+    }
+    if (res.status === 'success' && res.data) {
+      console.log('res.data===', res.data);
+      this.productListStore.addProduct(res.data); // use .data instead of .product
     }
 
     this.productForm.reset();

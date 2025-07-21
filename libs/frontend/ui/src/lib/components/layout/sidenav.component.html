@@ -12,7 +12,7 @@
     class="hover:bg-green-200"
     [routerLink]="['/', routes.HOME, routes.PRODUCTS]"
     routerLinkActive="active-link"
-    [routerLinkActiveOptions]="{ exact: true }"
+    [ngClass]="{ 'active-link': isActive('/home/products') }"
     >Products</a
   >
   <a

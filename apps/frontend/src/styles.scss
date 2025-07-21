@@ -59,6 +59,9 @@ body {
   color-scheme: light;
   background-color: var(--mat-sys-secondary);
 }
+.active-link {
+  @apply bg-green-500 text-white;
+}
 
 // 8. Root app layout
 app-root {
