@@ -1,0 +1,18 @@
+<div class="workorder-list-container">
+  <ng-container *ngIf="isLoading(); else listContent">
+    <lib-ui-material-loader></lib-ui-material-loader>
+  </ng-container>
+
+  <ng-template #listContent>
+    <!-- <mat-card *ngFor="let workorder of workorders()" class="workorder-card">
+      <mat-card-title>Workorder #{{ workorder.id }}</mat-card-title>
+      <mat-card-content>
+        <p><strong>Status:</strong> {{ workorder.status }}</p>
+        <p><strong>Client Location:</strong> {{ workorder.clientLocation }}</p>
+        <p>
+          <strong>Delivery Date:</strong> {{ workorder.deliveryDate | date }}
+        </p>
+      </mat-card-content>
+    </mat-card> -->
+  </ng-template>
+</div>

@@ -40,13 +40,13 @@ export const appRoutes: Routes = [
             '@my-product-app/frontend-ui/components/product/product.routes'
           ).then((m) => m.productRoutes),
       },
-      // {
-      //   path: APP_ROUTES.WORK_ORDERS,
-      //   loadComponent: () =>
-      //     import(
-      //       '@my-product-app/frontend-ui/components/work-orders/work-orders.component'
-      //     ).then((m) => m.WorkOrdersComponent),
-      // },
+      {
+        path: APP_ROUTES.WORK_ORDERS,
+        loadChildren: () =>
+          import(
+            '@my-product-app/frontend-ui/components/workorder/workorder.routes'
+          ).then((m) => m.workOrderRoutes),
+      },
       // {
       //   path: APP_ROUTES.SAUCES,
       //   loadComponent: () =>

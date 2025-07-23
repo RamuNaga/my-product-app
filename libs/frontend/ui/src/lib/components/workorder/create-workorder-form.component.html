@@ -1,0 +1,87 @@
+<div
+  class="form-container"
+  *ngIf="!loadingVendors() && !loadingLocations(); else loadingTemplate"
+>
+  <form [formGroup]="form()" (ngSubmit)="onSubmit()" class="workorder-form">
+    <!-- Vendor or Client Dropdown -->
+    <div class="form-field">
+      <lib-select-field
+        [control]="form().controls.vendorOrClient"
+        label="Vendor or Client"
+        [options]="vendorsAndClients()"
+        [required]="true"
+      ></lib-select-field>
+    </div>
+
+    <!-- Client Location Dropdown -->
+    <div class="form-field">
+      <lib-select-field
+        [control]="form().controls.clientLocation"
+        label="Client Location"
+        [options]="greencoreLocations()"
+        [required]="true"
+      ></lib-select-field>
+    </div>
+
+    <!-- Quantity -->
+    <div class="form-field">
+      <lib-input-field
+        [control]="form().controls.quantity"
+        label="Quantity"
+        placeholder="Enter quantity"
+        [required]="true"
+        type="number"
+      ></lib-input-field>
+    </div>
+
+    <!-- Product Weight -->
+    <div class="form-field">
+      <lib-input-field
+        [control]="form().controls.productWeight"
+        label="Product Weight"
+        placeholder="Enter product weight"
+        [required]="true"
+        type="text"
+      ></lib-input-field>
+    </div>
+
+    <!-- Delivery Date -->
+    <div class="form-field">
+      <lib-input-field
+        [control]="form().controls.deliveryDate"
+        label="Delivery Date"
+        placeholder="Select delivery date"
+        [required]="true"
+        type="date"
+      ></lib-input-field>
+    </div>
+
+    <!-- Description (optional) -->
+    <div class="form-field">
+      <lib-input-field
+        [control]="form().controls.description"
+        label="Description"
+        placeholder="Enter description"
+        [required]="false"
+        type="text"
+      ></lib-input-field>
+    </div>
+
+    <div class="form-actions">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="form().invalid"
+      >
+        Save WorkOrder
+      </button>
+    </div>
+  </form>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="loader-container">
+    <lib-ui-material-loader></lib-ui-material-loader>
+  </div>
+</ng-template>
