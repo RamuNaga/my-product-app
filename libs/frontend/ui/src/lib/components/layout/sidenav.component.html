@@ -19,15 +19,15 @@
     mat-list-item
     class="hover:bg-green-200"
     [routerLink]="['/', routes.HOME, routes.WORK_ORDERS]"
-    routerLinkActive="bg-green-500"
-    [routerLinkActiveOptions]="{ exact: true }"
+    routerLinkActive="active-link"
+    [ngClass]="{ 'active-link': isActive(`/${routes.HOME}/${routes.WORK_ORDERS}`) }"
     >Work Orders</a
   >
   <a
     mat-list-item
     class="hover:bg-green-200"
     [routerLink]="['/', routes.HOME, routes.SAUCES]"
-    routerLinkActive="bg-green-500"
+    routerLinkActive="active-link"
     [routerLinkActiveOptions]="{ exact: true }"
     >Sauces</a
   >

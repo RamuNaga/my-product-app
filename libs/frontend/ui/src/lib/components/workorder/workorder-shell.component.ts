@@ -12,7 +12,7 @@ import { MaterialModule } from '@my-product-app/frontend-shared';
 export class WorkorderShellComponent {
   tabs = [
     { label: 'Work Order List', path: 'list' },
-    { label: 'Create Work Order', path: 'create' },
+    { label: 'Create Work Order', path: 'form' },
   ];
 
   constructor(private router: Router, private route: ActivatedRoute) {}

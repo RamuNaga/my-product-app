@@ -23,14 +23,14 @@ export class WorkOrderListComponent {
   //   private readonly workorderService = inject(WorkorderService);
 
   //workorders = signal<Workorder[]>([]);
-  isLoading = signal(true);
+  isLoading = signal(false);
 
   constructor() {
     this.fetchWorkorders();
   }
 
   fetchWorkorders() {
-    this.isLoading.set(true);
+    this.isLoading.set(false);
     // this.workorderService.findAll().subscribe({
     //   next: (data) => {
     //     this.workorders.set(data);

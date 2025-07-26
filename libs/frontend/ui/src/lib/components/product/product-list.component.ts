@@ -11,6 +11,7 @@ import {
 } from '@my-product-app/frontend-shared';
 import { ProductCardComponent } from './product-card.component';
 import { ProductListModel as Product } from '@my-product-app/frontend-shared';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'lib-product-list',
@@ -22,6 +23,7 @@ import { ProductListModel as Product } from '@my-product-app/frontend-shared';
 })
 export class ProductListComponent implements OnInit {
   store = inject(ProductListStore);
+  router = inject(Router);
 
   products = this.store.products;
   isLoading = this.store.isLoading;
@@ -43,7 +45,8 @@ export class ProductListComponent implements OnInit {
   }
 
   onWorkOrder(product: Product) {
-    // handle work order
-    console.log(product);
+    this.router.navigate(['/home/workOrders/form'], {
+      queryParams: { productId: product.id, productName: product.name },
+    });
   }
 }

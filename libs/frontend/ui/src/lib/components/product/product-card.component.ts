@@ -14,7 +14,7 @@ export class ProductCardComponent {
   @Input() product!: Product;
 
   // Signals instead of EventEmitters
-  // ✅ Use the new signal-based output
+  // Use the new signal-based output
   readonly edit = output<Product>();
   readonly delete = output<number>(); // maybe ID
   readonly workOrder = output<Product>();

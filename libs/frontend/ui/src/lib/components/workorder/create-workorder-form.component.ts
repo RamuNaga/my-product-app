@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -13,6 +13,7 @@ import { SelectFieldComponent } from '../form-controls/select-field.component';
 import { WorkOrderFormService } from '@my-product-app/frontend-data-access';
 import { MaterialLoaderComponent } from '../loader/loader.component';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 export type Option = { label: string; value: string };
 @Component({
@@ -29,9 +30,11 @@ export type Option = { label: string; value: string };
     MaterialLoaderComponent,
   ],
 })
-export class CreateWorkOrderFormComponent {
+export class CreateWorkOrderFormComponent implements OnInit {
+  readonly route = inject(ActivatedRoute);
   readonly workOrderFormService: WorkOrderFormService =
     inject(WorkOrderFormService);
+
   // FormGroup signal
   form = signal(
     new FormGroup({
@@ -64,6 +67,16 @@ export class CreateWorkOrderFormComponent {
 
   constructor() {
     // Fetch vendors & clients
+    const productId = Number(
+      this.route.snapshot.queryParamMap.get('productId')
+    );
+    const productName = this.route.snapshot.queryParamMap.get('productName');
+    if (productId) {
+      this.form().patchValue({
+        productId,
+        description: productName || '',
+      });
+    }
     this.workOrderFormService
       .getVendorsAndClients()
       .pipe(tap(() => this.loadingVendors.set(true)))
@@ -86,6 +99,9 @@ export class CreateWorkOrderFormComponent {
         },
         error: () => this.loadingLocations.set(false),
       });
+  }
+  ngOnInit() {
+    console.log();
   }
 
   onSubmit() {

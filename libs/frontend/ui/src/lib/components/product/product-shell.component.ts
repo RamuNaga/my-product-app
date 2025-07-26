@@ -30,7 +30,7 @@ export class ProductShellComponent implements OnInit {
     this.router.navigate([selectedTab.path], { relativeTo: this.route });
     // If switching to list tab, refresh product list store
     if (selectedTab.path === 'list') {
-      console.log(selectedTab.path + 'calling');
+      //console.log(selectedTab.path + 'calling');
       this.store.refreshProducts(); // inject ProductListStore in this component!
     }
   }
