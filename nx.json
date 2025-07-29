@@ -133,6 +133,14 @@
     "frontend": {
       "tags": ["type:app", "scope:frontend"]
     },
+    "frontend-core": {
+      "tags": [
+        "type:core",
+        "type:generated",
+        "type:buildable",
+        "scope:frontend"
+      ]
+    },
     "frontend-graphql-types": {
       "tags": [
         "type:graphql-types",
@@ -142,11 +150,16 @@
       ]
     },
     "frontend-shared": {
-      "tags": ["type:shared", "scope:frontend"]
+      "tags": ["type:shared", "scope:frontend"],
+      "implicitDependencies": ["frontend-graphql-types"]
     },
     "frontend-data-access": {
       "tags": ["type:lib", "scope:frontend"],
-      "implicitDependencies": ["frontend-shared"]
+      "implicitDependencies": [
+        "frontend-shared",
+        "frontend-core",
+        "frontend-graphql-types"
+      ]
     },
     "ui": {
       "tags": ["type:ui", "scope:frontend", "platform:angular"],

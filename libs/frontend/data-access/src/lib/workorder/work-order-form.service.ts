@@ -1,7 +1,7 @@
 // work-order-form.service.ts
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpService } from '@my-product-app/frontend-shared';
+import { HttpService } from '@my-product-app/frontend-core';
 
 @Injectable({ providedIn: 'root' })
 export class WorkOrderFormService {

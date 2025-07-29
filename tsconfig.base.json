@@ -29,14 +29,19 @@
       "@my-product-app/backend-shared/types/*": [
         "libs/backend/shared/src/lib/types/*"
       ],
+      "@my-product-app/frontend-core": ["dist/libs/frontend/core"],
+      "@my-product-app/frontend-core/*": ["libs/frontend/core/src/lib/*"],
+      "@my-product-app/frontend-data-access": [
+        "dist/libs/frontend/data-access"
+      ],
+      "@my-product-app/frontend-data-access/*": [
+        "libs/frontend/data-access/src/lib/*"
+      ],
       "@my-product-app/frontend-graphql-types": [
         "dist/libs/frontend/graphql-types"
       ],
       "@my-product-app/frontend-graphql-types/*": [
         "libs/frontend/graphql-types/src/lib/*"
-      ],
-      "@my-product-app/frontend-data-access": [
-        "dist/libs/frontend/data-access"
       ],
       "@my-product-app/frontend-shared": ["dist/libs/frontend/shared"],
       "@my-product-app/frontend-shared/*": ["libs/frontend/shared/src/lib/*"],

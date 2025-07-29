@@ -22,12 +22,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MaterialLoaderComponent } from '../loader/loader.component';
 import {
-  HttpService,
   ProductCreateResponse,
   ProductListStore,
   ProductStore,
-  RuntimeConfigStore,
 } from '@my-product-app/frontend-shared';
+import { HttpService, RuntimeConfigStore } from '@my-product-app/frontend-core';
 import { firstValueFrom } from 'rxjs';
 
 @Component({

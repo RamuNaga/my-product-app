@@ -16,7 +16,7 @@ import {
   HttpService,
   RuntimeConfigStore,
   RuntimeEnvConfig,
-} from '@my-product-app/frontend-shared';
+} from '@my-product-app/frontend-core';
 import { environment } from '../environments/environments';
 
 export function apolloClientFactory(): ApolloClientOptions<any> {
