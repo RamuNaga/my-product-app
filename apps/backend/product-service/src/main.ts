@@ -6,7 +6,7 @@ async function startProductService() {
   await bootstrapMicroservice(ProductServiceModule, {
     hostEnv: 'MICROSERVICE_HOST',
     portEnv: 'PRODUCT_SERVICE_PORT',
-    fallbackPort: 8888,
+    fallbackPort: 3001,
     serviceName: 'Product Service',
   });
 }

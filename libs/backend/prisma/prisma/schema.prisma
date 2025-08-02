@@ -7,60 +7,237 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Company {
+  id        Int      @id @default(autoincrement())
+  name      String
+  type      String   // "manufacturer" | "client" | "supplier"
+  address   String?
+  contact   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users       User[]
+  vendors     Vendor[]
+  workOrders  WorkOrder[]
+  products    Product[]
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
   email     String   @unique
   password  String
   role      String
+  companyId Int?
+  company   Company? @relation(fields: [companyId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-   // Relations
-  CreatedWorkOrders  WorkOrder[]  @relation("CreatedWorkOrders")
-  ApprovedWorkOrders WorkOrder[]  @relation("ApprovedWorkOrders")
+
+  CreatedWorkOrders  WorkOrder[] @relation("CreatedWorkOrders")
+  ApprovedWorkOrders WorkOrder[] @relation("ApprovedWorkOrders")
 }
 
 model Product {
-  id          Int          @id @default(autoincrement())
-  productcode String       @unique
-  name        String
-  description String
-  image       String? 
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id             Int                 @id @default(autoincrement())
+  productCode    String              @unique
+  name           String
+  description    String
+  image          String?
+  productWeight  String
+  price          Float
+  companyId      Int?
+  company        Company?            @relation(fields: [companyId], references: [id])
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
 
-  WorkOrders  WorkOrder[]
+  workOrders     WorkOrder[]
+  ingredients    ProductIngredient[]
+  sauces         Sauce[]
+  purchaseOrders PurchaseOrder[]
+  nutritionalInfo NutritionalInfo?
 }
-
 
 model WorkOrder {
-  id              Int       @id @default(autoincrement())
-  productId       Int
-  product         Product   @relation(fields: [productId], references: [id])
-  clientLocation  String
-  vendorOrClient  String
-  quantity        Int
-  productWeight   String
-  createdDate     DateTime  @default(now())
-  deliveryDate    DateTime
-  updateDate      DateTime  @updatedAt
-  description     String?
-  status          String
-  createdById     Int
-  approvedById    Int?
-  priority        String?
-  attachments     String[]
-  assignedTo      String?
-  comments        String?
+  id             Int      @id @default(autoincrement())
+  workOrderCode  String   @unique
+  productId      Int
+  product        Product  @relation(fields: [productId], references: [id])
+  clientLocation String
+  vendorOrClient String
+  quantity       Int
+  deliveryDate   DateTime
+  description    String?
+  status         String
+  createdById    Int
+  approvedById   Int?
+  companyId      Int?
+  company        Company? @relation(fields: [companyId], references: [id])
 
-  // Relations
-  createdBy       User      @relation("CreatedWorkOrders", fields: [createdById], references: [id])
-  approvedBy      User?     @relation("ApprovedWorkOrders", fields: [approvedById], references: [id])
+  priority       String?
+  attachments    String[]
+  assignedTo     String?
+  comments       String?
 
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  createdBy       User             @relation("CreatedWorkOrders", fields: [createdById], references: [id])
+  approvedBy      User?            @relation("ApprovedWorkOrders", fields: [approvedById], references: [id])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
-  @@index([status])
+  purchaseOrders  PurchaseOrder[]
+  productionPlans ProductionPlan[]
+}
+
+model PurchaseOrder {
+  id            Int        @id @default(autoincrement())
+  poNumber      String     @unique
+  workOrderId   Int
+  productId     Int
+  ingredientId  Int
+  quantity      Int
+  supplierId    Int
+  deliveryDate  DateTime
+  status        String
+  comments      String?
+
+  workOrder     WorkOrder   @relation(fields: [workOrderId], references: [id])
+  product       Product     @relation(fields: [productId], references: [id])
+  ingredient    Ingredient  @relation(fields: [ingredientId], references: [id])
+  supplier      Vendor      @relation(fields: [supplierId], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Vendor {
+  id             Int              @id @default(autoincrement())
+  name           String
+  companyId      Int?
+  company        Company?         @relation(fields: [companyId], references: [id])
+  address        String?
+  contact        String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  purchaseOrders PurchaseOrder[]
+}
+
+model Ingredient {
+  id             Int                @id @default(autoincrement())
+  code           String             @unique
+  name           String
+  description    String?
+  unit           String
+  netWeight      String?
+  origin         String?
+  usedBy         DateTime?
+  batchCode      String?
+  manufacturer   String?
+  vendor         String?
+  packSize       String?
+  netContent     String?
+
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  productLinks   ProductIngredient[]
+  sauceLinks     SauceIngredient[]
+  purchaseOrders PurchaseOrder[]
+}
+
+model ProductIngredient {
+  id           Int        @id @default(autoincrement())
+  productId    Int
+  ingredientId Int
+  quantity     Float
+
+  product     Product     @relation(fields: [productId], references: [id])
+  ingredient  Ingredient  @relation(fields: [ingredientId], references: [id])
+}
+
+model Sauce {
+  id          Int      @id @default(autoincrement())
+  name        String
+  productId   Int
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  product     Product   @relation(fields: [productId], references: [id])
+  ingredients SauceIngredient[]
+}
+
+model SauceIngredient {
+  id           Int        @id @default(autoincrement())
+  sauceId      Int
+  ingredientId Int
+  quantity     Float
+
+  sauce       Sauce       @relation(fields: [sauceId], references: [id])
+  ingredient  Ingredient  @relation(fields: [ingredientId], references: [id])
+}
+
+model Tray {
+  id         Int      @id @default(autoincrement())
+  trayName   String
+  dimensions String?
+  weight     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Garnish {
+  id        Int      @id @default(autoincrement())
+  name      String
+  weight    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Unit {
+  id        Int      @id @default(autoincrement())
+  name      String
+  noOfUnits Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NutritionalInfo {
+  id         Int     @id @default(autoincrement())
+  productId  Int     @unique
+  calories   Float
+  fat        Float
+  protein    Float
+  sugar      Float
+  fibre      Float
+  salt       Float
+
+  product    Product @relation(fields: [productId], references: [id])
 }
 
 
+model ProductionPlan {
+  id              Int               @id @default(autoincrement())
+  workOrderId     Int
+  lineNumber      Int
+  startTime       DateTime
+  endTime         DateTime?
+  hiskRiskLabour  Int
+  lowRiskLabour   Int
+  packLabour      Int
+  targetPerMin    Int
+  actualProduced  Int?
+  issues          String?
+
+  workOrder       WorkOrder        @relation(fields: [workOrderId], references: [id])
+  productionIssues ProductionIssue[]
+}
+
+model ProductionIssue {
+  id             Int      @id @default(autoincrement())
+  planId         Int
+  issueType      String   // e.g. "Machinery", "Packing"
+  description    String
+  occurredAt     DateTime
+  resolvedAt     DateTime?
+
+  productionPlan ProductionPlan @relation(fields: [planId], references: [id])
+}

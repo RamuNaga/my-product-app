@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '@my-product-app/prisma';
 import { CreateWorkorderInput } from '../dto/create-workoder.input';
 import { UpdateWorkorderInput } from '../dto/update-workorder.input';
 import { ApproveWorkorderInput } from '../dto/approve-workorder.input';
 
 @Injectable()
-export class WorkorderService {
+export class WorkOrderService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: CreateWorkorderInput, userId: number) {
@@ -14,7 +18,7 @@ export class WorkorderService {
     });
 
     if (!product) {
-      throw new Error('Product not found');
+      throw new NotFoundException('Product not found');
     }
 
     return this.prisma.workOrder.create({
@@ -35,14 +39,29 @@ export class WorkorderService {
   async approveWorkorder(input: ApproveWorkorderInput, approvedById: number) {
     const { id, priority, attachments, assignedTo, comments, status } = input;
 
+    const workorder = await this.prisma.workOrder.findUnique({ where: { id } });
+    if (!workorder) {
+      throw new NotFoundException('WorkOrder not found');
+    }
+
+    if (workorder.status !== 'Requested' && status === 'Approved') {
+      throw new BadRequestException(
+        `Cannot approve workorder with status: ${workorder.status}`
+      );
+    }
+
+    if (attachments !== undefined && !Array.isArray(attachments)) {
+      throw new BadRequestException('Attachments must be an array of strings');
+    }
+
     const updateData: any = {
       status,
-      approvedById, // required field, always include
+      approvedById,
       updateDate: new Date(),
     };
 
     if (priority !== undefined) updateData.priority = priority;
-    if (attachments !== undefined) updateData.attachments = attachments; // nullable is ok
+    if (attachments !== undefined) updateData.attachments = attachments;
     if (assignedTo !== undefined) updateData.assignedTo = assignedTo;
     if (comments !== undefined) updateData.comments = comments;
 
@@ -52,15 +71,46 @@ export class WorkorderService {
     });
   }
 
-  findAll() {
+  async cancel(id: number, userId: number) {
+    const workorder = await this.prisma.workOrder.findUnique({ where: { id } });
+
+    if (!workorder) {
+      throw new NotFoundException('WorkOrder not found');
+    }
+
+    return this.prisma.workOrder.update({
+      where: { id },
+      data: {
+        status: 'Cancelled',
+        updateDate: new Date(),
+      },
+    });
+  }
+
+  async findAll() {
     return this.prisma.workOrder.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.workOrder.findUnique({ where: { id } });
+  async findOne(id: number) {
+    const workorder = await this.prisma.workOrder.findUnique({ where: { id } });
+    if (!workorder) {
+      throw new NotFoundException('WorkOrder not found');
+    }
+    return workorder;
   }
 
-  update(id: number, data: UpdateWorkorderInput) {
-    return this.prisma.workOrder.update({ where: { id }, data });
+  async update(id: number, data: UpdateWorkorderInput) {
+    const workorder = await this.prisma.workOrder.findUnique({ where: { id } });
+    if (!workorder) {
+      throw new NotFoundException('WorkOrder not found');
+    }
+
+    return this.prisma.workOrder.update({
+      where: { id },
+      data: {
+        ...data,
+        updateDate: new Date(),
+      },
+    });
   }
 }

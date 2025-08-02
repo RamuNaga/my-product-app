@@ -11,6 +11,9 @@ node_modules
 # uploads
 uploads
 
+# backups
+backups
+
 # IDEs and editors
 /.idea
 .project
