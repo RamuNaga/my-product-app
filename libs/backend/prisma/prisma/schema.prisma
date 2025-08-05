@@ -7,19 +7,78 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum CompanyType {
+  MANUFACTURER
+  CLIENT
+  SUPPLIER
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  OPERATOR
+  STAFF
+  VIEWER
+}
+
+enum WorkOrderStatus {
+  REQUESTED
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+  CANCELLED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum PurchaseOrderStatus {
+  PENDING
+  ORDERED
+  DELIVERED
+  CANCELLED
+}
+
+enum IssueType {
+  MACHINERY
+  PACKING
+  LABOUR
+  QUALITY
+  OTHER
+}
+
 model Company {
-  id        Int      @id @default(autoincrement())
-  name      String
-  type      String   // "manufacturer" | "client" | "supplier"
-  address   String?
-  contact   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int               @id @default(autoincrement())
+  name        String            @unique
+  type        CompanyType       @default(MANUFACTURER)
+  contact     String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
 
   users       User[]
   vendors     Vendor[]
   workOrders  WorkOrder[]
   products    Product[]
+  locations   CompanyLocation[]
+}
+
+model CompanyLocation {
+  id          Int      @id @default(autoincrement())
+  location    String
+  address     String
+  city        String
+  country     String
+  postalCode  String
+  county      String?
+  contact     String?
+  companyId   Int
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model User {
@@ -27,9 +86,9 @@ model User {
   username  String   @unique
   email     String   @unique
   password  String
-  role      String
-  companyId Int?
-  company   Company? @relation(fields: [companyId], references: [id])
+  role      UserRole @default(STAFF)
+  companyId Int
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -58,45 +117,45 @@ model Product {
 }
 
 model WorkOrder {
-  id             Int      @id @default(autoincrement())
-  workOrderCode  String   @unique
+  id             Int             @id @default(autoincrement())
+  workOrderCode  String          @unique
   productId      Int
-  product        Product  @relation(fields: [productId], references: [id])
+  product        Product         @relation(fields: [productId], references: [id])
   clientLocation String
   vendorOrClient String
   quantity       Int
   deliveryDate   DateTime
   description    String?
-  status         String
+  status         WorkOrderStatus @default(REQUESTED)
   createdById    Int
   approvedById   Int?
   companyId      Int?
-  company        Company? @relation(fields: [companyId], references: [id])
+  company        Company?        @relation(fields: [companyId], references: [id])
 
-  priority       String?
+  priority       Priority?       @default(MEDIUM)
   attachments    String[]
   assignedTo     String?
   comments       String?
 
-  createdBy       User             @relation("CreatedWorkOrders", fields: [createdById], references: [id])
-  approvedBy      User?            @relation("ApprovedWorkOrders", fields: [approvedById], references: [id])
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  createdBy      User            @relation("CreatedWorkOrders", fields: [createdById], references: [id])
+  approvedBy     User?           @relation("ApprovedWorkOrders", fields: [approvedById], references: [id])
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 
   purchaseOrders  PurchaseOrder[]
   productionPlans ProductionPlan[]
 }
 
 model PurchaseOrder {
-  id            Int        @id @default(autoincrement())
-  poNumber      String     @unique
+  id            Int                 @id @default(autoincrement())
+  poNumber      String              @unique
   workOrderId   Int
   productId     Int
   ingredientId  Int
   quantity      Int
   supplierId    Int
   deliveryDate  DateTime
-  status        String
+  status        PurchaseOrderStatus @default(PENDING)
   comments      String?
 
   workOrder     WorkOrder   @relation(fields: [workOrderId], references: [id])
@@ -213,7 +272,6 @@ model NutritionalInfo {
   product    Product @relation(fields: [productId], references: [id])
 }
 
-
 model ProductionPlan {
   id              Int               @id @default(autoincrement())
   workOrderId     Int
@@ -234,7 +292,7 @@ model ProductionPlan {
 model ProductionIssue {
   id             Int      @id @default(autoincrement())
   planId         Int
-  issueType      String   // e.g. "Machinery", "Packing"
+  issueType      IssueType
   description    String
   occurredAt     DateTime
   resolvedAt     DateTime?

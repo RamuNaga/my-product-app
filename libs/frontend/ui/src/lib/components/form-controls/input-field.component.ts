@@ -29,6 +29,7 @@ export class InputFieldComponent implements ControlValueAccessor {
   @Input() type = 'text'; // text, email, password, etc.
   @Input() required = false;
   @Input() control: FormControl = new FormControl('');
+  @Input() readonly = false;
 
   @Output() valueChange = new EventEmitter<string>();
 

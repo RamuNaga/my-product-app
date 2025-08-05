@@ -1,0 +1,42 @@
+<div
+  class="flex flex-col gap-4 w-full max-w-md mx-auto"
+  [formGroup]="formGroup()!"
+>
+  <lib-input-field
+    [control]="usernameControl()"
+    label="Username"
+    placeholder="Enter username"
+    [required]="true"
+  ></lib-input-field>
+
+  <lib-input-field
+    [control]="emailControl()"
+    label="Email"
+    placeholder="Enter email"
+    [required]="true"
+    type="email"
+  ></lib-input-field>
+
+  <lib-input-field
+    [control]="passwordControl()"
+    label="Password"
+    placeholder="Enter password"
+    [required]="true"
+    type="password"
+  ></lib-input-field>
+
+  <lib-input-field
+    [control]="confirmPasswordControl()"
+    label="Confirm Password"
+    placeholder="Confirm your password"
+    [required]="true"
+    type="password"
+  ></lib-input-field>
+
+  <lib-select-field
+    [control]="roleControl()"
+    label="Role"
+    [options]="roles()"
+    [required]="true"
+  ></lib-select-field>
+</div>

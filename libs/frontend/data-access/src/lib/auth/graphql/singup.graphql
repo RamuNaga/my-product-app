@@ -5,5 +5,8 @@ mutation Signup($createUserInput: CreateUserInput!) {
     username
     role
     createdAt
+    company {
+      id
+    }
   }
 }

@@ -1,5 +1,175 @@
-[
-  { "label": "Greencore Kiveton", "value": "greencore_kiveton" },
-  { "label": "Greencore Northampton", "value": "greencore_northampton" },
-  { "label": "Greencore Warrington", "value": "greencore_warrington" }
-]
+{
+  "Greencore_UK_Locations": [
+    {
+      "location": "Atherstone",
+      "address": "Unit 7, Carlyon Road Industrial Estate",
+      "city": "Atherstone",
+      "county": "Warwickshire",
+      "postcode": "CV9 1LQ",
+      "country": "United Kingdom",
+      "contact": "+44 (0)1827 719 100"
+    },
+    {
+      "location": "Boston",
+      "address": "Marsh Lane",
+      "city": "Boston",
+      "county": "Lincolnshire",
+      "postcode": "PE21 7PJ",
+      "country": "United Kingdom",
+      "contact": "+44 (0)1205 312 010"
+    },
+    {
+      "location": "Bow (Bromley-by-Bow, London)",
+      "address": "Unit 1, ProLogis Park, Twelvetrees Crescent",
+      "city": "Bromley-by-Bow",
+      "county": "London",
+      "postcode": "E3 3JG",
+      "country": "United Kingdom",
+      "contact": ""
+    },
+    {
+      "location": "Bristol",
+      "address": "Unit 4, Bristol Distribution Park, Hawkley Drive, Woodlands Road",
+      "city": "Bradley Stoke",
+      "county": "Bristol",
+      "postcode": "BS32 0BF",
+      "country": "United Kingdom",
+      "contact": ""
+    },
+    {
+      "location": "Consett",
+      "address": "Hownsgill Industrial Park, Knitsley Lane",
+      "city": "Consett",
+      "county": "County Durham",
+      "postcode": "DH8 7NU",
+      "country": "United Kingdom",
+      "contact": ""
+    },
+    {
+      "location": "Crosby (Liverpool)",
+      "address": "2 Musker Street",
+      "city": "Crosby",
+      "county": "Liverpool",
+      "postcode": "L23 0UB",
+      "country": "United Kingdom",
+      "contact": ""
+    },
+    {
+      "location": "Heathrow (West Drayton)",
+      "address": "366 Stockley Close",
+      "city": "West Drayton",
+      "county": "Heathrow",
+      "postcode": "UB7 9BL",
+      "country": "United Kingdom",
+      "contact": ""
+    },
+    {
+      "location": "Kiveton (Sheffield)",
+      "address": "Mansfield Road",
+      "city": "Kiveton",
+      "county": "Sheffield",
+      "postcode": "S26 5PF",
+      "country": "United Kingdom",
+      "contact": ""
+    },
+    {
+      "location": "Leeds",
+      "address": "Midland Road, Hunslet",
+      "city": "Leeds",
+      "county": "",
+      "postcode": "LS10 2RJ",
+      "country": "United Kingdom",
+      "contact": ""
+    },
+    {
+      "location": "Manton Wood",
+      "address": "Manton Wood Enterprise Park, Retford Road",
+      "city": "Worksop",
+      "county": "Nottinghamshire",
+      "postcode": "S80 2RS",
+      "country": "United Kingdom",
+      "contact": "01909 512 600"
+    },
+    {
+      "location": "Manton 110",
+      "address": "Unit 8, Manton Wood Enterprise Park",
+      "city": "Worksop",
+      "county": "Nottinghamshire",
+      "postcode": "S80 2RS",
+      "country": "United Kingdom",
+      "contact": ""
+    },
+    {
+      "location": "Northampton",
+      "address": "Moulton Park Industrial Estate, 15-17 Deer Park Road",
+      "city": "Northampton",
+      "county": "",
+      "postcode": "NN3 6RX",
+      "country": "United Kingdom",
+      "contact": ""
+    },
+    {
+      "location": "Park Royal (London)",
+      "address": "Unit 4c, Willen Field Road",
+      "city": "Park Royal",
+      "county": "London",
+      "postcode": "NW10 7AQ",
+      "country": "United Kingdom",
+      "contact": ""
+    },
+    {
+      "location": "Selby",
+      "address": "Barlby Road",
+      "city": "Selby",
+      "county": "North Yorkshire",
+      "postcode": "YO8 5BJ",
+      "country": "United Kingdom",
+      "contact": ""
+    },
+    {
+      "location": "Spalding (Pinchbeck site)",
+      "address": "Wardentree Lane, Pinchbeck",
+      "city": "Spalding",
+      "county": "",
+      "postcode": "PE11 3UY",
+      "country": "United Kingdom",
+      "contact": ""
+    },
+    {
+      "location": "Warrington",
+      "address": "20 Grosvenor Grange, Woolston",
+      "city": "Warrington",
+      "county": "Cheshire",
+      "postcode": "WA1 4SF",
+      "country": "United Kingdom",
+      "contact": "01925 283701"
+    },
+    {
+      "location": "Wisbech",
+      "address": "Weasenham Lane",
+      "city": "Wisbech",
+      "county": "Cambridgeshire",
+      "postcode": "PE13 2RD",
+      "country": "United Kingdom",
+      "contact": ""
+    },
+    {
+      "location": "Tamworth / Dordon",
+      "address": "Core 42 Business Park, Meridian Drive",
+      "city": "Dordon",
+      "county": "Tamworth",
+      "postcode": "B78 1ST",
+      "country": "United Kingdom",
+      "contact": ""
+    },
+    {
+      "location": "UK Centre (Corporate Office – Barlborough, Chesterfield)",
+      "address": "Midland Way, Barlborough Links Business Park",
+      "city": "Barlborough",
+      "county": "Chesterfield",
+      "postcode": "S43 4XA",
+      "country": "United Kingdom",
+      "contact": ""
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+<div
+  class="flex flex-col gap-4 w-full max-w-md mx-auto"
+  [formGroup]="formGroup()!"
+>
+  <lib-select-field
+    [control]="locationControl()"
+    label="Location"
+    [options]="locations()"
+    [required]="true"
+  ></lib-select-field>
+
+  <lib-input-field
+    [control]="addressControl()"
+    label="Address"
+    placeholder="Enter address"
+  ></lib-input-field>
+
+  <lib-input-field
+    [control]="cityControl()"
+    label="City"
+    placeholder="Enter city"
+  ></lib-input-field>
+
+  <lib-input-field
+    [control]="countyControl()"
+    label="County"
+    placeholder="Enter county"
+  ></lib-input-field>
+
+  <lib-input-field
+    [control]="postalCodeControl()"
+    label="Postcode"
+    placeholder="Enter postcode"
+  ></lib-input-field>
+
+  <lib-input-field
+    [control]="countryControl()"
+    label="Country"
+    placeholder="Enter country"
+  ></lib-input-field>
+
+  <lib-input-field
+    [control]="contactControl()"
+    label="Contact"
+    placeholder="Enter Location contact number"
+  ></lib-input-field>
+</div>

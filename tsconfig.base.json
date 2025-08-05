@@ -29,6 +29,10 @@
       "@my-product-app/backend-shared/types/*": [
         "libs/backend/shared/src/lib/types/*"
       ],
+      "@my-product-app/backend-company": ["libs/backend/company/src/index.ts"],
+      "@my-product-app/backend-company-location": [
+        "libs/backend/company-location/src/index.ts"
+      ],
       "@my-product-app/frontend-core": ["dist/libs/frontend/core"],
       "@my-product-app/frontend-core/*": ["libs/frontend/core/src/lib/*"],
       "@my-product-app/frontend-data-access": [

@@ -1,13 +1,31 @@
 <lib-tailwind-host>
-  <mat-card
-    class="form-card p-6 max-w-md w-full bg-green-500 text-white rounded-lg shadow-md"
-  >
+  <mat-card class="form-card">
     <mat-tab-group [(selectedIndex)]="selectedTabIndex">
       <mat-tab label="Login">
         <lib-ui-login></lib-ui-login>
       </mat-tab>
       <mat-tab label="Sign Up">
-        <lib-ui-signup></lib-ui-signup>
+        <lib-ui-signup-stepper
+          *ngIf="signupFormSignal()"
+          [signupForm]="signupFormSignal()"
+          [companyGroup]="companyGroupSignal()"
+          [locationGroup]="locationGroupSignal()"
+          [userGroup]="userGroupSignal()"
+          (formSubmitted)="handleFormSubmit()"
+        >
+          <lib-ui-company-form
+            step1
+            [formGroup]="companyGroupSignal()!"
+          ></lib-ui-company-form>
+          <lib-ui-location-form
+            step2
+            [formGroup]="locationGroupSignal()!"
+          ></lib-ui-location-form>
+          <lib-ui-user-form
+            step3
+            [formGroup]="userGroupSignal()!"
+          ></lib-ui-user-form>
+        </lib-ui-signup-stepper>
       </mat-tab>
     </mat-tab-group>
   </mat-card>

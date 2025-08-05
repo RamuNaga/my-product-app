@@ -1,0 +1,12 @@
+mutation CreateCompanyLocation($input: CreateCompanyLocationInput!) {
+  createCompanyLocation(input: $input) {
+    id
+    address
+    city
+    country
+    postalCode
+    county
+    contact
+    companyId
+  }
+}

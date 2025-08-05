@@ -1,5 +1,13 @@
+// src/user/dto/create-user.input.ts
+
 import { InputType, Field } from '@nestjs/graphql';
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  MinLength,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 @InputType()
 export class CreateUserInput {

@@ -1,52 +1,102 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "CompanyType" AS ENUM ('MANUFACTURER', 'CLIENT', 'SUPPLIER');
 
-  - You are about to drop the column `productcode` on the `Product` table. All the data in the column will be lost.
-  - You are about to drop the column `createdDate` on the `WorkOrder` table. All the data in the column will be lost.
-  - You are about to drop the column `productWeight` on the `WorkOrder` table. All the data in the column will be lost.
-  - You are about to drop the column `updateDate` on the `WorkOrder` table. All the data in the column will be lost.
-  - A unique constraint covering the columns `[productCode]` on the table `Product` will be added. If there are existing duplicate values, this will fail.
-  - A unique constraint covering the columns `[workOrderCode]` on the table `WorkOrder` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `price` to the `Product` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `productCode` to the `Product` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `productWeight` to the `Product` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `workOrderCode` to the `WorkOrder` table without a default value. This is not possible if the table is not empty.
+-- CreateEnum
+CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'MANAGER', 'OPERATOR', 'STAFF', 'VIEWER');
 
-*/
--- DropIndex
-DROP INDEX "Product_productcode_key";
+-- CreateEnum
+CREATE TYPE "WorkOrderStatus" AS ENUM ('REQUESTED', 'PENDING', 'APPROVED', 'REJECTED', 'COMPLETED', 'CANCELLED');
 
--- DropIndex
-DROP INDEX "WorkOrder_status_idx";
+-- CreateEnum
+CREATE TYPE "Priority" AS ENUM ('LOW', 'MEDIUM', 'HIGH');
 
--- AlterTable
-ALTER TABLE "Product" DROP COLUMN "productcode",
-ADD COLUMN     "companyId" INTEGER,
-ADD COLUMN     "price" DOUBLE PRECISION NOT NULL,
-ADD COLUMN     "productCode" TEXT NOT NULL,
-ADD COLUMN     "productWeight" TEXT NOT NULL;
+-- CreateEnum
+CREATE TYPE "PurchaseOrderStatus" AS ENUM ('PENDING', 'ORDERED', 'DELIVERED', 'CANCELLED');
 
--- AlterTable
-ALTER TABLE "User" ADD COLUMN     "companyId" INTEGER;
-
--- AlterTable
-ALTER TABLE "WorkOrder" DROP COLUMN "createdDate",
-DROP COLUMN "productWeight",
-DROP COLUMN "updateDate",
-ADD COLUMN     "companyId" INTEGER,
-ADD COLUMN     "workOrderCode" TEXT NOT NULL;
+-- CreateEnum
+CREATE TYPE "IssueType" AS ENUM ('MACHINERY', 'PACKING', 'LABOUR', 'QUALITY', 'OTHER');
 
 -- CreateTable
 CREATE TABLE "Company" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
-    "address" TEXT,
+    "type" "CompanyType" NOT NULL DEFAULT 'MANUFACTURER',
     "contact" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Company_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "CompanyLocation" (
+    "id" SERIAL NOT NULL,
+    "location" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "city" TEXT NOT NULL,
+    "country" TEXT NOT NULL,
+    "postalCode" TEXT NOT NULL,
+    "county" TEXT,
+    "contact" TEXT,
+    "companyId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "CompanyLocation_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "username" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "role" "UserRole" NOT NULL DEFAULT 'STAFF',
+    "companyId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Product" (
+    "id" SERIAL NOT NULL,
+    "productCode" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "image" TEXT,
+    "productWeight" TEXT NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
+    "companyId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "WorkOrder" (
+    "id" SERIAL NOT NULL,
+    "workOrderCode" TEXT NOT NULL,
+    "productId" INTEGER NOT NULL,
+    "clientLocation" TEXT NOT NULL,
+    "vendorOrClient" TEXT NOT NULL,
+    "quantity" INTEGER NOT NULL,
+    "deliveryDate" TIMESTAMP(3) NOT NULL,
+    "description" TEXT,
+    "status" "WorkOrderStatus" NOT NULL DEFAULT 'REQUESTED',
+    "createdById" INTEGER NOT NULL,
+    "approvedById" INTEGER,
+    "companyId" INTEGER,
+    "priority" "Priority" DEFAULT 'MEDIUM',
+    "attachments" TEXT[],
+    "assignedTo" TEXT,
+    "comments" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "WorkOrder_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -59,7 +109,7 @@ CREATE TABLE "PurchaseOrder" (
     "quantity" INTEGER NOT NULL,
     "supplierId" INTEGER NOT NULL,
     "deliveryDate" TIMESTAMP(3) NOT NULL,
-    "status" TEXT NOT NULL,
+    "status" "PurchaseOrderStatus" NOT NULL DEFAULT 'PENDING',
     "comments" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -202,13 +252,28 @@ CREATE TABLE "ProductionPlan" (
 CREATE TABLE "ProductionIssue" (
     "id" SERIAL NOT NULL,
     "planId" INTEGER NOT NULL,
-    "issueType" TEXT NOT NULL,
+    "issueType" "IssueType" NOT NULL,
     "description" TEXT NOT NULL,
     "occurredAt" TIMESTAMP(3) NOT NULL,
     "resolvedAt" TIMESTAMP(3),
 
     CONSTRAINT "ProductionIssue_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Company_name_key" ON "Company"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Product_productCode_key" ON "Product"("productCode");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "WorkOrder_workOrderCode_key" ON "WorkOrder"("workOrderCode");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PurchaseOrder_poNumber_key" ON "PurchaseOrder"("poNumber");
@@ -219,20 +284,26 @@ CREATE UNIQUE INDEX "Ingredient_code_key" ON "Ingredient"("code");
 -- CreateIndex
 CREATE UNIQUE INDEX "NutritionalInfo_productId_key" ON "NutritionalInfo"("productId");
 
--- CreateIndex
-CREATE UNIQUE INDEX "Product_productCode_key" ON "Product"("productCode");
-
--- CreateIndex
-CREATE UNIQUE INDEX "WorkOrder_workOrderCode_key" ON "WorkOrder"("workOrderCode");
+-- AddForeignKey
+ALTER TABLE "CompanyLocation" ADD CONSTRAINT "CompanyLocation_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Company"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Company"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "User" ADD CONSTRAINT "User_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Company"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Company"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "WorkOrder" ADD CONSTRAINT "WorkOrder_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "WorkOrder" ADD CONSTRAINT "WorkOrder_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Company"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "WorkOrder" ADD CONSTRAINT "WorkOrder_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "WorkOrder" ADD CONSTRAINT "WorkOrder_approvedById_fkey" FOREIGN KEY ("approvedById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PurchaseOrder" ADD CONSTRAINT "PurchaseOrder_workOrderId_fkey" FOREIGN KEY ("workOrderId") REFERENCES "WorkOrder"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

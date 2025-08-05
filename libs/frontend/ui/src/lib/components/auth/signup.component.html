@@ -1,53 +1,120 @@
-<form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="auth-form">
-  <div class="form-field">
-    <lib-input-field
-      [control]="usernameControl"
-      label="Username"
-      placeholder="Enter username"
-      [required]="true"
-    ></lib-input-field>
+<form
+  [formGroup]="signupForm"
+  (ngSubmit)="onSubmit()"
+  class="flex flex-col gap-6"
+>
+  <div class="flex gap-6">
+    <!-- User Fields -->
+    <div class="w-1/2 flex flex-col gap-4">
+      <lib-input-field
+        [control]="usernameControl"
+        label="Username"
+        placeholder="Enter username"
+        [required]="true"
+      ></lib-input-field>
+
+      <lib-input-field
+        [control]="emailControl"
+        label="Email"
+        placeholder="Enter email"
+        [required]="true"
+        type="email"
+      ></lib-input-field>
+
+      <lib-input-field
+        [control]="passwordControl"
+        label="Password"
+        placeholder="Enter password"
+        [required]="true"
+        type="password"
+      ></lib-input-field>
+
+      <lib-input-field
+        [control]="confirmPasswordControl"
+        label="Confirm Password"
+        placeholder="Confirm your password"
+        [required]="true"
+        type="password"
+      ></lib-input-field>
+
+      <lib-select-field
+        [control]="roleControl"
+        label="Role"
+        [options]="roles()"
+        [required]="true"
+      ></lib-select-field>
+    </div>
+
+    <!-- Company Fields -->
+    <div class="w-1/2 flex flex-col gap-4" [formGroup]="companyGroup">
+      <lib-input-field
+        [control]="companyNameControl"
+        label="Company Name"
+        placeholder="Enter company name"
+        [required]="true"
+      ></lib-input-field>
+
+      <lib-select-field
+        [control]="companyTypeControl"
+        label="Company Type"
+        [options]="companyTypes()"
+        [required]="true"
+      ></lib-select-field>
+
+      <lib-input-field
+        [control]="companyNameControl"
+        label="Company Contact Number"
+        placeholder="Enter contact number"
+        [required]="true"
+      ></lib-input-field>
+
+      <lib-select-field
+        [control]="companyLocationControl"
+        label="Location"
+        [options]="locations()"
+        [required]="true"
+      ></lib-select-field>
+
+      <lib-input-field
+        [control]="companyAddressControl"
+        label="Address"
+        placeholder="Enter address"
+      ></lib-input-field>
+
+      <lib-input-field
+        [control]="companyCityControl"
+        label="City"
+        placeholder="Enter city"
+      ></lib-input-field>
+
+      <lib-input-field
+        [control]="companyCountyControl"
+        label="County"
+        placeholder="Enter county"
+      ></lib-input-field>
+
+      <lib-input-field
+        [control]="companyPostcodeControl"
+        label="Postcode"
+        placeholder="Enter postcode"
+      ></lib-input-field>
+
+      <lib-input-field
+        [control]="companyCountryControl"
+        label="Country"
+        placeholder="Enter country"
+      ></lib-input-field>
+
+      <lib-input-field
+        [control]="companyContactControl"
+        label="Contact"
+        placeholder="Enter Location contact number"
+      ></lib-input-field>
+    </div>
   </div>
 
-  <div class="form-field">
-    <lib-input-field
-      [control]="emailControl"
-      label="Email"
-      placeholder="Enter email"
-      [required]="true"
-      type="email"
-    ></lib-input-field>
-  </div>
-
-  <div class="form-field">
-    <lib-input-field
-      [control]="passwordControl"
-      label="Password"
-      placeholder="Enter password"
-      [required]="true"
-      type="password"
-    ></lib-input-field>
-  </div>
-
-  <div class="form-field">
-    <lib-input-field
-      [control]="confirmPasswordControl"
-      label="Confirm Password"
-      placeholder="Confirm your password"
-      [required]="true"
-      type="password"
-    ></lib-input-field>
-  </div>
-
-  <div class="form-field">
-    <lib-select-field
-      [control]="roleControl"
-      label="Role"
-      [options]="roles"
-      [required]="true"
-    ></lib-select-field>
-  </div>
-
-  <div class="form-actions">
+  <!-- Submit Button -->
+  <div class="mt-4">
     <button
       mat-raised-button
       color="primary"

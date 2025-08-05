@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import {
   SignupMutation,
@@ -11,11 +11,13 @@ import {
 
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { HttpService } from '@my-product-app/frontend-core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  readonly httpService = inject(HttpService);
   constructor(private apollo: Apollo) {}
 
   signup(

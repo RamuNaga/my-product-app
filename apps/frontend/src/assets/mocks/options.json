@@ -1,0 +1,17 @@
+{
+  "roles": [
+    { "label": "Admin", "value": "admin" },
+    { "label": "Operator", "value": "operator" },
+    { "label": "Manager", "value": "manager" }
+  ],
+  "companyTypes": [
+    { "label": "Manufacturer", "value": "manufacturer" },
+    { "label": "Client", "value": "client" },
+    { "label": "Supplier", "value": "supplier" }
+  ],
+  "clients": [
+    { "label": "Tesco", "value": "tesco" },
+    { "label": "Sainsbury", "value": "sainsbury" },
+    { "label": "Co-op", "value": "coop" }
+  ]
+}

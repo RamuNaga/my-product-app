@@ -12,6 +12,6 @@
     "noPropertyAccessFromIndexSignature": true
   },
   "files": [],
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "../company/src/lib/graphql/company.model.ts"],
   "exclude": ["node_modules", "dist"] // Exclude unnecessary directories
 }

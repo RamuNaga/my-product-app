@@ -4,7 +4,7 @@ import * as path from 'path';
 
 import { GraphQLConfigModule } from './config/graphql.module';
 import { MicroserviceModule } from './config/microservice.module';
-import { ProductModule } from '@my-product-app/product';
+//import { ProductModule } from '@my-product-app/product';
 import { UserModule } from '@my-product-app/user';
 import { SharedModule } from '@my-product-app/backend-shared';
 import { ProductController } from './controllers/product.controller';
@@ -19,7 +19,7 @@ import { ProductController } from './controllers/product.controller';
     }),
     SharedModule,
     GraphQLConfigModule,
-    ProductModule,
+    //ProductModule,
     UserModule,
     MicroserviceModule,
   ],
