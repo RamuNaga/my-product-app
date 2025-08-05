@@ -1,4 +1,4 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { InputType, Field, Float } from '@nestjs/graphql';
 import { IsNotEmpty, IsOptional, Length } from 'class-validator';
 import { BaseCreateInput } from '@my-product-app/backend-shared';
 
@@ -6,18 +6,26 @@ import { BaseCreateInput } from '@my-product-app/backend-shared';
 export class CreateProductInput extends BaseCreateInput {
   @Field()
   @IsNotEmpty()
-  productcode!: string;
+  productCode!: string;
 
   @Field()
   @IsNotEmpty()
   @Length(2, 100)
   declare name: string;
 
-  @Field({ nullable: true }) // Marking the field as optional
-  @IsOptional() // Validator to ensure optionality
+  @Field()
+  @IsNotEmpty()
   description!: string;
 
   @Field({ nullable: true })
   @IsOptional()
   image?: string;
+
+  @Field()
+  @IsNotEmpty()
+  productWeight!: string;
+
+  @Field(() => Float)
+  @IsNotEmpty()
+  price!: number;
 }

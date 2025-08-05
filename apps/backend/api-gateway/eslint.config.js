@@ -12,6 +12,9 @@ module.exports = [
             '^@my-product-app/backend-shared',
             '^@my-product-app/product',
             '^@my-product-app/user',
+            '^@my-product-app/backend-company',
+            '^@my-product-app/backend-company-location',
+            '@my-product-app/backend-registration',
           ],
           enforceBuildableLibDependency: true,
           depConstraints: [

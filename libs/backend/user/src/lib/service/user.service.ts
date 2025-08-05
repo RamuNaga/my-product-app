@@ -8,6 +8,9 @@ import { User } from '../graphql/user.model';
 import { PrismaService } from '@my-product-app/prisma';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { UserRole as GQLUserRole } from '../graphql/user.model'; // GraphQL enum
+import { User as PrismaUser, UserRole as PrismaUserRole } from '@prisma/client'; // Prisma types
+import { UserWithoutPassword } from '../interfaces/user.interface';
 
 @Injectable()
 export class UserService {
@@ -16,19 +19,30 @@ export class UserService {
     private readonly jwtService: JwtService
   ) {}
 
-  async createUser(createUserInput: CreateUserInput): Promise<User> {
-    const { email, password } = createUserInput;
+  async create(createUserInput: CreateUserInput): Promise<UserWithoutPassword> {
+    const { email, password, username, role, companyId } = createUserInput;
 
-    // ❗ Corrected: should throw if email is NOT available
-    const emailAvailable = await this.isEmailAvailable(email);
-    if (!emailAvailable) {
+    const emailExists = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (emailExists) {
       throw new ConflictException('Email is already in use.');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    return this.prisma.user.create({
-      data: { ...createUserInput, password: hashedPassword },
+
+    const user = await this.prisma.user.create({
+      data: {
+        email,
+        username,
+        password: hashedPassword,
+        role: role as PrismaUserRole,
+        companyId,
+      },
     });
+
+    return this.mapUser(user);
   }
 
   async login(
@@ -52,23 +66,27 @@ export class UserService {
     const { password: _, ...userWithoutPassword } = user;
 
     return {
-      user: userWithoutPassword,
+      user: this.mapUser(userWithoutPassword as PrismaUser),
       accessToken,
     };
   }
 
-  async findAll(): Promise<User[]> {
-    return this.prisma.user.findMany({
+  async findAll(): Promise<UserWithoutPassword[]> {
+    const users = await this.prisma.user.findMany({
       select: {
         id: true,
         email: true,
         username: true,
         role: true,
+        companyId: true,
         createdAt: true,
         updatedAt: true,
-        password: false,
+        // no password selected here!
       },
     });
+
+    // Cast each user as Partial without password
+    return users.map((user) => this.mapUser(user));
   }
 
   async isEmailAvailable(email: string): Promise<boolean> {
@@ -76,5 +94,18 @@ export class UserService {
       where: { email },
     });
     return !user;
+  }
+
+  /**
+   * Map Prisma user (with or without password) to GraphQL user by casting role
+   * Accepts user WITHOUT password as input here.
+   */
+  private mapUser(
+    user: Omit<PrismaUser, 'password'> | PrismaUser
+  ): UserWithoutPassword {
+    return {
+      ...user,
+      role: user.role as GQLUserRole,
+    };
   }
 }

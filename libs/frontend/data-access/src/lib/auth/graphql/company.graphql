@@ -1,5 +1,5 @@
-mutation CreateCompany($input: CreateCompanyInput!) {
-  createCompany(input: $input) {
+mutation createCompany($createCompanyInput: CreateCompanyInput!) {
+  createCompany(createCompanyInput: $createCompanyInput) {
     id
     name
     type

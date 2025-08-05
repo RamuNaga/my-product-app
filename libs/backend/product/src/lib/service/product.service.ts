@@ -13,7 +13,10 @@ export class ProductService {
 
   async create(data: CreateProductInput) {
     try {
-      return await this.prisma.product.create({ data });
+      const product = await this.prisma.product.create({
+        data,
+      });
+      return product;
     } catch (error) {
       // Prisma unique constraint violation
       console.log('Prisma unique constraint violation calling');

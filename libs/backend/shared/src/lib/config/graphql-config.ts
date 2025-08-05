@@ -4,6 +4,7 @@ import { join } from 'path';
 import { Request } from 'express';
 
 export const graphqlConfig: GqlModuleOptions & ApolloDriverConfig = {
+  path: '/graphql', // 👈 add this
   autoSchemaFile: join(process.cwd(), 'dist/schema.gql'),
   sortSchema: true,
   playground: true,

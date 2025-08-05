@@ -21,7 +21,7 @@ export class ProductResolver extends BaseProductResolver {
     super(prisma); // Pass prisma to the base resolver constructor
   }
 
-  @Query(() => [Product])
+  @Query(() => [Product], { name: 'products' })
   async products(): Promise<Product[]> {
     const products = await this.prisma.product.findMany();
     return products.map((p) => ({

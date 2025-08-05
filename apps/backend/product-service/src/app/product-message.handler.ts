@@ -8,14 +8,17 @@ export class ProductMessageHandler {
 
   @MessagePattern({ cmd: 'create_product' })
   async create(@Payload() data: any) {
-    const { productcode, name, description, imagePath } = data;
+    const { productCode, name, description, imagePath, productWeight, price } =
+      data;
 
     try {
       const product = await this.productService.create({
-        productcode,
+        productCode,
         name,
         description,
         image: imagePath ?? null,
+        productWeight,
+        price,
       });
 
       return { status: 'success', data: product };

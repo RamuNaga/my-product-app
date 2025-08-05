@@ -1,6 +1,7 @@
-mutation CreateCompanyLocation($input: CreateCompanyLocationInput!) {
-  createCompanyLocation(input: $input) {
+mutation createCompanyLocation($createLocationInput: CreateLocationInput!) {
+  createCompanyLocation(createLocationInput: $createLocationInput) {
     id
+    location
     address
     city
     country

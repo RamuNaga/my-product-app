@@ -1,0 +1,5 @@
+mutation registerCompanyUser(
+  $registerCompanyUserInput: RegisterCompanyUserInput!
+) {
+  registerCompanyUser(registerCompanyUserInput: $registerCompanyUserInput)
+}

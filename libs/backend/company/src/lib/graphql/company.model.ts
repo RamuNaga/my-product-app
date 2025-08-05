@@ -1,4 +1,16 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+// company.model.ts
+import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
+
+export enum CompanyType {
+  MANUFACTURER = 'MANUFACTURER',
+  CLIENT = 'CLIENT',
+  SUPPLIER = 'SUPPLIER',
+}
+
+registerEnumType(CompanyType, {
+  name: 'CompanyType',
+  description: 'Type of company',
+});
 
 @ObjectType()
 export class Company {
@@ -8,15 +20,9 @@ export class Company {
   @Field()
   name!: string;
 
-  @Field()
-  type!: string;
+  @Field(() => CompanyType)
+  type!: CompanyType;
 
   @Field({ nullable: true })
   contact?: string;
-
-  @Field()
-  createdAt!: Date;
-
-  @Field()
-  updatedAt!: Date;
 }

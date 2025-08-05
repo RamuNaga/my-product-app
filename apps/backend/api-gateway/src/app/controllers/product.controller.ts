@@ -15,6 +15,7 @@ import { diskStorage } from 'multer';
 import { extname, join, sep } from 'path';
 import * as fs from 'fs';
 import { Observable } from 'rxjs';
+import { CurrentUser } from '@my-product-app/backend-shared';
 
 const uploadPath = join(__dirname, '../../../../uploads/products');
 if (!fs.existsSync(uploadPath)) {
@@ -47,10 +48,13 @@ export class ProductController {
     @UploadedFile() file: Express.Multer.File,
     @Body()
     body: {
-      productcode: string;
+      productCode: string;
       name: string;
-      description?: string;
-    }
+      description: string;
+      productWeight: string;
+      price: number;
+    },
+    @CurrentUser() user: any
   ) {
     if (!file) {
       throw new HttpException('File is required', HttpStatus.BAD_REQUEST);
@@ -60,7 +64,10 @@ export class ProductController {
 
     try {
       const result = await this.productClient
-        .send({ cmd: 'create_product' }, { ...body, imagePath: relativePath })
+        .send(
+          { cmd: 'create_product' },
+          { ...body, imagePath: relativePath, companyId: user.companyId }
+        )
         .toPromise();
 
       return result;

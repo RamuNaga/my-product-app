@@ -1,13 +1,14 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { WorkorderService } from '../service/workorder.service';
+
 import { CreateWorkorderInput } from '../dto/create-workoder.input';
 import { Workorder } from '../graphql/workorder.model';
 import { UpdateWorkorderInput } from '../dto/update-workorder.input';
 import { CurrentUser } from '@my-product-app/backend-shared';
+import { WorkOrderService } from '../service/workorder.service';
 
 @Resolver(() => Workorder)
 export class WorkorderResolver {
-  constructor(private readonly workorderService: WorkorderService) {}
+  constructor(private readonly workorderService: WorkOrderService) {}
 
   @Mutation(() => Workorder)
   createWorkOrder(

@@ -1,10 +1,12 @@
 query findAllProduct {
   products {
     id
-    productcode
+    productCode
     name
     description
     image
+    productWeight
+    price
     createdAt
   }
 }
