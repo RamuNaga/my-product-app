@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import {
-  SignupMutation,
-  SignupMutationVariables,
-  SignupDocument,
+  RegisterCompanyUserMutation,
+  RegisterCompanyUserMutationVariables,
+  RegisterCompanyUserDocument,
   LoginMutationVariables,
   LoginMutation,
   LoginDocument,
@@ -20,23 +20,27 @@ export class AuthService {
   readonly httpService = inject(HttpService);
   constructor(private apollo: Apollo) {}
 
-  signup(
-    variables: SignupMutationVariables
-  ): Observable<SignupMutation['createUser']> {
+  registerCompanyUser(
+    variables: RegisterCompanyUserMutationVariables
+  ): Observable<boolean> {
     return this.apollo
-      .mutate<SignupMutation, SignupMutationVariables>({
-        mutation: SignupDocument,
+      .mutate<
+        RegisterCompanyUserMutation,
+        RegisterCompanyUserMutationVariables
+      >({
+        mutation: RegisterCompanyUserDocument,
         variables,
       })
       .pipe(
         map((result) => {
-          if (result.data) {
-            return result.data.createUser;
+          if (result.data?.registerCompanyUser != null) {
+            return result.data.registerCompanyUser;
           }
-          throw new Error('No data returned from signup mutation');
+          throw new Error('No data returned from registerCompanyUser mutation');
         })
       );
   }
+
   login(variables: LoginMutationVariables): Observable<LoginMutation['login']> {
     return this.apollo
       .mutate<LoginMutation, LoginMutationVariables>({

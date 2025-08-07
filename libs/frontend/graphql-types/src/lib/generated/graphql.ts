@@ -31,7 +31,7 @@ export type CompanyLocation = {
   __typename?: 'CompanyLocation';
   address: Scalars['String']['output'];
   city: Scalars['String']['output'];
-  companyId: Scalars['Int']['output'];
+  companyId?: Maybe<Scalars['Float']['output']>;
   contact?: Maybe<Scalars['String']['output']>;
   country: Scalars['String']['output'];
   county: Scalars['String']['output'];
@@ -52,13 +52,13 @@ export enum CompanyType {
 export type CreateCompanyInput = {
   contact: Scalars['String']['input'];
   name: Scalars['String']['input'];
-  type: Scalars['String']['input'];
+  type: CompanyType;
 };
 
 export type CreateLocationInput = {
   address: Scalars['String']['input'];
   city: Scalars['String']['input'];
-  companyId: Scalars['Float']['input'];
+  companyId?: InputMaybe<Scalars['Float']['input']>;
   contact: Scalars['String']['input'];
   country: Scalars['String']['input'];
   county: Scalars['String']['input'];
@@ -76,7 +76,7 @@ export type CreateProductInput = {
 };
 
 export type CreateUserInput = {
-  companyId: Scalars['Int']['input'];
+  companyId?: InputMaybe<Scalars['Float']['input']>;
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
   role: UserRole;
@@ -208,7 +208,7 @@ export type UpdateProductInput = {
 
 export type User = {
   __typename?: 'User';
-  companyId: Scalars['Int']['output'];
+  companyId?: Maybe<Scalars['Float']['output']>;
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
@@ -231,7 +231,7 @@ export type CreateCompanyLocationMutationVariables = Exact<{
 }>;
 
 
-export type CreateCompanyLocationMutation = { __typename?: 'Mutation', createCompanyLocation: { __typename?: 'CompanyLocation', id: number, location: string, address: string, city: string, country: string, postalCode: string, county: string, contact?: string | null, companyId: number } };
+export type CreateCompanyLocationMutation = { __typename?: 'Mutation', createCompanyLocation: { __typename?: 'CompanyLocation', id: number, location: string, address: string, city: string, country: string, postalCode: string, county: string, contact?: string | null, companyId?: number | null } };
 
 export type CreateCompanyMutationVariables = Exact<{
   createCompanyInput: CreateCompanyInput;

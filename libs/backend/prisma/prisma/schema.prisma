@@ -75,8 +75,8 @@ model CompanyLocation {
   postalCode  String
   county      String?
   contact     String?
-  companyId   Int
-  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId   Int?
+  company     Company?  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -87,8 +87,8 @@ model User {
   email     String   @unique
   password  String
   role      UserRole @default(STAFF)
-  companyId Int
-  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId Int?
+  company   Company?  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

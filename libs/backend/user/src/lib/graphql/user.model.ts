@@ -38,8 +38,8 @@ export class User {
   @Field(() => UserRole)
   role!: UserRole;
 
-  @Field(() => Int)
-  companyId!: number;
+  @Field({ nullable: true })
+  companyId?: number;
 
   @Field()
   createdAt!: Date;

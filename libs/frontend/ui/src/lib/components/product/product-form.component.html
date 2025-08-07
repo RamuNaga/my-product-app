@@ -42,6 +42,26 @@
       </div>
 
       <div class="form-field">
+        <lib-input-field
+          [control]="weightControl"
+          label="Product Weight"
+          placeholder="Enter Weight"
+          [required]="false"
+          type="text"
+        ></lib-input-field>
+      </div>
+
+      <div class="form-field">
+        <lib-input-field
+          [control]="priceControl"
+          label="Product price"
+          placeholder="Enter price"
+          [required]="false"
+          type="number"
+        ></lib-input-field>
+      </div>
+
+      <div class="form-field">
         <lib-ui-product-image-upload
           [uploadUrl]="productImageUploadUrl()"
           [formData]="productForm.value"

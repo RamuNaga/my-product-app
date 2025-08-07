@@ -4,10 +4,12 @@ import { ProductFormModel as Product } from './product.model';
 @Injectable({ providedIn: 'root' })
 export class ProductStore {
   readonly product = signal<Product>({
-    productcode: '',
+    productCode: '',
     name: '',
     description: '',
     image: '',
+    productWeight: '',
+    price: 0,
   });
 
   selectedFile = signal<File | null>(null);
@@ -24,10 +26,12 @@ export class ProductStore {
 
   reset() {
     this.product.set({
-      productcode: '',
+      productCode: '',
       name: '',
       description: '',
       image: '',
+      productWeight: '',
+      price: 0,
     });
     this.selectedFile.set(null);
     this.resetImage();

@@ -32,14 +32,19 @@ export class UserService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const data: any = {
+      email,
+      username,
+      password: hashedPassword,
+      role: role as PrismaUserRole,
+    };
+
+    if (companyId !== undefined) {
+      data.companyId = companyId;
+    }
+
     const user = await this.prisma.user.create({
-      data: {
-        email,
-        username,
-        password: hashedPassword,
-        role: role as PrismaUserRole,
-        companyId,
-      },
+      data,
     });
 
     return this.mapUser(user);
@@ -106,6 +111,7 @@ export class UserService {
     return {
       ...user,
       role: user.role as GQLUserRole,
+      companyId: user.companyId === null ? undefined : user.companyId,
     };
   }
 }

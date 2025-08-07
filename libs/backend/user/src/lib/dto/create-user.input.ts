@@ -1,4 +1,4 @@
-import { InputType, Field, Int } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
 import { IsEmail, IsNotEmpty, MinLength, IsEnum, IsInt } from 'class-validator';
 import { UserRole } from '../graphql/user.model'; // or wherever your enum is defined
 
@@ -20,7 +20,7 @@ export class CreateUserInput {
   @IsEnum(UserRole, { message: 'Invalid role' })
   role!: UserRole;
 
-  @Field(() => Int)
+  @Field({ nullable: true })
   @IsInt({ message: 'Company ID must be a number' })
-  companyId!: number;
+  companyId?: number;
 }

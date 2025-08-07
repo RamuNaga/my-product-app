@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormGroup,
@@ -14,6 +19,15 @@ import { MaterialModule } from '@my-product-app/frontend-shared';
 import { CompanyFormComponent } from '../company/company-form.component';
 import { LocationFormComponent } from '../location/location-form.component';
 import { UserFormComponent } from '../user/user-form.component';
+import { AuthService } from '@my-product-app/frontend-data-access';
+import {
+  CompanyType,
+  CreateCompanyInput,
+  CreateLocationInput,
+  CreateUserInput,
+  RegisterCompanyUserInput,
+  UserRole,
+} from '@my-product-app/frontend-graphql-types';
 
 @Component({
   selector: 'lib-auth-form',
@@ -34,6 +48,7 @@ import { UserFormComponent } from '../user/user-form.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthFormComponent {
+  readonly authService = inject(AuthService);
   selectedTabIndex = 0;
 
   // Company form controls matching Prisma Company model
@@ -78,8 +93,51 @@ export class AuthFormComponent {
 
   handleFormSubmit(): void {
     if (this.signupForm.valid) {
-      console.log(' Signup form submitted:', this.signupForm.value);
-      // Trigger API call or service action here
+      const { company, location, user } = this.signupForm.value;
+
+      // Ensure password matches
+      if (user?.password !== user?.confirmPassword) {
+        console.error(' Passwords do not match');
+        return;
+      }
+
+      // Strip confirmPassword before sending
+      const cleanUser = { ...user };
+      delete cleanUser.confirmPassword;
+
+      const roleStr = (cleanUser.role ?? 'STAFF').toUpperCase();
+      // if (!Object.keys(UserRole).includes(roleStr)) {
+      //   console.error(' Invalid user role:', roleStr);
+      //   return;
+      // }
+      cleanUser.role = roleStr as UserRole;
+
+      const cleanCompany = { ...company };
+
+      const typeStr = (cleanCompany.type ?? 'MANUFACTURER').toUpperCase();
+
+      cleanCompany.type = typeStr as CompanyType;
+
+      const registerCompanyUserInput: RegisterCompanyUserInput = {
+        company: cleanCompany as CreateCompanyInput,
+        location: location as CreateLocationInput, // companyId will be added in backend
+        user: cleanUser as CreateUserInput, // companyId will be added in backend
+      };
+
+      this.authService
+        .registerCompanyUser({ registerCompanyUserInput })
+        .subscribe({
+          next: (success) => {
+            if (success) {
+              console.log('Company user registered successfully!');
+            } else {
+              console.error('Registration failed.');
+            }
+          },
+          error: (err) => {
+            console.error('Error registering company user:', err);
+          },
+        });
     } else {
       this.markAllAsTouched(this.signupForm);
     }

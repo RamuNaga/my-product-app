@@ -7,12 +7,12 @@
   <img
     mat-card-image
     [src]="'http://localhost:3000' + product.image"
-    alt="{{ product.productcode }}"
+    alt="{{ product.productCode }}"
   />
   }
 
   <mat-card-content>
-    <p>{{ product.productcode }}</p>
+    <p>{{ product.productCode }}</p>
   </mat-card-content>
   <div class="card-footer">
     <button mat-icon-button (click)="triggerEdit()" matTooltip="Edit Product">

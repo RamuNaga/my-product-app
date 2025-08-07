@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, output, computed, ViewChild } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+  computed,
+  ViewChild,
+  signal,
+  OnInit,
+} from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MaterialModule } from '@my-product-app/frontend-shared';
@@ -16,7 +24,7 @@ import { MaterialModule } from '@my-product-app/frontend-shared';
   templateUrl: './signup-stepper.component.html',
   styleUrls: ['./signup-stepper.component.scss'],
 })
-export class SignupStepperComponent {
+export class SignupStepperComponent implements OnInit {
   @ViewChild(MatStepper) stepper!: MatStepper;
 
   readonly signupForm = input<FormGroup>();
@@ -26,7 +34,19 @@ export class SignupStepperComponent {
 
   readonly formSubmitted = output<void>();
 
-  readonly isFormValid = computed(() => this.signupForm()?.valid ?? false);
+  private formValidSignal = signal(false);
+
+  readonly isFormValid = computed(() => this.formValidSignal());
+
+  ngOnInit() {
+    const form = this.signupForm();
+    if (form) {
+      this.formValidSignal.set(form.valid);
+      form.statusChanges.subscribe(() => {
+        this.formValidSignal.set(form.valid);
+      });
+    }
+  }
 
   onSubmit(): void {
     const form = this.signupForm();

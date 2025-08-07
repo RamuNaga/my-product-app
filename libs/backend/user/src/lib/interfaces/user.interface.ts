@@ -6,7 +6,7 @@ export interface IUser {
   username: string;
   email: string;
   role: UserRole;
-  companyId: number;
+  companyId?: number;
   createdAt: Date;
   updatedAt: Date;
 }

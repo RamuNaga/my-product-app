@@ -58,9 +58,11 @@ export class ProductFormComponent {
   readonly productListStore = inject(ProductListStore);
 
   readonly productForm: FormGroup = this.fb.group({
-    productcode: new FormControl('', [Validators.required]),
+    productCode: new FormControl('', [Validators.required]),
     name: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
+    productWeight: new FormControl('', [Validators.required]),
+    price: new FormControl('', [Validators.required]),
   });
 
   readonly productImageUploadUrl = computed(
@@ -68,8 +70,8 @@ export class ProductFormComponent {
   );
 
   constructor() {
-    this.productForm.get('productcode')?.valueChanges.subscribe((value) => {
-      this.productStore.updateField('productcode', value);
+    this.productForm.get('productCode')?.valueChanges.subscribe((value) => {
+      this.productStore.updateField('productCode', value);
     });
 
     this.productForm.get('name')?.valueChanges.subscribe((value) => {
@@ -78,6 +80,12 @@ export class ProductFormComponent {
 
     this.productForm.get('description')?.valueChanges.subscribe((value) => {
       this.productStore.updateField('description', value);
+    });
+    this.productForm.get('productWeight')?.valueChanges.subscribe((value) => {
+      this.productStore.updateField('productWeight', value);
+    });
+    this.productForm.get('price')?.valueChanges.subscribe((value) => {
+      this.productStore.updateField('price', value);
     });
   }
 
@@ -91,6 +99,14 @@ export class ProductFormComponent {
 
   get descriptionControl(): FormControl {
     return this.productForm.get('description') as FormControl;
+  }
+
+  get weightControl(): FormControl {
+    return this.productForm.get('productWeight') as FormControl;
+  }
+
+  get priceControl(): FormControl {
+    return this.productForm.get('price') as FormControl;
   }
 
   onFileSelected(event: { file: File; previewUrl: string } | string) {

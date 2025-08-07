@@ -12,6 +12,7 @@ module.exports = [
             '^@my-product-app/backend-shared',
             '^@my-product-app/prisma',
             '^@my-product-app/user',
+            '@my-product-app/backend-registration',
           ],
           enforceBuildableLibDependency: true,
           depConstraints: [

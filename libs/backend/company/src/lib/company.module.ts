@@ -7,6 +7,6 @@ import { PrismaService } from '@my-product-app/prisma';
 @Module({
   imports: [SharedModule],
   providers: [CompanyService, CompanyResolver, PrismaService],
-  exports: [CompanyService],
+  exports: [CompanyService, CompanyResolver],
 })
 export class CompanyModule {}

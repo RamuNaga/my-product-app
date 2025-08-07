@@ -38,8 +38,8 @@ export class CreateLocationInput {
   @IsOptional()
   contact?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsInt()
   @Type(() => Number) // transforms incoming value to number
-  companyId!: number; // required field to link location to company
+  companyId?: number; // required field to link location to company
 }

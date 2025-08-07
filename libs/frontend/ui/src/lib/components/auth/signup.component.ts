@@ -12,9 +12,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { SelectFieldComponent } from '../form-controls/select-field.component';
-
+//  AuthService,
 import {
-  AuthService,
   OptionsService,
   LocationsService,
   Location,
@@ -50,7 +49,7 @@ export class SignupComponent {
   private locationData: Location[] = [];
   loadingOptions = signal(true);
 
-  private readonly authService = inject(AuthService);
+  //private readonly authService = inject(AuthService);
   private readonly optionsService = inject(OptionsService);
   private readonly locationsService = inject(LocationsService);
 
@@ -191,24 +190,23 @@ export class SignupComponent {
   }
 
   onSubmit() {
-    if (this.signupForm.valid) {
-      const { username, email, password, role, company } =
-        this.signupForm.value;
-      const createUserInput = { username, email, password, role, company };
-
-      this.authService
-        .signup({ createUserInput })
-        .pipe(
-          tap((user) => {
-            console.log('User signed up:', user);
-            // reset or navigate here
-          })
-        )
-        .subscribe({
-          error: (err) => console.error('Signup error:', err),
-        });
-    } else {
-      this.signupForm.markAllAsTouched();
-    }
+    // if (this.signupForm.valid) {
+    //   //const { username, email, password, role, company } =
+    //     this.signupForm.value;
+    //   //const createUserInput = { username, email, password, role, company };
+    //   // this.authService
+    //   //   .signup({ createUserInput })
+    //   //   .pipe(
+    //   //     tap((user) => {
+    //   //       console.log('User signed up:', user);
+    //   //       // reset or navigate here
+    //   //     })
+    //   //   )
+    //   //   .subscribe({
+    //   //     error: (err) => console.error('Signup error:', err),
+    //   //   });
+    // } else {
+    //   this.signupForm.markAllAsTouched();
+    // }
   }
 }

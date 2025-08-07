@@ -1,5 +1,6 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsNotEmpty } from 'class-validator';
+import { IsEnum, IsNotEmpty } from 'class-validator';
+import { CompanyType } from '../graphql/company.model';
 
 @InputType()
 export class CreateCompanyInput {
@@ -7,9 +8,9 @@ export class CreateCompanyInput {
   @IsNotEmpty({ message: 'Company name is required' })
   name!: string;
 
-  @Field()
-  @IsNotEmpty({ message: 'Company type is required' })
-  type!: string;
+  @Field(() => CompanyType)
+  @IsEnum(CompanyType, { message: 'Invalid role' })
+  type!: CompanyType;
 
   @Field()
   @IsNotEmpty({ message: 'Contact is required' })
