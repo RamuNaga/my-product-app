@@ -5,12 +5,13 @@ import {
   FormControl,
 } from '@angular/forms';
 
-import { ReactiveFormsModule } from '@angular/forms'; // Required for FormControl usage
+import { ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { MaterialModule } from '@my-product-app/frontend-shared';
 
 @Component({
   selector: 'lib-input-field',
+  host: { '[attr.data-component-id]': "'unique-id-1'" },
   templateUrl: './input-field.component.html',
   styleUrls: ['./input-field.component.scss'],
   providers: [
@@ -28,23 +29,23 @@ export class InputFieldComponent implements ControlValueAccessor {
   @Input() placeholder = '';
   @Input() type = 'text'; // text, email, password, etc.
   @Input() required = false;
+
+  // Initialize control by default so it is never undefined
   @Input() control: FormControl = new FormControl('');
+
   @Input() readonly = false;
 
   @Output() valueChange = new EventEmitter<string>();
+  /* eslint-disable @typescript-eslint/no-empty-function */
+  private onChange: (value: any) => void = () => {};
 
-  onTouched(): void {
-    // intentionally left empty: ControlValueAccessor callback
-  }
-  onChange: (value: any) => void = () => {
-    // noop until registered
-  };
+  private onTouched: () => void = () => {};
 
   writeValue(value: any): void {
-    this.control.setValue(value);
+    this.control.setValue(value, { emitEvent: false });
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: any) => void): void {
     this.onChange = fn;
     this.control.valueChanges.subscribe((val) => {
       this.valueChange.emit(val);
@@ -52,11 +53,15 @@ export class InputFieldComponent implements ControlValueAccessor {
     });
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
-  setDisabledState?(isDisabled: boolean): void {
+  onBlur(): void {
+    this.onTouched();
+  }
+
+  setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {
       this.control.disable();
     } else {

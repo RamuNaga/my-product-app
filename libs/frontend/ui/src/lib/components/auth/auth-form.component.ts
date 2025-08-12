@@ -1,21 +1,14 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormGroup,
-  FormControl,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { LoginComponent } from './login.component';
 import { TailwindHostComponent } from '../tailwind-host/tailwind-host.component';
 import { SignupStepperComponent } from './signup-stepper.component';
-import { MaterialModule } from '@my-product-app/frontend-shared';
+import {
+  MaterialModule,
+  SignupFormStore,
+} from '@my-product-app/frontend-shared';
 import { CompanyFormComponent } from '../company/company-form.component';
 import { LocationFormComponent } from '../location/location-form.component';
 import { UserFormComponent } from '../user/user-form.component';
@@ -28,6 +21,7 @@ import {
   RegisterCompanyUserInput,
   UserRole,
 } from '@my-product-app/frontend-graphql-types';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'lib-auth-form',
@@ -49,108 +43,171 @@ import {
 })
 export class AuthFormComponent {
   readonly authService = inject(AuthService);
+  readonly signupStore = inject(SignupFormStore);
+  readonly snackBar = inject(MatSnackBar);
+
   selectedTabIndex = 0;
 
-  // Company form controls matching Prisma Company model
-  readonly companyGroup = new FormGroup({
-    name: new FormControl('Greencore', Validators.required), // companyNameControl => name
-    type: new FormControl('', Validators.required), // companyTypeControl => type
-    contact: new FormControl('+353 1 605 1000', Validators.required), // companyContactControl => contact
-  });
+  constructor() {
+    // Initialize the root form & child groups in the store on component creation
+    this.signupStore.initForm();
+  }
 
-  // Location form controls matching Prisma CompanyLocation model
-  readonly locationGroup = new FormGroup({
-    location: new FormControl('', Validators.required),
-    address: new FormControl('', Validators.required), // companyAddressControl => address
-    city: new FormControl(''), // companyCityControl => city
-    country: new FormControl(''), // companyCountryControl => country
-    postalCode: new FormControl(''), // companyPostcodeControl => postalCode
-    county: new FormControl(''), // companyCountyControl => county
-    contact: new FormControl(''), // companyContactControl => contact
-    // Removed companyLocationControl - no matching field in schema, or if it represents something else, clarify
-  });
+  get signupForm() {
+    return this.signupStore.signupForm()!;
+  }
 
-  // User form controls matching Prisma User model
-  readonly userGroup = new FormGroup({
-    username: new FormControl('', Validators.required), // usernameControl => username
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', Validators.required),
-    confirmPassword: new FormControl('', Validators.required), // Not in schema but needed for confirmation
-    role: new FormControl('STAFF', Validators.required),
-  });
+  get companyGroup() {
+    return this.signupStore.companyGroup()!;
+  }
 
-  readonly signupForm = new FormGroup({
-    company: this.companyGroup,
-    location: this.locationGroup,
-    user: this.userGroup,
-  });
+  get locationGroup() {
+    return this.signupStore.locationGroup()!;
+  }
 
-  // Signals for binding in the stepper component
-  readonly signupFormSignal = signal(this.signupForm);
-  readonly companyGroupSignal = signal(this.companyGroup);
-  readonly locationGroupSignal = signal(this.locationGroup);
-  readonly userGroupSignal = signal(this.userGroup);
+  get userGroup() {
+    return this.signupStore.userGroup()!;
+  }
+
+  get existingCompanyControl() {
+    return this.signupStore.existingCompanyControl()!;
+  }
+
+  get isNewCompany() {
+    return this.signupStore.isNewCompany();
+  }
 
   handleFormSubmit(): void {
-    if (this.signupForm.valid) {
-      const { company, location, user } = this.signupForm.value;
+    const form = this.signupForm;
+    if (!form) return;
 
-      // Ensure password matches
-      if (user?.password !== user?.confirmPassword) {
-        console.error(' Passwords do not match');
-        return;
-      }
+    if (!this.isFormValidForSubmission(form)) return;
 
-      // Strip confirmPassword before sending
-      const cleanUser = { ...user };
-      delete cleanUser.confirmPassword;
+    const payload = this.buildRegisterPayload(form.value);
 
-      const roleStr = (cleanUser.role ?? 'STAFF').toUpperCase();
-      // if (!Object.keys(UserRole).includes(roleStr)) {
-      //   console.error(' Invalid user role:', roleStr);
-      //   return;
-      // }
-      cleanUser.role = roleStr as UserRole;
+    this.submitRegistration(payload);
+  }
 
+  /**
+   * Validates the form before submission.
+   * Returns `true` if form is valid, `false` otherwise.
+   */
+  private isFormValidForSubmission(form: any): boolean {
+    if (!form.valid) {
+      this.markAllAsTouched(form);
+      return false;
+    }
+
+    const { user, existingCompany } = form.value;
+
+    if (!this.isNewCompany && !existingCompany) {
+      this.existingCompanyControl.markAsTouched();
+      return false;
+    }
+
+    if (user?.password !== user?.confirmPassword) {
+      this.showErrorSnackbar('Passwords do not match');
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Builds the API payload for registration based on form values.
+   */
+  private buildRegisterPayload(formValue: any): RegisterCompanyUserInput {
+    const { company, location, user, existingCompany } = formValue;
+
+    const cleanUser = { ...user };
+    delete cleanUser.confirmPassword;
+    cleanUser.role = (cleanUser.role ?? 'STAFF').toUpperCase() as UserRole;
+
+    if (this.isNewCompany) {
       const cleanCompany = { ...company };
+      cleanCompany.type = (
+        cleanCompany.type ?? 'MANUFACTURER'
+      ).toUpperCase() as CompanyType;
 
-      const typeStr = (cleanCompany.type ?? 'MANUFACTURER').toUpperCase();
-
-      cleanCompany.type = typeStr as CompanyType;
-
-      const registerCompanyUserInput: RegisterCompanyUserInput = {
+      return {
         company: cleanCompany as CreateCompanyInput,
-        location: location as CreateLocationInput, // companyId will be added in backend
-        user: cleanUser as CreateUserInput, // companyId will be added in backend
+        location: location as CreateLocationInput,
+        user: cleanUser as CreateUserInput,
       };
-
-      this.authService
-        .registerCompanyUser({ registerCompanyUserInput })
-        .subscribe({
-          next: (success) => {
-            if (success) {
-              console.log('Company user registered successfully!');
-            } else {
-              console.error('Registration failed.');
-            }
-          },
-          error: (err) => {
-            console.error('Error registering company user:', err);
-          },
-        });
     } else {
-      this.markAllAsTouched(this.signupForm);
+      return {
+        company: null as any,
+        location: location as CreateLocationInput,
+        user: cleanUser as CreateUserInput,
+        existingCompanyId: existingCompany?.id,
+      };
     }
   }
 
-  private markAllAsTouched(group: FormGroup) {
-    Object.values(group.controls).forEach((control) => {
-      if (control instanceof FormGroup) {
-        this.markAllAsTouched(control);
-      } else {
-        control.markAsTouched();
-      }
+  /**
+   * Submits the registration request and handles responses.
+   */
+  private submitRegistration(payload: RegisterCompanyUserInput): void {
+    this.authService
+      .registerCompanyUser({ registerCompanyUserInput: payload })
+      .subscribe({
+        next: (success) => {
+          if (success) {
+            this.handleSuccessfulRegistration();
+          } else {
+            this.showErrorSnackbar('Registration failed.');
+          }
+        },
+        error: (err) => {
+          console.error('Error registering company user:', err);
+          this.showErrorSnackbar('Error registering company user.');
+        },
+      });
+  }
+
+  /**
+   * Handles the UI updates after successful registration.
+   */
+  private handleSuccessfulRegistration(): void {
+    this.showSuccessSnackbar('Company user registered successfully!');
+    this.resetSignupForm();
+    this.switchToLogin();
+  }
+
+  /**
+   * Resets all signup form values and reinitializes store state.
+   */
+  private resetSignupForm(): void {
+    this.signupForm.reset();
+    this.signupStore.initForm();
+  }
+
+  /**
+   * Snackbar helpers
+   */
+  private showSuccessSnackbar(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      panelClass: ['snackbar-success'],
     });
+  }
+
+  private showErrorSnackbar(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      panelClass: ['snackbar-error'],
+    });
+  }
+
+  private markAllAsTouched(group: any) {
+    if (!group) return;
+    if ('controls' in group) {
+      Object.values(group.controls).forEach((control: any) => {
+        this.markAllAsTouched(control);
+      });
+    } else if ('markAsTouched' in group) {
+      group.markAsTouched();
+    }
   }
 
   switchToSignup() {

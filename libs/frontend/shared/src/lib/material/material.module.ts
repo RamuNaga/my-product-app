@@ -12,6 +12,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   exports: [
@@ -29,6 +33,10 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatProgressBarModule,
     MatTooltipModule,
     MatStepperModule,
+    MatButtonToggleModule,
+    MatAutocompleteModule,
+    MatRadioModule,
+    MatSnackBarModule,
   ],
 })
 export class MaterialModule {}

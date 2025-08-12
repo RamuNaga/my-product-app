@@ -4,3 +4,6 @@ export * from './lib/state/product/product.model';
 export * from './lib/material/material.module';
 export * from './lib/constants/routes';
 export * from './lib/state/product/product-list.store';
+export * from './lib/state/registerUser/signup-form.store';
+export * from './lib/state/company/company.model';
+export * from './lib/state/company/search-company-store';

@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '@my-product-app/frontend-shared';
+import {
+  MaterialModule,
+  SignupFormStore,
+} from '@my-product-app/frontend-shared';
 import { InputFieldComponent } from '../form-controls/input-field.component';
 import { SelectFieldComponent } from '../form-controls/select-field.component';
 import { Option, OptionsService } from '@my-product-app/frontend-data-access';
@@ -26,17 +29,23 @@ export class CompanyFormComponent {
   loadingOptions = signal(true);
   companyTypes = signal<Option[]>([]);
 
-  readonly formGroup = input<FormGroup>();
+  store = inject(SignupFormStore);
 
-  readonly nameControl = computed(
-    () => this.formGroup()?.get('name') as FormControl
-  );
-  readonly typeControl = computed(
-    () => this.formGroup()?.get('type') as FormControl
-  );
-  readonly contactControl = computed(
-    () => this.formGroup()?.get('contact') as FormControl
-  );
+  get companyGroup(): FormGroup {
+    return this.store.companyGroup()!;
+  }
+
+  nameControl() {
+    return this.companyGroup.get('name') as FormControl;
+  }
+
+  typeControl() {
+    return this.companyGroup.get('type') as FormControl;
+  }
+
+  contactControl() {
+    return this.companyGroup.get('contact') as FormControl;
+  }
 
   constructor() {
     this.loadCompanyTypes();

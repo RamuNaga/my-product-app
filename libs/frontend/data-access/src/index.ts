@@ -5,3 +5,5 @@ export * from './lib/workorder/work-order-form.service';
 export * from './lib/options/options.service';
 export * from './lib/locations/location.service';
 export * from './lib/interfaces/location.interface';
+export * from './lib/auth/company/company.service';
+export * from './lib/auth/company/search-company';

@@ -1,16 +1,28 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
-  input,
-  output,
-  computed,
   ViewChild,
-  signal,
-  OnInit,
+  OnDestroy,
+  inject,
+  effect,
+  EffectRef,
+  Output,
+  EventEmitter,
 } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatStepper, MatStepperModule } from '@angular/material/stepper';
-import { MaterialModule } from '@my-product-app/frontend-shared';
+import { MatStepper } from '@angular/material/stepper';
+import {
+  AbstractControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MaterialModule,
+  SignupFormStore,
+} from '@my-product-app/frontend-shared';
+import { CommonModule } from '@angular/common';
+import { UserFormComponent } from '../user/user-form.component';
+import { CompanyFormComponent } from '../company/company-form.component';
+import { LocationFormComponent } from '../location/location-form.component';
+import { CompanySelectComponent } from '../company/company-select.component';
 
 @Component({
   selector: 'lib-ui-signup-stepper',
@@ -19,59 +31,119 @@ import { MaterialModule } from '@my-product-app/frontend-shared';
     CommonModule,
     ReactiveFormsModule,
     MaterialModule,
-    MatStepperModule,
+    UserFormComponent,
+    CompanyFormComponent,
+    LocationFormComponent,
+    CompanySelectComponent,
   ],
   templateUrl: './signup-stepper.component.html',
   styleUrls: ['./signup-stepper.component.scss'],
 })
-export class SignupStepperComponent implements OnInit {
+export class SignupStepperComponent implements OnDestroy {
   @ViewChild(MatStepper) stepper!: MatStepper;
+  store = inject(SignupFormStore);
 
-  readonly signupForm = input<FormGroup>();
-  readonly companyGroup = input<FormGroup>();
-  readonly locationGroup = input<FormGroup>();
-  readonly userGroup = input<FormGroup>();
+  // Signals for reactive access
+  isNewCompany = this.store.isNewCompany;
 
-  readonly formSubmitted = output<void>();
+  private cleanupEffect?: EffectRef;
+  @Output() submitEvent = new EventEmitter<void>();
 
-  private formValidSignal = signal(false);
+  constructor() {
+    this.store.initForm();
 
-  readonly isFormValid = computed(() => this.formValidSignal());
+    this.cleanupEffect = effect(() => {
+      this.isNewCompany();
+    });
+  }
 
-  ngOnInit() {
-    const form = this.signupForm();
-    if (form) {
-      this.formValidSignal.set(form.valid);
-      form.statusChanges.subscribe(() => {
-        this.formValidSignal.set(form.valid);
-      });
+  ngOnDestroy() {
+    this.cleanupEffect?.destroy();
+  }
+
+  get companyStepControl(): AbstractControl {
+    return this.store.companyStepControl;
+  }
+
+  get locationStepControl(): AbstractControl {
+    return this.store.locationStepControl;
+  }
+
+  get userStepControl(): AbstractControl {
+    return this.store.userStepControl;
+  }
+
+  get existingCompanyCtrl() {
+    return this.store.existingCompanyCtrl;
+  }
+
+  get companyFormGroup(): FormGroup {
+    return this.store.companyFormGroup;
+  }
+
+  get locationFormGroup(): FormGroup {
+    return this.store.locationFormGroup;
+  }
+
+  get userFormGroup(): FormGroup {
+    return this.store.userFormGroup;
+  }
+
+  get isFormValid(): boolean {
+    if (this.store.isNewCompany()) {
+      return (
+        this.store.companyStepControl.valid &&
+        this.store.locationStepControl.valid &&
+        this.store.userStepControl.valid
+      );
+    } else {
+      return (
+        this.store.existingCompanyCtrl.valid &&
+        this.store.locationStepControl.valid &&
+        this.store.userStepControl.valid
+      );
     }
   }
 
-  onSubmit(): void {
-    const form = this.signupForm();
-    if (form?.valid) {
-      this.formSubmitted.emit();
-    } else if (form) {
-      this.markAllAsTouched(form);
-    }
+  onCompanyModeChange(isNew: boolean) {
+    this.store.setCompanyMode(isNew);
   }
 
   goNext(): void {
-    this.stepper.next();
+    if (!this.stepper) return;
+
+    const index = this.stepper.selectedIndex;
+    let control: AbstractControl | null = null;
+
+    if (index === 0) control = this.companyStepControl;
+    else if (index === 1) control = this.locationStepControl;
+    else if (index === 2) control = this.userStepControl;
+
+    if (control && control.valid) {
+      this.stepper.next();
+    } else if (control) {
+      this.markAllAsTouched(control as FormGroup);
+    }
   }
 
   goBack(): void {
-    this.stepper.previous();
+    if (!this.stepper) return;
+    if (this.stepper.selectedIndex > 0) {
+      this.stepper.previous();
+    }
   }
 
-  private markAllAsTouched(group: FormGroup): void {
-    Object.values(group.controls).forEach((control) => {
-      if (control instanceof FormGroup) {
-        this.markAllAsTouched(control);
-      } else {
-        control.markAsTouched();
-      }
-    });
+  private markAllAsTouched(control: AbstractControl | null) {
+    if (!control) return;
+
+    if (control instanceof FormGroup) {
+      Object.values(control.controls).forEach((c) => this.markAllAsTouched(c));
+    } else {
+      control.markAsTouched();
+    }
+  }
+
+  onSubmitClick() {
+    this.submitEvent.emit();
   }
 }

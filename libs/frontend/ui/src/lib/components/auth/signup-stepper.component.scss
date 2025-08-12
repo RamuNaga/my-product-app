@@ -1,0 +1,16 @@
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+mat-radio-group {
+  display: flex;
+  gap: 24px; /* Adjust spacing between radio buttons */
+  align-items: center; /* Vertically center align the radio buttons */
+}
+
+mat-radio-button {
+  display: flex;
+  align-items: center;
+}

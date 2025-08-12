@@ -178,6 +178,7 @@ export type Query = {
   isEmailAvailable: Scalars['Boolean']['output'];
   ping: Scalars['String']['output'];
   products: Array<Product>;
+  searchCompanies: Array<Company>;
 };
 
 
@@ -190,9 +191,15 @@ export type QueryIsEmailAvailableArgs = {
   email: Scalars['String']['input'];
 };
 
+
+export type QuerySearchCompaniesArgs = {
+  searchTerm: Scalars['String']['input'];
+};
+
 export type RegisterCompanyUserInput = {
-  company: CreateCompanyInput;
-  location: CreateLocationInput;
+  company?: InputMaybe<CreateCompanyInput>;
+  existingCompanyId?: InputMaybe<Scalars['Float']['input']>;
+  location?: InputMaybe<CreateLocationInput>;
   user: CreateUserInput;
 };
 

@@ -1,14 +1,7 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  signal,
-} from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '@my-product-app/frontend-shared';
+import { MaterialModule, SignupFormStore } from '@my-product-app/frontend-shared';
 import { InputFieldComponent } from '../form-controls/input-field.component';
 import { SelectFieldComponent } from '../form-controls/select-field.component';
 import {
@@ -16,6 +9,7 @@ import {
   Location,
 } from '@my-product-app/frontend-data-access';
 import { tap } from 'rxjs';
+
 
 export type Option = { label: string; value: string };
 
@@ -34,57 +28,53 @@ export type Option = { label: string; value: string };
 })
 export class LocationFormComponent {
   private readonly locationsService = inject(LocationsService);
+  private readonly signupFormStore = inject(SignupFormStore); // <-- Inject store
 
   loadingOptions = signal(true);
   locations = signal<Option[]>([]);
 
-  readonly formGroup = input<FormGroup>();
-
   private locationData: Location[] = [];
 
-  // Computed getters for each control
-  readonly locationControl = computed(
-    () => this.formGroup()?.get('location') as FormControl
+  /** Form group read directly from store */
+  get locationGroup(): FormGroup {
+    return this.signupFormStore.locationGroup()!;
+  }
+
+  /** Computed getters for controls */
+  locationControl = computed(
+    () => this.locationGroup.get('location') as FormControl
   );
-  readonly addressControl = computed(
-    () => this.formGroup()?.get('address') as FormControl
+  addressControl = computed(
+    () => this.locationGroup.get('address') as FormControl
   );
-  readonly cityControl = computed(
-    () => this.formGroup()?.get('city') as FormControl
+  cityControl = computed(() => this.locationGroup.get('city') as FormControl);
+  countryControl = computed(
+    () => this.locationGroup.get('country') as FormControl
   );
-  readonly countryControl = computed(
-    () => this.formGroup()?.get('country') as FormControl
+  postalCodeControl = computed(
+    () => this.locationGroup.get('postalCode') as FormControl
   );
-  readonly postalCodeControl = computed(
-    () => this.formGroup()?.get('postalCode') as FormControl
+  countyControl = computed(
+    () => this.locationGroup.get('county') as FormControl
   );
-  readonly countyControl = computed(
-    () => this.formGroup()?.get('county') as FormControl
-  );
-  readonly contactControl = computed(
-    () => this.formGroup()?.get('contact') as FormControl
+  contactControl = computed(
+    () => this.locationGroup.get('contact') as FormControl
   );
 
   constructor() {
     this.loadLocations();
 
     effect(() => {
-      const fg = this.formGroup();
-      if (!fg) return; // Wait until formGroup is defined
-
-      const locationControl = fg.get('location');
+      const locationControl = this.locationGroup.get('location');
       if (!locationControl) return;
 
-      // Subscribe to valueChanges and update fields on change
       locationControl.valueChanges.subscribe((selectedLocation) => {
         const locationInfo = this.locationData.find(
           (loc) => loc.location === selectedLocation
         );
 
-        console.log('locationInfo===', locationInfo);
-
         if (locationInfo) {
-          fg.patchValue({
+          this.locationGroup.patchValue({
             address: locationInfo.address || '',
             city: locationInfo.city || '',
             county: locationInfo.county || '',

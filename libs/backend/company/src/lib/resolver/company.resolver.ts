@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 
 import { CreateCompanyInput } from '../dto/create-company.input';
 import { CompanyService } from '../service/company.service';
@@ -13,5 +13,12 @@ export class CompanyResolver {
     @Args('createCompanyInput') createCompanyInput: CreateCompanyInput
   ) {
     return this.companyService.create(createCompanyInput);
+  }
+
+  @Query(() => [Company], { name: 'searchCompanies' })
+  async searchCompanies(
+    @Args('searchTerm') searchTerm: string
+  ): Promise<Company[]> {
+    return this.companyService.searchByName(searchTerm);
   }
 }

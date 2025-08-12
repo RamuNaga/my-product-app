@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '@my-product-app/frontend-shared';
+import {
+  MaterialModule,
+  SignupFormStore,
+} from '@my-product-app/frontend-shared';
 import { InputFieldComponent } from '../form-controls/input-field.component';
 import { SelectFieldComponent } from '../form-controls/select-field.component';
 import { Option, OptionsService } from '@my-product-app/frontend-data-access';
@@ -22,30 +25,31 @@ import { tap } from 'rxjs';
 })
 export class UserFormComponent {
   private readonly optionsService = inject(OptionsService);
+  private readonly signupFormStore = inject(SignupFormStore); // <-- Inject store
 
   loadingOptions = signal(true);
   roles = signal<Option[]>([]);
-  readonly formGroup = input<FormGroup>();
 
-  // Computed signals for each form control
-  readonly usernameControl = computed(
-    () => this.formGroup()?.get('username') as FormControl<string>
+  /** Read FormGroup from store */
+  get userGroup(): FormGroup {
+    return this.signupFormStore.userGroup()!;
+  }
+
+  /** Computed getters for form controls */
+  usernameControl = computed(
+    () => this.userGroup.get('username') as FormControl<string>
   );
-
-  readonly emailControl = computed(
-    () => this.formGroup()?.get('email') as FormControl<string>
+  emailControl = computed(
+    () => this.userGroup.get('email') as FormControl<string>
   );
-
-  readonly passwordControl = computed(
-    () => this.formGroup()?.get('password') as FormControl<string>
+  passwordControl = computed(
+    () => this.userGroup.get('password') as FormControl<string>
   );
-
-  readonly confirmPasswordControl = computed(
-    () => this.formGroup()?.get('confirmPassword') as FormControl<string>
+  confirmPasswordControl = computed(
+    () => this.userGroup.get('confirmPassword') as FormControl<string>
   );
-
-  readonly roleControl = computed(
-    () => this.formGroup()?.get('role') as FormControl<string>
+  roleControl = computed(
+    () => this.userGroup.get('role') as FormControl<string>
   );
 
   constructor() {

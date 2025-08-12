@@ -13,14 +13,30 @@ export class RegistrationService {
   ) {}
 
   async registerCompanyUser(dto: RegisterCompanyUserInput) {
-    // 1. Create company
-    const company = await this.companyService.create(dto.company);
+    let companyId: number;
 
-    // 2. Create company location
-    await this.companyLocationService.create({
-      ...dto.location,
-      companyId: company.id,
-    });
+    if (dto.existingCompanyId) {
+      companyId = dto.existingCompanyId;
+    } else {
+      if (!dto.company) {
+        throw new Error(
+          'Company data is required for new company registration'
+        );
+      }
+      if (!dto.location) {
+        throw new Error(
+          'Location data is required for new company registration'
+        );
+      }
+
+      const company = await this.companyService.create(dto.company);
+      companyId = company.id;
+
+      await this.companyLocationService.create({
+        ...dto.location,
+        companyId,
+      });
+    }
 
     if (!dto.user.password) {
       throw new Error('Password is required for user registration');
@@ -31,15 +47,14 @@ export class RegistrationService {
       username: dto.user.username,
       password: dto.user.password,
       role: dto.user.role,
-      companyId: company.id,
+      companyId,
     };
-    // 3. Create user and assign companyId
+
     const user = await this.userService.create(userInput);
     if (!user) {
       throw new Error('User creation failed');
     }
 
-    // Return combined result or relevant info
     return true;
   }
 }

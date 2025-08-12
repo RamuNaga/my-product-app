@@ -1,82 +1,79 @@
-<mat-horizontal-stepper linear #stepper>
+<mat-horizontal-stepper #stepper>
   <!-- Step 1: Company -->
-  <mat-step [stepControl]="companyGroup()!">
-    <ng-template matStepLabel>Company</ng-template>
-    <ng-content select="[step1]"></ng-content>
-
-    <div class="flex justify-between mt-4">
-      <span></span>
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="goNext()"
-        [disabled]="!companyGroup()?.valid"
+  <mat-step
+    [stepControl]="companyStepControl"
+    label="Company"
+    [errorMessage]="
+      companyStepControl.invalid ? 'Please fix errors in company form' : ''
+    "
+  >
+    <div>
+      <mat-radio-group
+        [formControl]="store.companyModeControl"
+        (change)="onCompanyModeChange(store.companyModeControl.value === 'new')"
       >
-        Next
-      </button>
+        <mat-radio-button value="new">Create New Company</mat-radio-button>
+        <mat-radio-button value="existing"
+          >Join Existing Company</mat-radio-button
+        >
+      </mat-radio-group>
+    </div>
+
+    <ng-container *ngIf="isNewCompany(); else existingCompanySelect">
+      <lib-ui-company-form
+        [formGroup]="companyFormGroup"
+        step1
+      ></lib-ui-company-form>
+    </ng-container>
+
+    <ng-template #existingCompanySelect>
+      <lib-ui-company-select
+        [control]="existingCompanyCtrl"
+      ></lib-ui-company-select>
+    </ng-template>
+
+    <div class="actions">
+      <!-- No Back button on first step -->
+      <button mat-raised-button color="primary" (click)="goNext()">Next</button>
     </div>
   </mat-step>
 
   <!-- Step 2: Location -->
-  <mat-step [stepControl]="locationGroup()!">
-    <ng-template matStepLabel>Location</ng-template>
-    <ng-content select="[step2]"></ng-content>
+  <mat-step
+    [stepControl]="locationStepControl"
+    label="Location"
+    [errorMessage]="
+      locationStepControl.invalid ? 'Please fix errors in location form' : ''
+    "
+  >
+    <lib-ui-location-form
+      [formGroup]="locationFormGroup"
+      step2
+    ></lib-ui-location-form>
 
-    <div class="flex justify-between mt-4">
+    <div class="actions">
       <button mat-button (click)="goBack()">Back</button>
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="goNext()"
-        [disabled]="!locationGroup()?.valid"
-      >
-        Next
-      </button>
+      <button mat-raised-button color="primary" (click)="goNext()">Next</button>
     </div>
   </mat-step>
 
   <!-- Step 3: User -->
-  <mat-step [stepControl]="userGroup()!">
-    <ng-template matStepLabel>User</ng-template>
-    <ng-content select="[step3]"></ng-content>
+  <mat-step
+    [stepControl]="userStepControl"
+    label="User"
+    [errorMessage]="
+      userStepControl.invalid ? 'Please fix errors in user form' : ''
+    "
+  >
+    <lib-ui-user-form [formGroup]="userFormGroup" step3></lib-ui-user-form>
 
-    <div class="flex justify-between mt-4">
+    <div class="actions">
       <button mat-button (click)="goBack()">Back</button>
       <button
         mat-raised-button
         color="primary"
-        (click)="goNext()"
-        [disabled]="!userGroup()?.valid"
-      >
-        Next
-      </button>
-    </div>
-  </mat-step>
-
-  <!-- Step 4: Confirmation -->
-  <mat-step>
-    <ng-template matStepLabel>Confirm & Submit</ng-template>
-
-    <p class="text-sm text-gray-600">
-      Please review your information before submitting.
-    </p>
-
-    <!-- Example Summary -->
-    <pre>{{ signupForm()?.status }}</pre>
-    <pre class="bg-gray-100 p-4 rounded mt-4 text-sm">
-          Company: {{ companyGroup()?.value | json }}
-          Location: {{ locationGroup()?.value | json }}
-          User: {{ userGroup()?.value | json }}
-    </pre>
-
-    <div class="flex justify-between mt-6">
-      <button mat-button (click)="goBack()">Back</button>
-      <button
-        mat-raised-button
-        color="accent"
-        type="button"
-        (click)="onSubmit()"
-        [disabled]="!isFormValid()"
+        [disabled]="!isFormValid"
+        (click)="onSubmitClick()"
       >
         Submit
       </button>
