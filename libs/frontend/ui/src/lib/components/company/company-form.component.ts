@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   MaterialModule,
   SignupFormStore,
@@ -25,26 +25,13 @@ import { tap } from 'rxjs';
 })
 export class CompanyFormComponent {
   private readonly optionsService = inject(OptionsService);
+  private readonly store = inject(SignupFormStore);
 
   loadingOptions = signal(true);
   companyTypes = signal<Option[]>([]);
 
-  store = inject(SignupFormStore);
-
   get companyGroup(): FormGroup {
-    return this.store.companyGroup()!;
-  }
-
-  nameControl() {
-    return this.companyGroup.get('name') as FormControl;
-  }
-
-  typeControl() {
-    return this.companyGroup.get('type') as FormControl;
-  }
-
-  contactControl() {
-    return this.companyGroup.get('contact') as FormControl;
+    return this.store.companyFormGroup;
   }
 
   constructor() {

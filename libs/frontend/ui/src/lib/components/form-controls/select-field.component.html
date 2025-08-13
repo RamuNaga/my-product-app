@@ -1,11 +1,13 @@
-<mat-form-field appearance="fill" class="full-width">
+<mat-form-field appearance="outline" class="w-full">
   <mat-label>{{ label }}</mat-label>
-  <mat-select [formControl]="control" [required]="required">
+  <mat-select
+    [value]="value"
+    (selectionChange)="onSelectChange($event.value)"
+    (blur)="onBlur()"
+    [required]="required"
+  >
     <mat-option *ngFor="let option of options" [value]="option.value">
       {{ option.label }}
     </mat-option>
   </mat-select>
-  <mat-error *ngIf="control?.invalid && control?.touched">
-    <span *ngIf="control?.errors?.['required']">This field is required</span>
-  </mat-error>
 </mat-form-field>

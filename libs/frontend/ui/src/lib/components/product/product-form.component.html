@@ -1,62 +1,52 @@
-<!-- Loader shown while loading -->
 @if (productStore.isLoading()) {
-<div class="loader-container">
-  <lib-ui-material-loader></lib-ui-material-loader>
-</div>
+  <div class="loader-container">
+    <lib-ui-material-loader></lib-ui-material-loader>
+  </div>
 }
+
 <div class="form-container">
   <mat-card class="form-card">
-    <form
-      [formGroup]="productForm"
-      class="product-form"
-      (ngSubmit)="onSubmit()"
-    >
+    <form [formGroup]="productForm" class="product-form" (ngSubmit)="onSubmit()">
+      
       <div class="form-field">
         <lib-input-field
-          [control]="productcodeControl"
+          formControlName="productCode"
           label="Product Code"
           placeholder="Enter product code"
           [required]="true"
-          type="text"
         ></lib-input-field>
       </div>
 
       <div class="form-field">
         <lib-input-field
-          [control]="nameControl"
+          formControlName="name"
           label="Product Name"
           placeholder="Enter product name"
           [required]="true"
-          type="text"
         ></lib-input-field>
       </div>
 
       <div class="form-field">
         <lib-input-field
-          [control]="descriptionControl"
+          formControlName="description"
           label="Description"
           placeholder="Enter description"
-          [required]="false"
-          type="text"
         ></lib-input-field>
       </div>
 
       <div class="form-field">
         <lib-input-field
-          [control]="weightControl"
+          formControlName="productWeight"
           label="Product Weight"
           placeholder="Enter Weight"
-          [required]="false"
-          type="text"
         ></lib-input-field>
       </div>
 
       <div class="form-field">
         <lib-input-field
-          [control]="priceControl"
-          label="Product price"
+          formControlName="price"
+          label="Product Price"
           placeholder="Enter price"
-          [required]="false"
           type="number"
         ></lib-input-field>
       </div>
@@ -75,11 +65,7 @@
           mat-raised-button
           color="primary"
           type="submit"
-          [disabled]="
-            productForm.invalid ||
-            !productStore.selectedFile() ||
-            productStore.isLoading()
-          "
+          [disabled]="productForm.invalid || !productStore.selectedFile() || productStore.isLoading()"
         >
           Save
         </button>

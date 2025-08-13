@@ -2,12 +2,16 @@
   class="form-container"
   *ngIf="!loadingVendors() && !loadingLocations(); else loadingTemplate"
 >
-  <form [formGroup]="form()" (ngSubmit)="onSubmit()" class="workorder-form">
+  <form
+    [formGroup]="form()"
+    (ngSubmit)="onSubmit()"
+    class="workorder-form space-y-4"
+  >
     <!-- Vendor or Client Dropdown -->
     <div class="form-field">
       <lib-select-field
-        [control]="form().controls.vendorOrClient"
         label="Vendor or Client"
+        formControlName="vendorOrClient"
         [options]="vendorsAndClients()"
         [required]="true"
       ></lib-select-field>
@@ -16,8 +20,8 @@
     <!-- Client Location Dropdown -->
     <div class="form-field">
       <lib-select-field
-        [control]="form().controls.clientLocation"
         label="Client Location"
+        formControlName="clientLocation"
         [options]="greencoreLocations()"
         [required]="true"
       ></lib-select-field>
@@ -26,53 +30,54 @@
     <!-- Quantity -->
     <div class="form-field">
       <lib-input-field
-        [control]="form().controls.quantity"
         label="Quantity"
         placeholder="Enter quantity"
-        [required]="true"
+        formControlName="quantity"
         type="number"
+        [required]="true"
       ></lib-input-field>
     </div>
 
     <!-- Product Weight -->
     <div class="form-field">
       <lib-input-field
-        [control]="form().controls.productWeight"
         label="Product Weight"
         placeholder="Enter product weight"
-        [required]="true"
+        formControlName="productWeight"
         type="text"
+        [required]="true"
       ></lib-input-field>
     </div>
 
     <!-- Delivery Date -->
     <div class="form-field">
       <lib-input-field
-        [control]="form().controls.deliveryDate"
         label="Delivery Date"
         placeholder="Select delivery date"
-        [required]="true"
+        formControlName="deliveryDate"
         type="date"
+        [required]="true"
       ></lib-input-field>
     </div>
 
     <!-- Description (optional) -->
     <div class="form-field">
       <lib-input-field
-        [control]="form().controls.description"
         label="Description"
         placeholder="Enter description"
-        [required]="false"
+        formControlName="description"
         type="text"
       ></lib-input-field>
     </div>
 
+    <!-- Submit Button -->
     <div class="form-actions">
       <button
         mat-raised-button
         color="primary"
         type="submit"
         [disabled]="form().invalid"
+        class="w-full py-2 rounded bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50"
       >
         Save WorkOrder
       </button>

@@ -1,21 +1,23 @@
-<mat-form-field appearance="outline" class="full-width" floatLabel="auto">
+<mat-form-field appearance="outline" class="w-full">
   <mat-label>{{ label }}</mat-label>
   <input
     matInput
-    [placeholder]="placeholder"
     [type]="type"
-    [formControl]="control"
+    [placeholder]="placeholder"
+    [value]="value"
     [required]="required"
+    [disabled]="isDisabled"
     [readonly]="readonly"
+    (input)="onInput($event)"
     (blur)="onBlur()"
-    class="p-2 rounded border border-gray-300 focus:border-indigo-500"
   />
-  <mat-error *ngIf="control.invalid && control.touched">
-    <ng-container *ngIf="control.errors?.['required']">
+
+  <mat-error *ngIf="control?.invalid && control?.touched">
+    <ng-container *ngIf="control?.errors?.['required']">
       This field is required
     </ng-container>
-    <ng-container *ngIf="control.errors?.['email']">
-      Invalid email format
+    <ng-container *ngIf="control?.errors?.['email']">
+      Please enter a valid email
     </ng-container>
   </mat-error>
 </mat-form-field>

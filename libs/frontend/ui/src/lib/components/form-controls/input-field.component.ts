@@ -1,71 +1,64 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Input, Optional, Self } from '@angular/core';
 import {
   ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
-  FormControl,
+  NgControl,
+  ReactiveFormsModule,
 } from '@angular/forms';
-
-import { ReactiveFormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
 import { MaterialModule } from '@my-product-app/frontend-shared';
 
 @Component({
   selector: 'lib-input-field',
-  host: { '[attr.data-component-id]': "'unique-id-1'" },
+  standalone: true,
   templateUrl: './input-field.component.html',
   styleUrls: ['./input-field.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: InputFieldComponent,
-      multi: true,
-    },
-  ],
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule, NgIf],
+  imports: [CommonModule, MaterialModule, ReactiveFormsModule],
 })
 export class InputFieldComponent implements ControlValueAccessor {
+  @Input() type = 'text';
   @Input() label = '';
   @Input() placeholder = '';
-  @Input() type = 'text'; // text, email, password, etc.
   @Input() required = false;
-
-  // Initialize control by default so it is never undefined
-  @Input() control: FormControl = new FormControl('');
-
   @Input() readonly = false;
 
-  @Output() valueChange = new EventEmitter<string>();
-  /* eslint-disable @typescript-eslint/no-empty-function */
-  private onChange: (value: any) => void = () => {};
+  value: any = '';
+  isDisabled = false;
 
-  private onTouched: () => void = () => {};
+  constructor(@Optional() @Self() public ngControl: NgControl) {
+    if (ngControl) {
+      ngControl.valueAccessor = this; // ✅ Manual assignment, so no providers needed
+    }
+  }
+
+  get control() {
+    return this.ngControl?.control;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onChange = (_: any) => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onTouched = () => {};
 
   writeValue(value: any): void {
-    this.control.setValue(value, { emitEvent: false });
+    this.value = value ?? '';
   }
-
-  registerOnChange(fn: (value: any) => void): void {
+  registerOnChange(fn: any): void {
     this.onChange = fn;
-    this.control.valueChanges.subscribe((val) => {
-      this.valueChange.emit(val);
-      this.onChange(val);
-    });
   }
-
-  registerOnTouched(fn: () => void): void {
+  registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
-
-  onBlur(): void {
-    this.onTouched();
+  setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    if (isDisabled) {
-      this.control.disable();
-    } else {
-      this.control.enable();
-    }
+  onInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.value = input.value;
+    this.onChange(this.value);
+  }
+
+  onBlur() {
+    this.onTouched();
   }
 }

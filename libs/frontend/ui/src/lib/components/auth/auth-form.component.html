@@ -2,15 +2,15 @@
   <mat-card class="form-card">
     <mat-tab-group [(selectedIndex)]="selectedTabIndex">
       <mat-tab label="Login">
-        <lib-ui-login></lib-ui-login>
+        <ng-container *ngIf="loginComponent">
+          <ng-container *ngComponentOutlet="loginComponent"></ng-container>
+        </ng-container>
       </mat-tab>
 
       <mat-tab label="Sign Up">
-        <lib-ui-signup-stepper (submitEvent)="handleFormSubmit()">
-          <lib-ui-company-form step1></lib-ui-company-form>
-          <lib-ui-location-form step2></lib-ui-location-form>
-          <lib-ui-user-form step3></lib-ui-user-form>
-        </lib-ui-signup-stepper>
+        <ng-container *ngIf="signupStepperComponent">
+          <ng-container *ngComponentOutlet="signupStepperComponent"></ng-container>
+        </ng-container>
       </mat-tab>
     </mat-tab-group>
   </mat-card>

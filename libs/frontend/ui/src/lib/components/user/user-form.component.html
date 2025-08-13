@@ -3,14 +3,14 @@
   [formGroup]="userGroup"
 >
   <lib-input-field
-    [control]="usernameControl()"
+    formControlName="username"
     label="Username"
     placeholder="Enter username"
     [required]="true"
   ></lib-input-field>
 
   <lib-input-field
-    [control]="emailControl()"
+    formControlName="email"
     label="Email"
     placeholder="Enter email"
     [required]="true"
@@ -18,7 +18,7 @@
   ></lib-input-field>
 
   <lib-input-field
-    [control]="passwordControl()"
+    formControlName="password"
     label="Password"
     placeholder="Enter password"
     [required]="true"
@@ -26,7 +26,7 @@
   ></lib-input-field>
 
   <lib-input-field
-    [control]="confirmPasswordControl()"
+    formControlName="confirmPassword"
     label="Confirm Password"
     placeholder="Confirm your password"
     [required]="true"
@@ -34,7 +34,7 @@
   ></lib-input-field>
 
   <lib-select-field
-    [control]="roleControl()"
+    formControlName="role"
     label="Role"
     [options]="roles()"
     [required]="true"

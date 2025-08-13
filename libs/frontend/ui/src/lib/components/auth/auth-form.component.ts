@@ -1,17 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-
-import { LoginComponent } from './login.component';
 import { TailwindHostComponent } from '../tailwind-host/tailwind-host.component';
-import { SignupStepperComponent } from './signup-stepper.component';
 import {
   MaterialModule,
   SignupFormStore,
 } from '@my-product-app/frontend-shared';
-import { CompanyFormComponent } from '../company/company-form.component';
-import { LocationFormComponent } from '../location/location-form.component';
-import { UserFormComponent } from '../user/user-form.component';
 import { AuthService } from '@my-product-app/frontend-data-access';
 import {
   CompanyType,
@@ -30,12 +24,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     CommonModule,
     ReactiveFormsModule,
     MaterialModule,
-    LoginComponent,
     TailwindHostComponent,
-    SignupStepperComponent,
-    CompanyFormComponent,
-    LocationFormComponent,
-    UserFormComponent,
   ],
   templateUrl: './auth-form.component.html',
   styleUrls: ['./auth-form.component.scss'],
@@ -48,9 +37,28 @@ export class AuthFormComponent {
 
   selectedTabIndex = 0;
 
+  // Lazy-loaded component references
+  loginComponent: any;
+  signupStepperComponent: any;
+
   constructor() {
-    // Initialize the root form & child groups in the store on component creation
     this.signupStore.initForm();
+    this.loadChildComponents();
+  }
+
+  private async loadChildComponents() {
+    this.loginComponent = (await import('./login.component')).LoginComponent;
+    this.signupStepperComponent = (
+      await import('./signup-stepper.component')
+    ).SignupStepperComponent;
+  }
+
+  switchToSignup() {
+    this.selectedTabIndex = 1;
+  }
+
+  switchToLogin() {
+    this.selectedTabIndex = 0;
   }
 
   get signupForm() {
@@ -208,13 +216,5 @@ export class AuthFormComponent {
     } else if ('markAsTouched' in group) {
       group.markAsTouched();
     }
-  }
-
-  switchToSignup() {
-    this.selectedTabIndex = 1;
-  }
-
-  switchToLogin() {
-    this.selectedTabIndex = 0;
   }
 }

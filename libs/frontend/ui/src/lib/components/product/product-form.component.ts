@@ -3,25 +3,20 @@ import {
   Component,
   computed,
   inject,
-  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { InputFieldComponent } from '../form-controls/input-field.component';
-import { MatButtonModule } from '@angular/material/button';
 import { ProductImageUploadComponent } from '../form-controls/product-image-upload.component';
-import { MatCardModule } from '@angular/material/card';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialLoaderComponent } from '../loader/loader.component';
 import {
+  MaterialModule,
   ProductCreateResponse,
   ProductListStore,
   ProductStore,
@@ -35,34 +30,29 @@ import { firstValueFrom } from 'rxjs';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatCardModule,
-    MatInputModule,
+    MaterialModule,
     InputFieldComponent,
-    MatButtonModule,
-    MatSnackBarModule,
     ProductImageUploadComponent,
     MaterialLoaderComponent,
   ],
   templateUrl: './product-form.component.html',
-  styleUrl: './product-form.component.scss',
+  styleUrls: ['./product-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductFormComponent {
-  readonly runtimeConfigStore = inject(RuntimeConfigStore);
-  readonly resetImageTrigger = signal(0);
   private readonly fb = inject(FormBuilder);
   readonly productStore = inject(ProductStore);
-  readonly httpService = inject(HttpService);
+  private readonly runtimeConfigStore = inject(RuntimeConfigStore);
+  private readonly httpService = inject(HttpService);
   private readonly snackBar = inject(MatSnackBar);
-  readonly productListStore = inject(ProductListStore);
+  private readonly productListStore = inject(ProductListStore);
 
   readonly productForm: FormGroup = this.fb.group({
-    productCode: new FormControl('', [Validators.required]),
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl('', [Validators.required]),
-    productWeight: new FormControl('', [Validators.required]),
-    price: new FormControl('', [Validators.required]),
+    productCode: ['', Validators.required],
+    name: ['', Validators.required],
+    description: [''],
+    productWeight: [''],
+    price: ['', Validators.required],
   });
 
   readonly productImageUploadUrl = computed(
@@ -70,43 +60,10 @@ export class ProductFormComponent {
   );
 
   constructor() {
-    this.productForm.get('productCode')?.valueChanges.subscribe((value) => {
-      this.productStore.updateField('productCode', value);
+    // Sync form changes to store
+    this.productForm.valueChanges.subscribe((value) => {
+      this.productStore.updateFields(value);
     });
-
-    this.productForm.get('name')?.valueChanges.subscribe((value) => {
-      this.productStore.updateField('name', value);
-    });
-
-    this.productForm.get('description')?.valueChanges.subscribe((value) => {
-      this.productStore.updateField('description', value);
-    });
-    this.productForm.get('productWeight')?.valueChanges.subscribe((value) => {
-      this.productStore.updateField('productWeight', value);
-    });
-    this.productForm.get('price')?.valueChanges.subscribe((value) => {
-      this.productStore.updateField('price', value);
-    });
-  }
-
-  get productcodeControl(): FormControl {
-    return this.productForm.get('productcode') as FormControl;
-  }
-
-  get nameControl(): FormControl {
-    return this.productForm.get('name') as FormControl;
-  }
-
-  get descriptionControl(): FormControl {
-    return this.productForm.get('description') as FormControl;
-  }
-
-  get weightControl(): FormControl {
-    return this.productForm.get('productWeight') as FormControl;
-  }
-
-  get priceControl(): FormControl {
-    return this.productForm.get('price') as FormControl;
   }
 
   onFileSelected(event: { file: File; previewUrl: string } | string) {
@@ -117,6 +74,7 @@ export class ProductFormComponent {
       this.productStore.updateField('image', event.previewUrl);
     }
   }
+
   async onSubmit() {
     if (!this.isFormValid()) return;
 
@@ -181,8 +139,7 @@ export class ProductFormComponent {
       return;
     }
     if (res.status === 'success' && res.data) {
-      console.log('res.data===', res.data);
-      this.productListStore.addProduct(res.data); // use .data instead of .product
+      this.productListStore.addProduct(res.data);
     }
 
     this.productForm.reset();

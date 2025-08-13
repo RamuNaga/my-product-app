@@ -3,7 +3,7 @@
   [formGroup]="companyGroup"
 >
   <lib-input-field
-    [control]="nameControl()"
+    formControlName="name"
     label="Company Name"
     placeholder="Enter company name"
     [required]="true"
@@ -11,14 +11,14 @@
   ></lib-input-field>
 
   <lib-select-field
-    [control]="typeControl()"
+    formControlName="type"
     label="Company Type"
     [options]="companyTypes()"
     [required]="true"
   ></lib-select-field>
 
   <lib-input-field
-    [control]="contactControl()"
+    formControlName="contact"
     label="Company Contact Number"
     placeholder="Enter contact number"
     [required]="true"

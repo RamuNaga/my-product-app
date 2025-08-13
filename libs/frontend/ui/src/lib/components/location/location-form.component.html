@@ -3,44 +3,44 @@
   [formGroup]="locationGroup"
 >
   <lib-select-field
-    [control]="locationControl()"
+    formControlName="location"
     label="Location"
     [options]="locations()"
     [required]="true"
   ></lib-select-field>
 
   <lib-input-field
-    [control]="addressControl()"
+    formControlName="address"
     label="Address"
     placeholder="Enter address"
   ></lib-input-field>
 
   <lib-input-field
-    [control]="cityControl()"
+    formControlName="city"
     label="City"
     placeholder="Enter city"
   ></lib-input-field>
 
   <lib-input-field
-    [control]="countyControl()"
+    formControlName="county"
     label="County"
     placeholder="Enter county"
   ></lib-input-field>
 
   <lib-input-field
-    [control]="postalCodeControl()"
+    formControlName="postalCode"
     label="Postcode"
     placeholder="Enter postcode"
   ></lib-input-field>
 
   <lib-input-field
-    [control]="countryControl()"
+    formControlName="country"
     label="Country"
     placeholder="Enter country"
   ></lib-input-field>
 
   <lib-input-field
-    [control]="contactControl()"
+    formControlName="contact"
     label="Contact"
     placeholder="Enter Location contact number"
   ></lib-input-field>

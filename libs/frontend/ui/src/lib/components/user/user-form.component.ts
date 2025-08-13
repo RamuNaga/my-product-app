@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   MaterialModule,
   SignupFormStore,
@@ -25,37 +25,21 @@ import { tap } from 'rxjs';
 })
 export class UserFormComponent {
   private readonly optionsService = inject(OptionsService);
-  private readonly signupFormStore = inject(SignupFormStore); // <-- Inject store
+  private readonly store = inject(SignupFormStore);
 
   loadingOptions = signal(true);
   roles = signal<Option[]>([]);
 
-  /** Read FormGroup from store */
+  /** Access user form group from store */
   get userGroup(): FormGroup {
-    return this.signupFormStore.userGroup()!;
+    return this.store.userFormGroup;
   }
-
-  /** Computed getters for form controls */
-  usernameControl = computed(
-    () => this.userGroup.get('username') as FormControl<string>
-  );
-  emailControl = computed(
-    () => this.userGroup.get('email') as FormControl<string>
-  );
-  passwordControl = computed(
-    () => this.userGroup.get('password') as FormControl<string>
-  );
-  confirmPasswordControl = computed(
-    () => this.userGroup.get('confirmPassword') as FormControl<string>
-  );
-  roleControl = computed(
-    () => this.userGroup.get('role') as FormControl<string>
-  );
 
   constructor() {
     this.loadRoles();
   }
 
+  /** Fetch role options from API */
   private loadRoles() {
     this.loadingOptions.set(true);
     this.optionsService

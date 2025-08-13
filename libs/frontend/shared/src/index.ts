@@ -7,3 +7,5 @@ export * from './lib/state/product/product-list.store';
 export * from './lib/state/registerUser/signup-form.store';
 export * from './lib/state/company/company.model';
 export * from './lib/state/company/search-company-store';
+export * from './lib/state/login/login.model';
+export * from './lib/state/login/login.store';

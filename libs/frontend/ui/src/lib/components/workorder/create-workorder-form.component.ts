@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -6,7 +6,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { MaterialModule } from '@my-product-app/frontend-shared';
-
 import { tap } from 'rxjs';
 import { InputFieldComponent } from '../form-controls/input-field.component';
 import { SelectFieldComponent } from '../form-controls/select-field.component';
@@ -16,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 export type Option = { label: string; value: string };
+
 @Component({
   selector: 'lib-create-workorder-form',
   templateUrl: './create-workorder-form.component.html',
@@ -30,7 +30,7 @@ export type Option = { label: string; value: string };
     MaterialLoaderComponent,
   ],
 })
-export class CreateWorkOrderFormComponent implements OnInit {
+export class CreateWorkOrderFormComponent {
   readonly route = inject(ActivatedRoute);
   readonly workOrderFormService: WorkOrderFormService =
     inject(WorkOrderFormService);
@@ -58,25 +58,27 @@ export class CreateWorkOrderFormComponent implements OnInit {
   );
 
   // Dropdown data signals
-  vendorsAndClients = signal<{ label: string; value: string }[]>([]);
-  greencoreLocations = signal<{ label: string; value: string }[]>([]);
+  vendorsAndClients = signal<Option[]>([]);
+  greencoreLocations = signal<Option[]>([]);
 
   // Loading states
   loadingVendors = signal(true);
   loadingLocations = signal(true);
 
   constructor() {
-    // Fetch vendors & clients
     const productId = Number(
       this.route.snapshot.queryParamMap.get('productId')
     );
     const productName = this.route.snapshot.queryParamMap.get('productName');
+
     if (productId) {
       this.form().patchValue({
         productId,
         description: productName || '',
       });
     }
+
+    // Fetch vendors & clients
     this.workOrderFormService
       .getVendorsAndClients()
       .pipe(tap(() => this.loadingVendors.set(true)))
@@ -99,9 +101,6 @@ export class CreateWorkOrderFormComponent implements OnInit {
         },
         error: () => this.loadingLocations.set(false),
       });
-  }
-  ngOnInit() {
-    console.log();
   }
 
   onSubmit() {

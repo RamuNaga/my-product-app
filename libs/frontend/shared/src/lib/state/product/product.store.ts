@@ -20,6 +20,10 @@ export class ProductStore {
     this.product.update((p) => ({ ...p, [key]: value }));
   }
 
+  updateFields(values: Partial<Product>) {
+    this.product.update((p) => ({ ...p, ...values }));
+  }
+
   setProduct(product: Product) {
     this.product.set(product);
   }
@@ -44,6 +48,7 @@ export class ProductStore {
   setLoading(value: boolean) {
     this.isLoading.set(value);
   }
+
   resetImage() {
     this.resetTrigger.update((v) => v + 1);
   }
