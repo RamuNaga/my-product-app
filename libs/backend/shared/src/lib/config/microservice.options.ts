@@ -7,7 +7,7 @@ export const getUserServiceOptions = (): ClientProviderOptions => ({
   transport: Transport.TCP,
   options: {
     host: process.env['MICROSERVICE_HOST'] || '127.0.0.1',
-    port: Number(process.env['USER_SERVICE_PORT']) || 3003,
+    port: Number(process.env['USER_SERVICE_MS_PORT']) || 3003,
   },
 });
 
@@ -19,6 +19,6 @@ export const getProductServiceOptions = (): ClientProviderOptions => ({
   transport: Transport.TCP,
   options: {
     host: process.env['MICROSERVICE_HOST'] || '127.0.0.1',
-    port: Number(process.env['PRODUCT_SERVICE_PORT']) || 3001,
+    port: Number(process.env['PRODUCT_SERVICE_MS_PORT']) || 4001,
   },
 });

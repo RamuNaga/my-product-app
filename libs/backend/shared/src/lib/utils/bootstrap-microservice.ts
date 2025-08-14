@@ -4,6 +4,8 @@ import { join } from 'path';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { INestApplication } from '@nestjs/common';
 import { AppLoggerService, LoggingInterceptor } from '@my-product-app/logger';
+import * as bodyParser from 'body-parser';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 interface BootstrapOptions {
   hostEnv: string;
@@ -28,24 +30,25 @@ export async function bootstrapMicroservice(
   options: BootstrapOptions
 ): Promise<INestApplication> {
   try {
-    //const app = await NestFactory.create(AppModule);
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+    // Body parser config (good for large payloads)
+    app.use(bodyParser.json({ limit: '10mb' }));
+    app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+
     // Serve static assets from uploads folder
-    // app.useStaticAssets(join(__dirname, '..', '..', '..', '..', 'uploads'), {
-    //   prefix: '/uploads',
-    // });
-    // NEW:
     app.useStaticAssets(join(process.cwd(), 'uploads'), {
       prefix: '/uploads',
     });
-    // Enable CORS here
+
+    // Enable CORS
     app.enableCors({
-      origin: 'http://localhost:4200', // adjust as needed for your frontend URL
+      origin: process.env['FRONTEND_URL'] || 'http://localhost:4200',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-      credentials: true, // if you want to allow cookies/auth headers
+      credentials: true,
     });
 
+    // Logger setup
     const logger = await tryGetLogger(app);
     if (logger) {
       app.useLogger(logger);
@@ -55,16 +58,30 @@ export async function bootstrapMicroservice(
     const host = process.env[options.hostEnv] || 'localhost';
     const port = Number(process.env[options.portEnv]) || options.fallbackPort;
 
+    // Use unique microservice port based on env variable naming pattern
+    const microserviceEnvKey = `${options.serviceName
+      .toUpperCase()
+      .replace(/\s/g, '_')}_MS_PORT`;
+    const microservicePort =
+      Number(process.env[microserviceEnvKey]) || port + 1000; // fallback offset
+
     console.log(`Starting ${options.serviceName} on ${host}:${port}`);
 
+    // Connect Microservice
     app.connectMicroservice<MicroserviceOptions>({
       transport: Transport.TCP,
-      options: { host, port },
+      options: { host, port: microservicePort },
     });
 
     await app.startAllMicroservices();
-    await app.listen(port);
 
+    // Initialize DI so guards can be resolved
+    await app.init();
+
+    const jwtAuthGuard = app.get(JwtAuthGuard);
+    app.useGlobalGuards(jwtAuthGuard);
+
+    await app.listen(port);
     console.log(`${options.serviceName} is running on http://${host}:${port}`);
 
     return app;

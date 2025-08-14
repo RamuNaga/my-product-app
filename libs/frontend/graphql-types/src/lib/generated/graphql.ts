@@ -252,7 +252,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginResponse', accessToken: string, user: { __typename?: 'User', id: number, email: string, username: string, role: UserRole } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginResponse', accessToken: string, user: { __typename?: 'User', id: number, email: string, username: string, role: UserRole, companyId?: number | null } } };
 
 export type RegisterCompanyUserMutationVariables = Exact<{
   registerCompanyUserInput: RegisterCompanyUserInput;
@@ -329,6 +329,7 @@ export const LoginDocument = gql`
       email
       username
       role
+      companyId
     }
   }
 }

@@ -1,14 +1,23 @@
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiGatewayModule } from './app/api-gateway.module';
-import { bootstrapMicroservice } from '@my-product-app/backend-shared';
+import {
+  bootstrapMicroservice,
+  PRODUCT_SERVICE,
+} from '@my-product-app/backend-shared';
 
 async function startApiGateway() {
   console.log('start  ApiGateway calling');
 
-  await bootstrapMicroservice(ApiGatewayModule, {
-    hostEnv: 'MICROSERVICE_HOST', // Environment variable for host, typically '127.0.0.1'
-    portEnv: 'MICROSERVICE_PORT', // Environment variable for microservice port
-    fallbackPort: 3000, // Default port for API Gateway if environment variable not set
-    serviceName: 'API Gateway', // Name of the service for logging or other purposes
+  const app = await bootstrapMicroservice(ApiGatewayModule, {
+    hostEnv: 'MICROSERVICE_HOST',
+    portEnv: 'API_GATEWAY_PORT',
+    fallbackPort: 3000,
+    serviceName: 'API Gateway',
+  });
+  const productClient = app.get<ClientProxy>(PRODUCT_SERVICE);
+  productClient.send({ cmd: 'ping' }, {}).subscribe({
+    next: (res) => console.log('✅ Ping response from Product Service:', res),
+    error: (err) => console.error('❌ Ping error from Product Service:', err),
   });
 }
 

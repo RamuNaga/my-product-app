@@ -6,10 +6,22 @@ import { ProductService } from '@my-product-app/product';
 export class ProductMessageHandler {
   constructor(private readonly productService: ProductService) {}
 
+  @MessagePattern({ cmd: 'ping' })
+  ping() {
+    return { status: 'ok', service: 'product-service', timestamp: new Date() };
+  }
+
   @MessagePattern({ cmd: 'create_product' })
   async create(@Payload() data: any) {
-    const { productCode, name, description, imagePath, productWeight, price } =
-      data;
+    const {
+      productCode,
+      name,
+      description,
+      imagePath,
+      productWeight,
+      price,
+      companyId,
+    } = data;
 
     try {
       const product = await this.productService.create({
@@ -18,7 +30,8 @@ export class ProductMessageHandler {
         description,
         image: imagePath ?? null,
         productWeight,
-        price,
+        price: parseFloat(price),
+        companyId,
       });
 
       return { status: 'success', data: product };

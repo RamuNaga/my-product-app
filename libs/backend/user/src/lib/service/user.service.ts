@@ -71,7 +71,7 @@ export class UserService {
       role: user.role,
       companyId: user.companyId,
     };
-    const accessToken = this.jwtService.sign(payload);
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
 
     const { password: _, ...userWithoutPassword } = user;
 

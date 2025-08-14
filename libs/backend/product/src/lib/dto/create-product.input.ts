@@ -1,6 +1,7 @@
 import { InputType, Field, Float } from '@nestjs/graphql';
-import { IsNotEmpty, IsOptional, Length } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, Length } from 'class-validator';
 import { BaseCreateInput } from '@my-product-app/backend-shared';
+import { Type } from 'class-transformer';
 
 @InputType()
 export class CreateProductInput extends BaseCreateInput {
@@ -28,4 +29,9 @@ export class CreateProductInput extends BaseCreateInput {
   @Field(() => Float)
   @IsNotEmpty()
   price!: number;
+
+  @Field({ nullable: true })
+  @IsInt()
+  @Type(() => Number)
+  companyId?: number;
 }

@@ -8,6 +8,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ClientProxy } from '@nestjs/microservices';
@@ -15,13 +16,15 @@ import { diskStorage } from 'multer';
 import { extname, join, sep } from 'path';
 import * as fs from 'fs';
 import { Observable } from 'rxjs';
-import { CurrentUser } from '@my-product-app/backend-shared';
+import { CurrentUser, JwtAuthGuard } from '@my-product-app/backend-shared';
+import { Public } from '@my-product-app/backend-shared/auth/public.decorator';
 
 const uploadPath = join(__dirname, '../../../../uploads/products');
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
 }
 
+@UseGuards(JwtAuthGuard)
 @Controller('products')
 export class ProductController {
   constructor(
@@ -96,7 +99,7 @@ export class ProductController {
       );
     }
   }
-
+  @Public()
   @Get()
   findAll(): Observable<any> {
     return this.productClient.send({ cmd: 'get_all_products' }, {});

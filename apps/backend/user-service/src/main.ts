@@ -6,7 +6,7 @@ async function startUserService() {
   await bootstrapMicroservice(UserServiceModule, {
     hostEnv: 'MICROSERVICE_HOST',
     portEnv: 'USER_SERVICE_PORT',
-    fallbackPort: 3003, // Matches .env config
+    fallbackPort: 3003,
     serviceName: 'User Service',
   });
 }

@@ -23,7 +23,8 @@
       "dependsOn": ["build"],
       "options": {
         "buildTarget": "workorder-service:build",
-        "runBuildTargetDependencies": false
+        "runBuildTargetDependencies": false,
+        "inspect": false
       },
       "configurations": {
         "development": {

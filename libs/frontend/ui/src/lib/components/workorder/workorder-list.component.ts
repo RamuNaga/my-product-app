@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { AsyncPipe, NgIf, NgFor } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { MaterialModule } from '@my-product-app/frontend-shared';
 import { MaterialLoaderComponent } from '../loader/loader.component';
 // import { WorkorderService } from '@my-product-app/frontend/data-access'; // Adjust if your service path differs
@@ -10,8 +10,8 @@ import { MaterialLoaderComponent } from '../loader/loader.component';
   standalone: true,
   imports: [
     NgIf,
-    NgFor,
-    AsyncPipe,
+    // NgFor,
+    // AsyncPipe,
     MaterialModule,
     MaterialModule,
     MaterialLoaderComponent,

@@ -21,23 +21,32 @@ export class ProductListStore {
 
   constructor(private productService: ProductService) {}
 
-  /** Load products from the backend */
+  /** Load products from the backend, merge with existing ones */
   loadProducts(forceReload = false) {
     if (this._hasLoadedOnce && !forceReload) return;
 
     this._isLoading.set(true);
     this._error.set(null);
-    this._deferReady.set(false);
 
     this.productService
       .findAllProducts()
       .pipe(
         tap((products: Product[]) => {
-          this._products.set(products);
+          // Merge backend products with locally added products
+          const existingIds = new Set(this._products().map((p) => p.id));
+          const merged = [
+            ...products,
+            ...this._products().filter((p) => !existingIds.has(p.id)),
+          ];
+          this._products.set(merged);
+
+          // Mark as loaded
           this._hasLoadedOnce = true;
 
-          // Defer-ready flag to simulate @defer
-          setTimeout(() => this._deferReady.set(true), 200);
+          // Only set deferReady on first load
+          if (!this._deferReady()) {
+            setTimeout(() => this._deferReady.set(true), 200);
+          }
         }),
         catchError((err) => {
           console.error('Failed to load products:', err);
@@ -58,7 +67,6 @@ export class ProductListStore {
 
   /** Refresh products manually */
   refreshProducts() {
-    this._hasLoadedOnce = false;
     this.loadProducts(true);
   }
 

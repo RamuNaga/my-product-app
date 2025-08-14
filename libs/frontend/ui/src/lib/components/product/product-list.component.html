@@ -1,19 +1,33 @@
-@if (store.isLoading()) {
-<mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
-<p>Loading products...</p>
-} @else { @if (store.errorMessage()) {
-<mat-error>{{ store.errorMessage() }}</mat-error>
-} @else { @if (store.isDeferReady()) {
-<div class="product-grid">
-  <lib-product-card
-    *ngFor="let product of store.products()"
-    [product]="product"
-    (edit)="onEdit($event)"
-    (delete)="onDelete($event)"
-    (workOrder)="onWorkOrder($event)"
-  />
-</div>
+<!-- Show error message if exists -->
+@if (errorMessage()) {
+<mat-error>{{ errorMessage() }}</mat-error>
 } @else {
-<mat-progress-bar mode="indeterminate"></mat-progress-bar>
-<p>Rendering product list...</p>
-} } }
+<div class="product-container">
+  <!-- Product Grid Always Visible -->
+  <div class="product-grid">
+    <lib-product-card
+      *ngFor="let product of products()"
+      [product]="product"
+      (edit)="onEdit($event)"
+      (delete)="onDelete($event)"
+      (workOrder)="onWorkOrder($event)"
+    />
+  </div>
+
+  <!-- Loading overlay when fetching -->
+  @if (isLoading()) {
+  <div class="loading-overlay">
+    <mat-progress-spinner
+      mode="indeterminate"
+      diameter="40"
+    ></mat-progress-spinner>
+    <p>Loading products...</p>
+  </div>
+  }
+
+  <!-- Initial defer indicator only for first load -->
+  @if (!isDeferReady()) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+</div>
+}

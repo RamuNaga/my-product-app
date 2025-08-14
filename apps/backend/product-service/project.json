@@ -11,7 +11,8 @@
       "dependsOn": ["build"],
       "options": {
         "buildTarget": "backend-product-service:build",
-        "runBuildTargetDependencies": false
+        "runBuildTargetDependencies": false,
+        "inspect": false
       },
       "configurations": {
         "development": {
