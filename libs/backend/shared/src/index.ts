@@ -13,3 +13,4 @@ export * from './lib/auth/jwt.module';
 export * from './lib/auth/jwt.strategy';
 export * from './lib/interceptors/response.interceptor';
 export * from './lib/auth/current-user.decorator';
+export * from './lib/enums/enum';

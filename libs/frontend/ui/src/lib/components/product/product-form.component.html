@@ -1,23 +1,23 @@
 @if (productStore.isLoading()) {
-  <div class="loader-container">
-    <lib-ui-material-loader></lib-ui-material-loader>
-  </div>
+<div class="loader-container">
+  <lib-ui-material-loader></lib-ui-material-loader>
+</div>
 }
 
 <div class="form-container">
   <mat-card class="form-card">
-    <form [formGroup]="productForm" class="product-form" (ngSubmit)="onSubmit()">
-      
-      <div class="form-field">
-        <lib-input-field
-          formControlName="productCode"
-          label="Product Code"
-          placeholder="Enter product code"
-          [required]="true"
-        ></lib-input-field>
-      </div>
+    <mat-card-header>
+      <mat-card-title>{{ titleLabel }}</mat-card-title>
+    </mat-card-header>
 
-      <div class="form-field">
+    <form
+      [formGroup]="productForm"
+      class="product-form"
+      (ngSubmit)="onSubmit()"
+    >
+      <!-- Horizontal Fields Row -->
+
+      <div class="form-field full-width">
         <lib-input-field
           formControlName="name"
           label="Product Name"
@@ -25,8 +25,37 @@
           [required]="true"
         ></lib-input-field>
       </div>
+      <div class="form-row">
+        <div class="form-field">
+          <lib-input-field
+            formControlName="productCode"
+            label="Product Code"
+            placeholder="Enter product code"
+            [required]="true"
+          ></lib-input-field>
+        </div>
 
-      <div class="form-field">
+        <div class="form-field">
+          <lib-input-field
+            formControlName="productWeight"
+            label="Product Weight"
+            placeholder="Enter weight"
+          ></lib-input-field>
+        </div>
+
+        <div class="form-field">
+          <lib-input-field
+            formControlName="price"
+            label="Product Price"
+            placeholder="Enter price"
+            type="number"
+            [required]="true"
+          ></lib-input-field>
+        </div>
+      </div>
+
+      <!-- Description Field -->
+      <div class="form-field full-width">
         <lib-input-field
           formControlName="description"
           label="Description"
@@ -34,24 +63,8 @@
         ></lib-input-field>
       </div>
 
-      <div class="form-field">
-        <lib-input-field
-          formControlName="productWeight"
-          label="Product Weight"
-          placeholder="Enter Weight"
-        ></lib-input-field>
-      </div>
-
-      <div class="form-field">
-        <lib-input-field
-          formControlName="price"
-          label="Product Price"
-          placeholder="Enter price"
-          type="number"
-        ></lib-input-field>
-      </div>
-
-      <div class="form-field">
+      <!-- Product Image Upload -->
+      <div class="form-field full-width">
         <lib-ui-product-image-upload
           [uploadUrl]="productImageUploadUrl()"
           [formData]="productForm.value"
@@ -60,12 +73,17 @@
         ></lib-ui-product-image-upload>
       </div>
 
+      <!-- Actions -->
       <div class="form-actions">
         <button
           mat-raised-button
           color="primary"
           type="submit"
-          [disabled]="productForm.invalid || !productStore.selectedFile() || productStore.isLoading()"
+          [disabled]="
+            productForm.invalid ||
+            !productStore.selectedFile() ||
+            productStore.isLoading()
+          "
         >
           Save
         </button>

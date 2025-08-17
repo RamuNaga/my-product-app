@@ -5,8 +5,8 @@ async function startWorkOrderService() {
   console.log('startWorkOrderService calling');
   await bootstrapMicroservice(WorkOrderServiceModule, {
     hostEnv: 'MICROSERVICE_HOST',
-    portEnv: 'WORKORDER_SERVICE_PORT',
-    fallbackPort: 3002,
+    portEnv: 'WORKORDER_SERVICE_MS_PORT', // Use MS port
+    fallbackPort: 4005, // Matches MS port
     serviceName: 'WorkOrder Service',
   });
 }

@@ -40,6 +40,7 @@ import { firstValueFrom } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductFormComponent {
+  titleLabel = 'Create product';
   private readonly fb = inject(FormBuilder);
   readonly productStore = inject(ProductStore);
   private readonly runtimeConfigStore = inject(RuntimeConfigStore);

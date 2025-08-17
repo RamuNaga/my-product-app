@@ -2,7 +2,7 @@ import { Product } from '@my-product-app/frontend-graphql-types';
 
 export type ProductFormModel = Omit<
   Product,
-  'id' | 'createdAt' | 'updatedAt' | '__typename'
+  'createdAt' | 'updatedAt' | '__typename'
 >;
 
 export type ProductListModel = Omit<Product, 'updatedAt' | '__typename'>;

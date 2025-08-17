@@ -1,18 +1,17 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, effect } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MaterialModule } from '@my-product-app/frontend-shared';
-import { tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { MaterialModule, ProductStore } from '@my-product-app/frontend-shared';
 import { InputFieldComponent } from '../form-controls/input-field.component';
 import { SelectFieldComponent } from '../form-controls/select-field.component';
-import { WorkOrderFormService } from '@my-product-app/frontend-data-access';
 import { MaterialLoaderComponent } from '../loader/loader.component';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { WorkOrderFormService } from '@my-product-app/frontend-data-access';
+import { tap } from 'rxjs';
 
 export type Option = { label: string; value: string };
 
@@ -31,9 +30,10 @@ export type Option = { label: string; value: string };
   ],
 })
 export class CreateWorkOrderFormComponent {
-  readonly route = inject(ActivatedRoute);
-  readonly workOrderFormService: WorkOrderFormService =
-    inject(WorkOrderFormService);
+  titleLabel = 'Work Order';
+
+  private readonly workOrderFormService = inject(WorkOrderFormService);
+  private readonly productStore = inject(ProductStore);
 
   // FormGroup signal
   form = signal(
@@ -49,9 +49,6 @@ export class CreateWorkOrderFormComponent {
         Validators.required,
         Validators.min(1),
       ]),
-      productWeight: new FormControl<string | null>(null, [
-        Validators.required,
-      ]),
       deliveryDate: new FormControl<Date | null>(null, [Validators.required]),
       description: new FormControl<string | null>(null),
     })
@@ -66,17 +63,18 @@ export class CreateWorkOrderFormComponent {
   loadingLocations = signal(true);
 
   constructor() {
-    const productId = Number(
-      this.route.snapshot.queryParamMap.get('productId')
-    );
-    const productName = this.route.snapshot.queryParamMap.get('productName');
+    // ✅ Auto-fill product details from ProductStore when it changes
+    effect(() => {
+      const product = this.productStore.product();
+      console.log('CreateWorkOrderFormComponent   product==', product);
 
-    if (productId) {
-      this.form().patchValue({
-        productId,
-        description: productName || '',
-      });
-    }
+      if (product && product.name) {
+        this.form().patchValue({
+          productId: product.id ?? null,
+          description: product.description || product.name,
+        });
+      }
+    });
 
     // Fetch vendors & clients
     this.workOrderFormService
@@ -110,6 +108,6 @@ export class CreateWorkOrderFormComponent {
     }
     const formValue = this.form().value;
     console.log('Submitting WorkOrder form:', formValue);
-    // TODO: Call service to create workorder
+    // TODO: Call service to create work order
   }
 }

@@ -7,10 +7,36 @@ import { PrismaService } from '@my-product-app/prisma';
 import { CreateWorkorderInput } from '../dto/create-workoder.input';
 import { UpdateWorkorderInput } from '../dto/update-workorder.input';
 import { ApproveWorkorderInput } from '../dto/approve-workorder.input';
+import { WorkOrderStatus } from '@prisma/client';
 
 @Injectable()
 export class WorkOrderService {
   constructor(private readonly prisma: PrismaService) {}
+
+  // Helper method to generate WorkOrderCode
+  private async generateWorkOrderCode(): Promise<string> {
+    const today = new Date();
+    const datePart = `${String(today.getFullYear()).slice(-2)}${String(
+      today.getMonth() + 1
+    ).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+
+    // Count existing work orders created today
+    const countToday = await this.prisma.workOrder.count({
+      where: {
+        createdAt: {
+          gte: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+          lt: new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate() + 1
+          ),
+        },
+      },
+    });
+
+    const sequence = String(countToday + 1).padStart(2, '0');
+    return `W${datePart}${sequence}`;
+  }
 
   async create(data: CreateWorkorderInput, userId: number) {
     const product = await this.prisma.product.findUnique({
@@ -21,17 +47,18 @@ export class WorkOrderService {
       throw new NotFoundException('Product not found');
     }
 
+    const workOrderCode = await this.generateWorkOrderCode();
+
     return this.prisma.workOrder.create({
       data: {
+        workOrderCode,
         productId: product.id,
         clientLocation: data.clientLocation,
         vendorOrClient: data.vendorOrClient,
         quantity: data.quantity,
-        productWeight: data.productWeight,
         deliveryDate: data.deliveryDate,
         description: data.description,
         createdById: userId,
-        status: 'Requested',
       },
     });
   }
@@ -44,7 +71,10 @@ export class WorkOrderService {
       throw new NotFoundException('WorkOrder not found');
     }
 
-    if (workorder.status !== 'Requested' && status === 'Approved') {
+    if (
+      workorder.status !== WorkOrderStatus.REQUESTED &&
+      status === WorkOrderStatus.APPROVED
+    ) {
       throw new BadRequestException(
         `Cannot approve workorder with status: ${workorder.status}`
       );
@@ -57,7 +87,7 @@ export class WorkOrderService {
     const updateData: any = {
       status,
       approvedById,
-      updateDate: new Date(),
+      updatedAt: new Date(),
     };
 
     if (priority !== undefined) updateData.priority = priority;
@@ -70,8 +100,8 @@ export class WorkOrderService {
       data: updateData,
     });
   }
-
-  async cancel(id: number, userId: number) {
+  // , userId: number in furture userId means currentUser who is cancelled this workorder
+  async cancel(id: number) {
     const workorder = await this.prisma.workOrder.findUnique({ where: { id } });
 
     if (!workorder) {
@@ -81,8 +111,8 @@ export class WorkOrderService {
     return this.prisma.workOrder.update({
       where: { id },
       data: {
-        status: 'Cancelled',
-        updateDate: new Date(),
+        status: WorkOrderStatus.CANCELLED,
+        updatedAt: new Date(),
       },
     });
   }
@@ -109,7 +139,7 @@ export class WorkOrderService {
       where: { id },
       data: {
         ...data,
-        updateDate: new Date(),
+        updatedAt: new Date(),
       },
     });
   }

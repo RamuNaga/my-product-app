@@ -41,6 +41,21 @@
   gap: 1.5rem;
 }
 
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  .form-field {
+    flex: 1;
+    min-width: 180px; // ensures fields don't shrink too small
+  }
+}
+
+.form-full-width {
+  width: 100%;
+}
+
 /* Kill internal tab scroll and fix padding */
 ::ng-deep .mat-mdc-tab-body-content {
   overflow: visible !important;
@@ -60,4 +75,19 @@
     padding: 1.5rem;
     border-radius: 16px;
   }
+}
+
+mat-card-header {
+  justify-content: center;
+  background-color: #22c55e !important;
+  color: white;
+  align-items: center;
+  text-align: center;
+  border-radius: 11px;
+}
+mat-card-title {
+  font-weight: normal;
+}
+.mat-mdc-card-header {
+  padding: 0.5rem;
 }

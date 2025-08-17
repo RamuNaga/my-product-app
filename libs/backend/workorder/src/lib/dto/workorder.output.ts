@@ -1,4 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { WorkOrderStatus, Priority } from '@my-product-app/backend-shared';
 
 @ObjectType()
 export class WorkorderOutput {
@@ -26,6 +27,9 @@ export class WorkorderOutput {
   @Field({ nullable: true })
   description?: string;
 
-  @Field()
-  status!: string;
+  @Field(() => WorkOrderStatus)
+  status!: WorkOrderStatus;
+
+  @Field(() => Priority, { nullable: true })
+  priority?: Priority;
 }

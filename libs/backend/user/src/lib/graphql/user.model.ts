@@ -1,25 +1,6 @@
 // user.model.ts
-import {
-  registerEnumType,
-  ObjectType,
-  Field,
-  Int,
-  HideField,
-} from '@nestjs/graphql';
-
-export enum UserRole {
-  ADMIN = 'ADMIN',
-  MANAGER = 'MANAGER',
-  OPERATOR = 'OPERATOR',
-  STAFF = 'STAFF',
-  VIEWER = 'VIEWER',
-}
-
-// Register enum with GraphQL so it can be used as a type in your schema
-registerEnumType(UserRole, {
-  name: 'UserRole', // this will be the GraphQL enum name
-  description: 'Roles assigned to users',
-});
+import { ObjectType, Field, Int, HideField } from '@nestjs/graphql';
+import { UserRole } from '@my-product-app/backend-shared';
 
 @ObjectType()
 export class User {

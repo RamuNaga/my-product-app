@@ -36,10 +36,8 @@ export async function bootstrapMicroservice(
     app.use(bodyParser.json({ limit: '10mb' }));
     app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
-    // Serve static assets from uploads folder
-    app.useStaticAssets(join(process.cwd(), 'uploads'), {
-      prefix: '/uploads',
-    });
+    // Serve static assets
+    app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads' });
 
     // Enable CORS
     app.enableCors({
@@ -58,12 +56,11 @@ export async function bootstrapMicroservice(
     const host = process.env[options.hostEnv] || 'localhost';
     const port = Number(process.env[options.portEnv]) || options.fallbackPort;
 
-    // Use unique microservice port based on env variable naming pattern
     const microserviceEnvKey = `${options.serviceName
       .toUpperCase()
       .replace(/\s/g, '_')}_MS_PORT`;
     const microservicePort =
-      Number(process.env[microserviceEnvKey]) || port + 1000; // fallback offset
+      Number(process.env[microserviceEnvKey]) || port + 1000;
 
     console.log(`Starting ${options.serviceName} on ${host}:${port}`);
 
@@ -75,7 +72,7 @@ export async function bootstrapMicroservice(
 
     await app.startAllMicroservices();
 
-    // Initialize DI so guards can be resolved
+    // Initialize DI
     await app.init();
 
     const jwtAuthGuard = app.get(JwtAuthGuard);
@@ -83,6 +80,12 @@ export async function bootstrapMicroservice(
 
     await app.listen(port);
     console.log(`${options.serviceName} is running on http://${host}:${port}`);
+    console.log(
+      `${options.serviceName} TCP microservice running on ${host}:${microservicePort}`
+    );
+    console.log(
+      `${options.serviceName} /ping endpoint is available at http://${host}:${port}/ping`
+    );
 
     return app;
   } catch (error) {

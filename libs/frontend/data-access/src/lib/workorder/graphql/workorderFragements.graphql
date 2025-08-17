@@ -1,0 +1,32 @@
+# fragments/workorder.graphql
+
+# Base fragment for stage 1 creation
+fragment WorkorderBaseFields on Workorder {
+  id
+  clientLocation
+  vendorOrClient
+  quantity
+  deliveryDate
+  description
+}
+
+# Full fragment including all details for stage 2 / queries
+fragment WorkorderFields on Workorder {
+  ...WorkorderBaseFields
+  workOrderCode
+  status
+  priority
+  product {
+    id
+    name
+    productCode
+    price
+  }
+  createdBy {
+    id
+    username
+    email
+  }
+  createdAt
+  updatedAt
+}

@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from '@my-product-app/prisma';
 
 import { WorkorderResolver } from './resolver/workorder.resolver';
 import { WorkOrderService } from './service/workorder.service';
+import { SharedModule } from '@my-product-app/backend-shared';
 
 @Module({
-  providers: [WorkOrderService, WorkorderResolver, PrismaService],
+  imports: [SharedModule],
+  providers: [WorkOrderService, WorkorderResolver],
 })
 export class WorkorderModule {}

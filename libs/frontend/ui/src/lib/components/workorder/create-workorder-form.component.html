@@ -1,89 +1,82 @@
-<div
-  class="form-container"
+<ng-container
   *ngIf="!loadingVendors() && !loadingLocations(); else loadingTemplate"
 >
-  <form
-    [formGroup]="form()"
-    (ngSubmit)="onSubmit()"
-    class="workorder-form space-y-4"
-  >
-    <!-- Vendor or Client Dropdown -->
-    <div class="form-field">
-      <lib-select-field
-        label="Vendor or Client"
-        formControlName="vendorOrClient"
-        [options]="vendorsAndClients()"
-        [required]="true"
-      ></lib-select-field>
-    </div>
+  <div class="form-container">
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>{{ titleLabel }}</mat-card-title>
+      </mat-card-header>
 
-    <!-- Client Location Dropdown -->
-    <div class="form-field">
-      <lib-select-field
-        label="Client Location"
-        formControlName="clientLocation"
-        [options]="greencoreLocations()"
-        [required]="true"
-      ></lib-select-field>
-    </div>
+      <form [formGroup]="form()" class="form-layout" (ngSubmit)="onSubmit()">
+        <!-- Row 1: Vendor or Client + Client Location -->
+        <div class="form-row">
+          <div class="form-field">
+            <lib-select-field
+              label="Vendor or Client"
+              formControlName="vendorOrClient"
+              [options]="vendorsAndClients()"
+              [required]="true"
+            ></lib-select-field>
+          </div>
 
-    <!-- Quantity -->
-    <div class="form-field">
-      <lib-input-field
-        label="Quantity"
-        placeholder="Enter quantity"
-        formControlName="quantity"
-        type="number"
-        [required]="true"
-      ></lib-input-field>
-    </div>
+          <div class="form-field">
+            <lib-select-field
+              label="Client Location"
+              formControlName="clientLocation"
+              [options]="greencoreLocations()"
+              [required]="true"
+            ></lib-select-field>
+          </div>
+        </div>
 
-    <!-- Product Weight -->
-    <div class="form-field">
-      <lib-input-field
-        label="Product Weight"
-        placeholder="Enter product weight"
-        formControlName="productWeight"
-        type="text"
-        [required]="true"
-      ></lib-input-field>
-    </div>
+        <!-- Row 2: Quantity + Product Weight + Delivery Date -->
+        <div class="form-row">
+          <div class="form-field">
+            <lib-input-field
+              label="Quantity"
+              placeholder="Enter quantity"
+              formControlName="quantity"
+              type="number"
+              [required]="true"
+            ></lib-input-field>
+          </div>
 
-    <!-- Delivery Date -->
-    <div class="form-field">
-      <lib-input-field
-        label="Delivery Date"
-        placeholder="Select delivery date"
-        formControlName="deliveryDate"
-        type="date"
-        [required]="true"
-      ></lib-input-field>
-    </div>
+          <div class="form-field">
+            <lib-input-field
+              label="Delivery Date"
+              placeholder="Select delivery date"
+              formControlName="deliveryDate"
+              type="date"
+              [required]="true"
+            ></lib-input-field>
+          </div>
+        </div>
 
-    <!-- Description (optional) -->
-    <div class="form-field">
-      <lib-input-field
-        label="Description"
-        placeholder="Enter description"
-        formControlName="description"
-        type="text"
-      ></lib-input-field>
-    </div>
+        <!-- Description -->
+        <div class="form-field form-full-width">
+          <lib-input-field
+            label="Description"
+            placeholder="Enter description"
+            formControlName="description"
+            type="text"
+          ></lib-input-field>
+        </div>
 
-    <!-- Submit Button -->
-    <div class="form-actions">
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="form().invalid"
-        class="w-full py-2 rounded bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50"
-      >
-        Save WorkOrder
-      </button>
-    </div>
-  </form>
-</div>
+        <!-- Actions -->
+        <div class="form-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="form().invalid"
+          >
+            Save Work Order
+          </button>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</ng-container>
 
 <ng-template #loadingTemplate>
   <div class="loader-container">

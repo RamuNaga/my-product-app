@@ -1,6 +1,7 @@
-import { User as GQLUser, UserRole } from '../graphql/user.model';
+import { User as GQLUser } from '../graphql/user.model';
+import { UserRole } from '@my-product-app/backend-shared';
 
-// Interface for internal user type WITHOUT password
+
 export interface IUser {
   id: number;
   username: string;

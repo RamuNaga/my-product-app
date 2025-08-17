@@ -118,9 +118,13 @@
       "tags": ["type:feature", "scope:backend", "area:user"],
       "implicitDependencies": ["prisma", "shared"]
     },
+    "workorder": {
+      "tags": ["type:feature", "scope:backend", "area:workorder"],
+      "implicitDependencies": ["prisma", "shared"]
+    },
     "api-gateway": {
       "tags": ["type:gateway", "scope:backend", "area:gateway"],
-      "implicitDependencies": ["shared", "product", "user"]
+      "implicitDependencies": ["shared", "product", "user", "workorder"]
     },
     "backend-product-service": {
       "tags": ["type:service", "scope:backend", "area:product"],
@@ -129,6 +133,10 @@
     "backend-user-service": {
       "tags": ["type:service", "scope:backend", "area:user"],
       "implicitDependencies": ["prisma", "shared", "user"]
+    },
+    "backend-workorder-service": {
+      "tags": ["type:service", "scope:backend", "area:workorder"],
+      "implicitDependencies": ["prisma", "shared", "workorder"]
     },
     "frontend": {
       "tags": ["type:app", "scope:frontend"]

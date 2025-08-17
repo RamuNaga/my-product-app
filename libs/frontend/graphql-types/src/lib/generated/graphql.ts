@@ -67,6 +67,7 @@ export type CreateLocationInput = {
 };
 
 export type CreateProductInput = {
+  companyId?: InputMaybe<Scalars['Float']['input']>;
   description: Scalars['String']['input'];
   image?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
@@ -81,6 +82,15 @@ export type CreateUserInput = {
   password: Scalars['String']['input'];
   role: UserRole;
   username: Scalars['String']['input'];
+};
+
+export type CreateWorkorderInput = {
+  clientLocation: Scalars['String']['input'];
+  deliveryDate: Scalars['DateTime']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  productId: Scalars['Int']['input'];
+  quantity: Scalars['Int']['input'];
+  vendorOrClient: Scalars['String']['input'];
 };
 
 export type LoginInput = {
@@ -100,10 +110,12 @@ export type Mutation = {
   createCompanyLocation: CompanyLocation;
   createProduct: Product;
   createUser: User;
+  createWorkOrder: Workorder;
   deleteProduct: Product;
   login: LoginResponse;
   registerCompanyUser: Scalars['Boolean']['output'];
   updateProduct: Product;
+  updateWorkorder: Workorder;
 };
 
 
@@ -127,6 +139,11 @@ export type MutationCreateUserArgs = {
 };
 
 
+export type MutationCreateWorkOrderArgs = {
+  input: CreateWorkorderInput;
+};
+
+
 export type MutationDeleteProductArgs = {
   id: Scalars['ID']['input'];
 };
@@ -147,6 +164,11 @@ export type MutationUpdateProductArgs = {
   id: Scalars['ID']['input'];
 };
 
+
+export type MutationUpdateWorkorderArgs = {
+  input: UpdateWorkorderInput;
+};
+
 export type PaginationMeta = {
   __typename?: 'PaginationMeta';
   currentPage: Scalars['Int']['output'];
@@ -155,6 +177,12 @@ export type PaginationMeta = {
   totalItems: Scalars['Int']['output'];
   totalPages: Scalars['Int']['output'];
 };
+
+export enum Priority {
+  High = 'HIGH',
+  Low = 'LOW',
+  Medium = 'MEDIUM'
+}
 
 export type Product = {
   __typename?: 'Product';
@@ -179,6 +207,8 @@ export type Query = {
   ping: Scalars['String']['output'];
   products: Array<Product>;
   searchCompanies: Array<Company>;
+  workorder: Workorder;
+  workorders: Array<Workorder>;
 };
 
 
@@ -196,6 +226,11 @@ export type QuerySearchCompaniesArgs = {
   searchTerm: Scalars['String']['input'];
 };
 
+
+export type QueryWorkorderArgs = {
+  id: Scalars['Int']['input'];
+};
+
 export type RegisterCompanyUserInput = {
   company?: InputMaybe<CreateCompanyInput>;
   existingCompanyId?: InputMaybe<Scalars['Float']['input']>;
@@ -204,6 +239,7 @@ export type RegisterCompanyUserInput = {
 };
 
 export type UpdateProductInput = {
+  companyId?: InputMaybe<Scalars['Float']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
   image?: InputMaybe<Scalars['String']['input']>;
@@ -211,6 +247,16 @@ export type UpdateProductInput = {
   price?: InputMaybe<Scalars['Float']['input']>;
   productCode?: InputMaybe<Scalars['String']['input']>;
   productWeight?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateWorkorderInput = {
+  clientLocation?: InputMaybe<Scalars['String']['input']>;
+  deliveryDate?: InputMaybe<Scalars['DateTime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  productId?: InputMaybe<Scalars['Int']['input']>;
+  quantity?: InputMaybe<Scalars['Int']['input']>;
+  vendorOrClient?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type User = {
@@ -232,6 +278,37 @@ export enum UserRole {
   Staff = 'STAFF',
   Viewer = 'VIEWER'
 }
+
+export enum WorkOrderStatus {
+  Approved = 'APPROVED',
+  Cancelled = 'CANCELLED',
+  Completed = 'COMPLETED',
+  Pending = 'PENDING',
+  Rejected = 'REJECTED',
+  Requested = 'REQUESTED'
+}
+
+export type Workorder = {
+  __typename?: 'Workorder';
+  approvedBy?: Maybe<User>;
+  assignedTo?: Maybe<Scalars['String']['output']>;
+  attachments?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  clientLocation: Scalars['String']['output'];
+  comments?: Maybe<Scalars['String']['output']>;
+  company?: Maybe<Company>;
+  createdAt: Scalars['DateTime']['output'];
+  createdBy: User;
+  deliveryDate: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  priority?: Maybe<Priority>;
+  product: Product;
+  quantity: Scalars['Int']['output'];
+  status: WorkOrderStatus;
+  updatedAt: Scalars['DateTime']['output'];
+  vendorOrClient: Scalars['String']['output'];
+  workOrderCode: Scalars['String']['output'];
+};
 
 export type CreateCompanyLocationMutationVariables = Exact<{
   createLocationInput: CreateLocationInput;
@@ -273,6 +350,67 @@ export type FindAllProductQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type FindAllProductQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', id: number, productCode: string, name: string, description: string, image?: string | null, productWeight: string, price: number, createdAt: any }> };
 
+export type CreateWorkOrderMutationVariables = Exact<{
+  input: CreateWorkorderInput;
+}>;
+
+
+export type CreateWorkOrderMutation = { __typename?: 'Mutation', createWorkOrder: { __typename?: 'Workorder', id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null } };
+
+export type UpdateWorkOrderMutationVariables = Exact<{
+  input: UpdateWorkorderInput;
+}>;
+
+
+export type UpdateWorkOrderMutation = { __typename?: 'Mutation', updateWorkorder: { __typename?: 'Workorder', workOrderCode: string, status: WorkOrderStatus, priority?: Priority | null, createdAt: any, updatedAt: any, id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null, product: { __typename?: 'Product', id: number, name: string, productCode: string, price: number }, createdBy: { __typename?: 'User', id: number, username: string, email: string } } };
+
+export type WorkordersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type WorkordersQuery = { __typename?: 'Query', workorders: Array<{ __typename?: 'Workorder', workOrderCode: string, status: WorkOrderStatus, priority?: Priority | null, createdAt: any, updatedAt: any, id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null, product: { __typename?: 'Product', id: number, name: string, productCode: string, price: number }, createdBy: { __typename?: 'User', id: number, username: string, email: string } }> };
+
+export type WorkorderQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type WorkorderQuery = { __typename?: 'Query', workorder: { __typename?: 'Workorder', workOrderCode: string, status: WorkOrderStatus, priority?: Priority | null, createdAt: any, updatedAt: any, id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null, product: { __typename?: 'Product', id: number, name: string, productCode: string, price: number }, createdBy: { __typename?: 'User', id: number, username: string, email: string } } };
+
+export type WorkorderBaseFieldsFragment = { __typename?: 'Workorder', id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null };
+
+export type WorkorderFieldsFragment = { __typename?: 'Workorder', workOrderCode: string, status: WorkOrderStatus, priority?: Priority | null, createdAt: any, updatedAt: any, id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null, product: { __typename?: 'Product', id: number, name: string, productCode: string, price: number }, createdBy: { __typename?: 'User', id: number, username: string, email: string } };
+
+export const WorkorderBaseFieldsFragmentDoc = gql`
+    fragment WorkorderBaseFields on Workorder {
+  id
+  clientLocation
+  vendorOrClient
+  quantity
+  deliveryDate
+  description
+}
+    `;
+export const WorkorderFieldsFragmentDoc = gql`
+    fragment WorkorderFields on Workorder {
+  ...WorkorderBaseFields
+  workOrderCode
+  status
+  priority
+  product {
+    id
+    name
+    productCode
+    price
+  }
+  createdBy {
+    id
+    username
+    email
+  }
+  createdAt
+  updatedAt
+}
+    ${WorkorderBaseFieldsFragmentDoc}`;
 export const CreateCompanyLocationDocument = gql`
     mutation createCompanyLocation($createLocationInput: CreateLocationInput!) {
   createCompanyLocation(createLocationInput: $createLocationInput) {
@@ -402,6 +540,78 @@ export const FindAllProductDocument = gql`
   })
   export class FindAllProductGQL extends Apollo.Query<FindAllProductQuery, FindAllProductQueryVariables> {
     document = FindAllProductDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateWorkOrderDocument = gql`
+    mutation CreateWorkOrder($input: CreateWorkorderInput!) {
+  createWorkOrder(input: $input) {
+    ...WorkorderBaseFields
+  }
+}
+    ${WorkorderBaseFieldsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateWorkOrderGQL extends Apollo.Mutation<CreateWorkOrderMutation, CreateWorkOrderMutationVariables> {
+    document = CreateWorkOrderDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateWorkOrderDocument = gql`
+    mutation UpdateWorkOrder($input: UpdateWorkorderInput!) {
+  updateWorkorder(input: $input) {
+    ...WorkorderFields
+  }
+}
+    ${WorkorderFieldsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateWorkOrderGQL extends Apollo.Mutation<UpdateWorkOrderMutation, UpdateWorkOrderMutationVariables> {
+    document = UpdateWorkOrderDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const WorkordersDocument = gql`
+    query Workorders {
+  workorders {
+    ...WorkorderFields
+  }
+}
+    ${WorkorderFieldsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class WorkordersGQL extends Apollo.Query<WorkordersQuery, WorkordersQueryVariables> {
+    document = WorkordersDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const WorkorderDocument = gql`
+    query Workorder($id: Int!) {
+  workorder(id: $id) {
+    ...WorkorderFields
+  }
+}
+    ${WorkorderFieldsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class WorkorderGQL extends Apollo.Query<WorkorderQuery, WorkorderQueryVariables> {
+    document = WorkorderDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

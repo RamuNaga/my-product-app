@@ -1,12 +1,13 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
+import { Priority, WorkOrderStatus } from '@prisma/client';
 
 @InputType()
 export class ApproveWorkorderInput {
   @Field(() => Int)
-  id!: number; // Workorder ID to approve/reject
+  id!: number; // Workorder ID
 
-  @Field({ nullable: true })
-  priority?: string;
+  @Field(() => Priority, { nullable: true })
+  priority?: Priority;
 
   @Field(() => [String], { nullable: true })
   attachments?: string[];
@@ -17,6 +18,6 @@ export class ApproveWorkorderInput {
   @Field({ nullable: true })
   comments?: string;
 
-  @Field()
-  status!: string; // e.g. 'Approved' or 'Rejected'
+  @Field(() => WorkOrderStatus)
+  status!: WorkOrderStatus; // APPROVED or REJECTED
 }

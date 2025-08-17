@@ -4,6 +4,7 @@ import { ClientsModule } from '@nestjs/microservices';
 import {
   getUserServiceOptions,
   getProductServiceOptions,
+  getWorkorderServiceOptions,
 } from '@my-product-app/backend-shared';
 
 @Module({
@@ -11,6 +12,7 @@ import {
     ClientsModule.register([
       getUserServiceOptions(),
       getProductServiceOptions(),
+      getWorkorderServiceOptions(),
     ]),
   ],
   exports: [ClientsModule],

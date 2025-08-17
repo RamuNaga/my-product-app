@@ -8,6 +8,7 @@ import {
 import {
   MaterialModule,
   ProductListStore,
+  ProductStore,
 } from '@my-product-app/frontend-shared';
 import { ProductCardComponent } from './product-card.component';
 import { ProductListModel as Product } from '@my-product-app/frontend-shared';
@@ -23,6 +24,7 @@ import { Router } from '@angular/router';
 })
 export class ProductListComponent implements OnInit {
   store = inject(ProductListStore);
+  productStore = inject(ProductStore);
   router = inject(Router);
 
   products = this.store.products;
@@ -45,8 +47,7 @@ export class ProductListComponent implements OnInit {
   }
 
   onWorkOrder(product: Product) {
-    this.router.navigate(['/home/workOrders/form'], {
-      queryParams: { productId: product.id, productName: product.name },
-    });
+    this.productStore.setProduct(product);
+    this.router.navigate(['/home/workOrders/form']);
   }
 }

@@ -15,12 +15,18 @@ module.exports = [
             '^@my-product-app/backend-company',
             '^@my-product-app/backend-company-location',
             '@my-product-app/backend-registration',
+            '@my-product-app/workorder',
           ],
           enforceBuildableLibDependency: true,
           depConstraints: [
             {
               sourceTag: 'gateway',
-              onlyDependOnLibsWithTags: ['shared', 'product', 'user'],
+              onlyDependOnLibsWithTags: [
+                'shared',
+                'product',
+                'user',
+                'workorder',
+              ],
             },
           ],
         },

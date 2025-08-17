@@ -1,4 +1,3 @@
-// src/product/resolver/product.resolver.ts
 import { Query, Resolver } from '@nestjs/graphql';
 import { PrismaService } from '@my-product-app/prisma';
 import { Product } from '../graphql/product.model';

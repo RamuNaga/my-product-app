@@ -8,8 +8,8 @@ import { User } from '../graphql/user.model';
 import { PrismaService } from '@my-product-app/prisma';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { UserRole as GQLUserRole } from '../graphql/user.model'; // GraphQL enum
-import { User as PrismaUser, UserRole as PrismaUserRole } from '@prisma/client'; // Prisma types
+import { UserRole as GQLUserRole } from '@my-product-app/backend-shared'; // updated
+import { User as PrismaUser, UserRole as PrismaUserRole } from '@prisma/client';
 import { UserWithoutPassword } from '../interfaces/user.interface';
 
 @Injectable()
@@ -91,11 +91,9 @@ export class UserService {
         companyId: true,
         createdAt: true,
         updatedAt: true,
-        // no password selected here!
       },
     });
 
-    // Cast each user as Partial without password
     return users.map((user) => this.mapUser(user));
   }
 
@@ -106,10 +104,6 @@ export class UserService {
     return !user;
   }
 
-  /**
-   * Map Prisma user (with or without password) to GraphQL user by casting role
-   * Accepts user WITHOUT password as input here.
-   */
   private mapUser(
     user: Omit<PrismaUser, 'password'> | PrismaUser
   ): UserWithoutPassword {

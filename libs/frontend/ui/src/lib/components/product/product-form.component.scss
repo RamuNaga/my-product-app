@@ -1,6 +1,23 @@
 @use 'libs/frontend/shared/src/lib/styles/form-layout' as *;
+
 :host {
   display: block;
   min-height: 100vh;
   overflow: hidden;
+}
+
+// .form-container {
+//   display: flex;
+//   justify-content: center;
+//   padding: 2rem;
+// }
+
+// .form-card {
+//   width: 100%;
+//   max-width: 800px;
+// }
+
+.product-form {
+  display: flex;
+  flex-direction: column;
 }

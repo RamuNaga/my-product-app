@@ -1,5 +1,5 @@
 schema: http://localhost:3000/graphql
-documents: libs/frontend/data-access/**/graphql/*.graphql
+documents: 'libs/frontend/data-access/src/lib/**/graphql/*.graphql'
 generates:
   libs/frontend/graphql-types/src/lib/generated/graphql.ts:
     plugins:

@@ -8,7 +8,13 @@ module.exports = [
       '@nx/enforce-module-boundaries': [
         'error',
         {
-          allow: ['^@my-product-app/backend-shared', '^@my-product-app/prisma'],
+          allow: [
+            '^@my-product-app/backend-shared',
+            '^@my-product-app/prisma',
+            '^@my-product-app/user',
+            '@my-product-app/product',
+            '@my-product-app/backend-company',
+          ],
           enforceBuildableLibDependency: true,
           depConstraints: [
             {

@@ -1,0 +1,7 @@
+# mutations/updateWorkorder.graphql
+
+mutation UpdateWorkOrder($input: UpdateWorkorderInput!) {
+  updateWorkorder(input: $input) {
+    ...WorkorderFields
+  }
+}

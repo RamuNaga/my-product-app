@@ -4,6 +4,7 @@ import { ProductFormModel as Product } from './product.model';
 @Injectable({ providedIn: 'root' })
 export class ProductStore {
   readonly product = signal<Product>({
+    id: 0,
     productCode: '',
     name: '',
     description: '',
@@ -30,6 +31,7 @@ export class ProductStore {
 
   reset() {
     this.product.set({
+      id: 0,
       productCode: '',
       name: '',
       description: '',

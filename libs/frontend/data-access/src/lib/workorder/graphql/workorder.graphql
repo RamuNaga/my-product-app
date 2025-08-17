@@ -1,0 +1,12 @@
+query Workorders {
+  workorders {
+    ...WorkorderFields
+  }
+}
+
+# Query to get a single workorder by ID
+query Workorder($id: Int!) {
+  workorder(id: $id) {
+    ...WorkorderFields
+  }
+}

@@ -5,8 +5,8 @@ async function startUserService() {
   console.log('startUserService calling');
   await bootstrapMicroservice(UserServiceModule, {
     hostEnv: 'MICROSERVICE_HOST',
-    portEnv: 'USER_SERVICE_PORT',
-    fallbackPort: 3003,
+    portEnv: 'USER_SERVICE_MS_PORT', //  Use MS port
+    fallbackPort: 4003, //  Matches MS port
     serviceName: 'User Service',
   });
 }

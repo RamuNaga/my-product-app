@@ -1,5 +1,4 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-
 import { CreateWorkorderInput } from '../dto/create-workoder.input';
 import { Workorder } from '../graphql/workorder.model';
 import { UpdateWorkorderInput } from '../dto/update-workorder.input';
@@ -15,7 +14,7 @@ export class WorkorderResolver {
     @Args('input') input: CreateWorkorderInput,
     @CurrentUser() user: any
   ) {
-    console.log('createWorkorder  --- user id', user.id);
+    console.log('Creating workorder for user id:', user.id);
     return this.workorderService.create(input, user.id);
   }
 

@@ -11,4 +11,12 @@ export class CompanyLocationService {
       data,
     });
   }
+
+  async getAllLocations(companyId: number) {
+    return this.prisma.companyLocation.findMany({
+      where: { companyId },
+      select: { id: true, location: true }, // select only needed fields
+      orderBy: { location: 'asc' },
+    });
+  }
 }
