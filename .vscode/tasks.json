@@ -1,0 +1,50 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Serve API Gateway",
+      "type": "shell",
+      "command": "nx serve api-gateway",
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Product Service",
+      "type": "shell",
+      "command": "nx serve backend-product-service",
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve User Service",
+      "type": "shell",
+      "command": "nx serve backend-user-service",
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Workorder Service",
+      "type": "shell",
+      "command": "nx serve workorder-service",
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Frontend",
+      "type": "shell",
+      "command": "nx serve frontend",
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve All Apps",
+      "dependsOn": [
+        "Serve API Gateway",
+        "Serve Product Service",
+        "Serve User Service",
+        "Serve Workorder Service",
+        "Serve Frontend"
+      ],
+      "dependsOrder": "parallel",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

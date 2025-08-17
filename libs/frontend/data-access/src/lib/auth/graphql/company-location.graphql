@@ -1,3 +1,4 @@
+# Mutation: Create a new company location
 mutation createCompanyLocation($createLocationInput: CreateLocationInput!) {
   createCompanyLocation(createLocationInput: $createLocationInput) {
     id
@@ -9,5 +10,13 @@ mutation createCompanyLocation($createLocationInput: CreateLocationInput!) {
     county
     contact
     companyId
+  }
+}
+
+# Query: Get company locations by companyId (only id and location)
+query getCompanyLocations($companyId: Int!) {
+  companyLocations(companyId: $companyId) {
+    id
+    location
   }
 }

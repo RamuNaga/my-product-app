@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query, Int } from '@nestjs/graphql';
 
 import { CompanyLocation } from '../graphql/company-location.model';
 import { CreateLocationInput } from '../dto/create-location.input';
@@ -15,5 +15,12 @@ export class CompanyLocationResolver {
     @Args('createLocationInput') createLocationInput: CreateLocationInput
   ) {
     return this.companyLocationService.create(createLocationInput);
+  }
+
+  @Query(() => [CompanyLocation], { name: 'companyLocations' })
+  async getCompanyLocations(
+    @Args('companyId', { type: () => Int }) companyId: number
+  ) {
+    return this.companyLocationService.getAllCompanyLocations(companyId);
   }
 }

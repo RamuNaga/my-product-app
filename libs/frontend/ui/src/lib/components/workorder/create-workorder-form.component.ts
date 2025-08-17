@@ -6,11 +6,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MaterialModule, ProductStore } from '@my-product-app/frontend-shared';
+import {
+  LoginStore,
+  MaterialModule,
+  ProductStore,
+} from '@my-product-app/frontend-shared';
 import { InputFieldComponent } from '../form-controls/input-field.component';
 import { SelectFieldComponent } from '../form-controls/select-field.component';
 import { MaterialLoaderComponent } from '../loader/loader.component';
 import { WorkOrderFormService } from '@my-product-app/frontend-data-access';
+
 import { tap } from 'rxjs';
 
 export type Option = { label: string; value: string };
@@ -34,6 +39,7 @@ export class CreateWorkOrderFormComponent {
 
   private readonly workOrderFormService = inject(WorkOrderFormService);
   private readonly productStore = inject(ProductStore);
+  private readonly loginStore = inject(LoginStore);
 
   // FormGroup signal
   form = signal(
@@ -63,11 +69,9 @@ export class CreateWorkOrderFormComponent {
   loadingLocations = signal(true);
 
   constructor() {
-    // ✅ Auto-fill product details from ProductStore when it changes
+    // Auto-fill product details from ProductStore
     effect(() => {
       const product = this.productStore.product();
-      console.log('CreateWorkOrderFormComponent   product==', product);
-
       if (product && product.name) {
         this.form().patchValue({
           productId: product.id ?? null,
@@ -88,17 +92,18 @@ export class CreateWorkOrderFormComponent {
         error: () => this.loadingVendors.set(false),
       });
 
-    // Fetch Greencore locations
-    this.workOrderFormService
-      .getGreencoreLocations()
-      .pipe(tap(() => this.loadingLocations.set(true)))
-      .subscribe({
-        next: (data: Option[]) => {
-          this.greencoreLocations.set(data);
-          this.loadingLocations.set(false);
-        },
-        error: () => this.loadingLocations.set(false),
-      });
+    // Use companyLocations from LoginStore for clientLocation dropdown
+    effect(() => {
+      const locations = this.loginStore.companyLocation();
+      if (locations && Array.isArray(locations)) {
+        const options: Option[] = locations.map((loc) => ({
+          label: loc.location,
+          value: String(loc.id),
+        }));
+        this.greencoreLocations.set(options);
+      }
+      this.loadingLocations.set(false);
+    });
   }
 
   onSubmit() {

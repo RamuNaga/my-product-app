@@ -200,6 +200,7 @@ export type Product = {
 
 export type Query = {
   __typename?: 'Query';
+  companyLocations: Array<CompanyLocation>;
   findAllProduct: Array<Product>;
   findOneProduct: Product;
   getAllUsers: Array<User>;
@@ -209,6 +210,11 @@ export type Query = {
   searchCompanies: Array<Company>;
   workorder: Workorder;
   workorders: Array<Workorder>;
+};
+
+
+export type QueryCompanyLocationsArgs = {
+  companyId: Scalars['Int']['input'];
 };
 
 
@@ -316,6 +322,13 @@ export type CreateCompanyLocationMutationVariables = Exact<{
 
 
 export type CreateCompanyLocationMutation = { __typename?: 'Mutation', createCompanyLocation: { __typename?: 'CompanyLocation', id: number, location: string, address: string, city: string, country: string, postalCode: string, county: string, contact?: string | null, companyId?: number | null } };
+
+export type GetCompanyLocationsQueryVariables = Exact<{
+  companyId: Scalars['Int']['input'];
+}>;
+
+
+export type GetCompanyLocationsQuery = { __typename?: 'Query', companyLocations: Array<{ __typename?: 'CompanyLocation', id: number, location: string }> };
 
 export type CreateCompanyMutationVariables = Exact<{
   createCompanyInput: CreateCompanyInput;
@@ -432,6 +445,25 @@ export const CreateCompanyLocationDocument = gql`
   })
   export class CreateCompanyLocationGQL extends Apollo.Mutation<CreateCompanyLocationMutation, CreateCompanyLocationMutationVariables> {
     document = CreateCompanyLocationDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetCompanyLocationsDocument = gql`
+    query getCompanyLocations($companyId: Int!) {
+  companyLocations(companyId: $companyId) {
+    id
+    location
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetCompanyLocationsGQL extends Apollo.Query<GetCompanyLocationsQuery, GetCompanyLocationsQueryVariables> {
+    document = GetCompanyLocationsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

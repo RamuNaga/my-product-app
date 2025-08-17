@@ -7,6 +7,9 @@ import {
   LoginMutationVariables,
   LoginMutation,
   LoginDocument,
+  GetCompanyLocationsQueryVariables,
+  GetCompanyLocationsQuery,
+  GetCompanyLocationsDocument,
 } from '@my-product-app/frontend-graphql-types';
 
 import { Observable } from 'rxjs';
@@ -18,6 +21,7 @@ import { HttpService } from '@my-product-app/frontend-core';
 })
 export class AuthService {
   readonly httpService = inject(HttpService);
+
   constructor(private apollo: Apollo) {}
 
   registerCompanyUser(
@@ -53,6 +57,26 @@ export class AuthService {
             return result.data.login;
           }
           throw new Error('No data returned from login mutation');
+        })
+      );
+  }
+
+  // New method: getCompanyLocation
+  getCompanyLocation(
+    variables: GetCompanyLocationsQueryVariables
+  ): Observable<GetCompanyLocationsQuery['companyLocations']> {
+    return this.apollo
+      .watchQuery<GetCompanyLocationsQuery, GetCompanyLocationsQueryVariables>({
+        query: GetCompanyLocationsDocument,
+        variables,
+        fetchPolicy: 'network-only', // optional: always fetch fresh data
+      })
+      .valueChanges.pipe(
+        map((result) => {
+          if (result.data?.companyLocations != null) {
+            return result.data.companyLocations;
+          }
+          throw new Error('No data returned from getCompanyLocation query');
         })
       );
   }
