@@ -29,7 +29,7 @@
           </div>
         </div>
 
-        <!-- Row 2: Quantity + Product Weight + Delivery Date -->
+        <!-- Row 2: Quantity + Delivery Date -->
         <div class="form-row">
           <div class="form-field">
             <lib-input-field
@@ -42,13 +42,12 @@
           </div>
 
           <div class="form-field">
-            <lib-input-field
+            <lib-date-picker-field
               label="Delivery Date"
               placeholder="Select delivery date"
               formControlName="deliveryDate"
-              type="date"
-              [required]="true"
-            ></lib-input-field>
+              restriction="future"
+            ></lib-date-picker-field>
           </div>
         </div>
 
@@ -68,9 +67,16 @@
             mat-raised-button
             color="primary"
             type="submit"
-            [disabled]="form().invalid"
+            [disabled]="form().invalid || submitting()"
           >
-            Save Work Order
+            <mat-progress-spinner
+              *ngIf="submitting()"
+              mode="indeterminate"
+              diameter="20"
+              color="accent"
+            ></mat-progress-spinner>
+            <span *ngIf="!submitting()">Save Work Order</span>
+            <span *ngIf="submitting()">Submitting...</span>
           </button>
         </div>
       </form>

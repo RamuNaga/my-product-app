@@ -7,7 +7,11 @@ import { PrismaService } from '@my-product-app/prisma';
 import { CreateWorkorderInput } from '../dto/create-workoder.input';
 import { UpdateWorkorderInput } from '../dto/update-workorder.input';
 import { ApproveWorkorderInput } from '../dto/approve-workorder.input';
-import { WorkOrderStatus } from '@prisma/client';
+import {
+  WorkOrderStatus,
+  Priority,
+  UserPayload,
+} from '@my-product-app/backend-shared';
 
 @Injectable()
 export class WorkOrderService {
@@ -38,7 +42,7 @@ export class WorkOrderService {
     return `W${datePart}${sequence}`;
   }
 
-  async create(data: CreateWorkorderInput, userId: number) {
+  async create(data: CreateWorkorderInput, user: UserPayload) {
     const product = await this.prisma.product.findUnique({
       where: { id: data.productId },
     });
@@ -49,18 +53,23 @@ export class WorkOrderService {
 
     const workOrderCode = await this.generateWorkOrderCode();
 
-    return this.prisma.workOrder.create({
-      data: {
-        workOrderCode,
-        productId: product.id,
-        clientLocation: data.clientLocation,
-        vendorOrClient: data.vendorOrClient,
-        quantity: data.quantity,
-        deliveryDate: data.deliveryDate,
-        description: data.description,
-        createdById: userId,
-      },
-    });
+    const cleanData = {
+      workOrderCode,
+      clientLocation: data.clientLocation,
+      vendorOrClient: data.vendorOrClient,
+      quantity: data.quantity,
+      deliveryDate: data.deliveryDate,
+      description: data.description || null,
+      createdById: user?.id,
+      productId: data.productId,
+      status: WorkOrderStatus.REQUESTED,
+      priority: Priority.LOW,
+      companyId: user?.companyId,
+      attachments: [],
+    };
+    console.log('WorkOrder Create Data:', cleanData);
+
+    return this.prisma.workOrder.create({ data: cleanData });
   }
 
   async approveWorkorder(input: ApproveWorkorderInput, approvedById: number) {

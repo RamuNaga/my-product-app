@@ -7,3 +7,4 @@ export * from './lib/locations/location.service';
 export * from './lib/interfaces/location.interface';
 export * from './lib/auth/company/company.service';
 export * from './lib/auth/company/search-company';
+export * from './lib/workorder/services/workorder.service';
