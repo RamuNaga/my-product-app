@@ -3,6 +3,24 @@ const baseConfig = require('../../../eslint.config.js');
 module.exports = [
   ...baseConfig,
   {
+    files: ['**/*.{ts,js,tsx,jsx}'],
+    rules: {
+      '@nx/enforce-module-boundaries': [
+        'error',
+        {
+          allow: ['@my-product-app/logger'],
+          enforceBuildableLibDependency: true,
+          depConstraints: [
+            {
+              sourceTag: 'type:prisma',
+              onlyDependOnLibsWithTags: ['type:shared', 'type:buildable'],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['**/*.json'],
     rules: {
       '@nx/dependency-checks': [

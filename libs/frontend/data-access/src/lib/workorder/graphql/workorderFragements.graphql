@@ -24,6 +24,39 @@ fragment WorkorderFields on Workorder {
   }
   createdBy {
     id
+    role
+    username
+    email
+  }
+  createdAt
+  updatedAt
+}
+
+# Base fragment for minimal display (used in tables/lists)
+fragment WorkorderListFields on Workorder {
+  id
+  workOrderCode
+  clientLocation
+  vendorOrClient
+  quantity
+  deliveryDate
+  status
+  priority
+}
+
+# Full details for single workorder view
+fragment WorkorderDetailsFields on Workorder {
+  ...WorkorderListFields
+  description
+  product {
+    id
+    name
+    productCode
+    price
+  }
+  createdBy {
+    id
+    role
     username
     email
   }

@@ -1,7 +1,44 @@
-.workorder-list-container {
-  padding: 16px;
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: first baseline;
+  margin-bottom: 0.25rem;
+
+  lib-input-field,
+  lib-select-field {
+    flex: 1 1 200px;
+    padding-left: 0.5rem;
+  }
+
+  .filter-buttons {
+    display: flex;
+    gap: 0.15rem;
+    align-items: center;
+
+    button {
+      height: 40px;
+    }
+  }
 }
 
-.workorder-card {
-  margin-bottom: 12px;
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fff;
+  padding: 8px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+mat-card {
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
 }

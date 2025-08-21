@@ -1,18 +1,51 @@
-<div class="workorder-list-container">
-  <ng-container *ngIf="isLoading(); else listContent">
-    <lib-ui-material-loader></lib-ui-material-loader>
-  </ng-container>
+<div class="filters sticky" [formGroup]="filterForm">
+  <lib-input-field
+    label="Workorder Code"
+    placeholder="Enter workorder code"
+    formControlName="workorderCodeControl"
+    (keyup)="onFilterChange()"
+  ></lib-input-field>
 
-  <ng-template #listContent>
-    <!-- <mat-card *ngFor="let workorder of workorders()" class="workorder-card">
-      <mat-card-title>Workorder #{{ workorder.id }}</mat-card-title>
-      <mat-card-content>
-        <p><strong>Status:</strong> {{ workorder.status }}</p>
-        <p><strong>Client Location:</strong> {{ workorder.clientLocation }}</p>
-        <p>
-          <strong>Delivery Date:</strong> {{ workorder.deliveryDate | date }}
-        </p>
-      </mat-card-content>
-    </mat-card> -->
-  </ng-template>
+  <lib-select-field
+    label="Client Location"
+    formControlName="clientLocationControl"
+    [options]="greencoreLocations()"
+    (selectionChange)="onFilterChange()"
+  ></lib-select-field>
+
+  <lib-select-field
+    label="Status"
+    formControlName="statusControl"
+    [options]="[
+      { label: 'All', value: '' },
+      { label: 'Pending', value: 'Pending' },
+      { label: 'Approved', value: 'Approved' }
+    ]"
+    (selectionChange)="onFilterChange()"
+  ></lib-select-field>
+
+  <div class="filter-buttons">
+    <button mat-raised-button color="primary" (click)="fetchWorkorders()">
+      Search
+    </button>
+    <button mat-stroked-button color="accent" (click)="exportToCSV()">
+      Export CSV
+    </button>
+  </div>
 </div>
+
+<mat-card>
+  <mat-card-content>
+    <div *ngIf="isLoading(); else gridTemplate" class="loader">
+      <lib-ui-material-loader></lib-ui-material-loader>
+    </div>
+
+    <ng-template #gridTemplate>
+      <lib-data-grid
+        #dataGrid
+        [dataSourceData]="rowData()"
+        [displayedColumns]="displayedColumns"
+      ></lib-data-grid>
+    </ng-template>
+  </mat-card-content>
+</mat-card>

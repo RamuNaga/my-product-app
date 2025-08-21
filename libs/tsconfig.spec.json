@@ -6,6 +6,9 @@
     "moduleResolution": "node10",
     "types": ["jest", "node"]
   },
+  "angularCompilerOptions": {
+    "experimentalTemplateReactivity": true
+  },
   "include": [
     "jest.config.ts",
     "src/**/*.test.ts",

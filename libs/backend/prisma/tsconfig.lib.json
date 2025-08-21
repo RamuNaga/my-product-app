@@ -5,6 +5,11 @@
     "declaration": true,
     "declarationMap": true,
     "composite": true,
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ES2020",
+    "moduleResolution": "node",
     "types": ["node"]
   },
   "include": ["src/**/*.ts"],

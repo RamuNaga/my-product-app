@@ -24,11 +24,7 @@
             "output": "/assets"
           }
         ],
-        "styles": [
-          "node_modules/ag-grid-community/styles/ag-grid.css",
-          "node_modules/ag-grid-community/styles/ag-theme-alpine.css",
-          "apps/frontend/src/styles.scss"
-        ],
+        "styles": ["apps/frontend/src/styles.scss"],
         "scripts": [],
         "stylePreprocessorOptions": {
           "includePaths": ["libs/frontend/ui/src/lib/styles"]
@@ -48,7 +44,12 @@
               "maximumError": "8kb"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "aot": true,
+          "buildOptimizer": true,
+          "optimization": true,
+          "extractCss": true,
+          "sourceMap": false
         },
         "development": {
           "optimization": false,
@@ -71,7 +72,8 @@
           "buildTarget": "frontend:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "continuous": true
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
