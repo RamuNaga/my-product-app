@@ -1,16 +1,19 @@
+import { inject, Injectable } from '@angular/core';
 import {
-  HttpEvent,
-  HttpHandler,
   HttpInterceptor,
   HttpRequest,
+  HttpHandler,
+  HttpEvent,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, finalize } from 'rxjs/operators';
+import { catchError, finalize, map } from 'rxjs/operators';
+import { NotificationService } from '../notifications/notification.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+  readonly notificationService = inject(NotificationService);
+
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
@@ -24,55 +27,55 @@ export class AuthInterceptor implements HttpInterceptor {
           Authorization: `Bearer ${token}`,
         },
       });
-    } else {
-      console.log('@28 httpinterceptor req', cloned, req);
     }
 
-    // Optional: start global loading spinner here
-    // this.loaderService.setLoading(true);
-
     return next.handle(cloned).pipe(
+      map((event: any) => {
+        // Check if GraphQL response has "errors"
+        console.log(event);
+        if (event?.body?.errors?.length) {
+          const graphQLError = event.body.errors[0];
+          this.notificationService.showNotification(
+            graphQLError.message,
+            'error'
+          );
+        }
+        return event;
+      }),
       catchError((error: HttpErrorResponse) => {
+        let errorMessage = 'Something went wrong';
+
         switch (error.status) {
           case 400:
-            console.error(
-              'Bad Request:',
-              error.error?.message || error.message
-            );
+            errorMessage =
+              'Bad Request: ' + (error.error?.message || error.message);
             break;
           case 401:
-            console.warn('Unauthorized - Redirecting to login');
-            // Optionally redirect to login
+            errorMessage = 'Unauthorized - Please login again';
             break;
           case 403:
-            console.warn('Forbidden');
+            errorMessage = 'Forbidden - You do not have access';
             break;
           case 404:
-            console.error('Not Found:', error.message);
+            errorMessage = 'Not Found: ' + error.message;
             break;
           case 409:
-            console.error(
-              'Product code already exists. Please use a different one:',
-              error.message
-            );
-            alert('Product code already exists. Please use a different one.');
+            errorMessage =
+              'Product code already exists. Please use a different one.';
             break;
           case 500:
-            console.error('Server Error:', error.message);
+            errorMessage = 'Server Error: ' + error.message;
             break;
           default:
-            console.error('Unhandled Error:', error.message);
-            break;
+            errorMessage = error.message || 'Unknown error occurred';
         }
 
-        // Optional: show toast/notification service
-        // this.notificationService.showError('Something went wrong');
+        this.notificationService.showNotification(errorMessage, 'error');
 
         return throwError(() => error);
       }),
       finalize(() => {
-        // Optional: stop loading spinner here
-        // this.loaderService.setLoading(false);
+        // Optional: stop spinner
       })
     );
   }

@@ -1,4 +1,4 @@
-import { Component, computed, inject, Input, output } from '@angular/core';
+import { Component, inject, Input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoginStore, MaterialModule } from '@my-product-app/frontend-shared';
 import { ProductListModel as Product } from '@my-product-app/frontend-shared';

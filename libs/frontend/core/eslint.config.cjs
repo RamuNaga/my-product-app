@@ -32,7 +32,6 @@ module.exports = [
           allow: [
             '^@my-product-app/frontend-core',
             '^@my-product-app/frontend-shared',
-            '^@my-product-app/frontend-ui',
           ],
           depConstraints: [
             {
