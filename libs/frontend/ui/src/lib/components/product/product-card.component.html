@@ -21,6 +21,7 @@
     <button
       mat-icon-button
       (click)="triggerWorkOrder()"
+      [disabled]="!loginStore.canCreateWorkOrder()"
       matTooltip="Create Work Order"
     >
       <mat-icon>shopping_cart</mat-icon>

@@ -1,6 +1,6 @@
-import { Component, Input, output } from '@angular/core';
+import { Component, computed, inject, Input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from '@my-product-app/frontend-shared';
+import { LoginStore, MaterialModule } from '@my-product-app/frontend-shared';
 import { ProductListModel as Product } from '@my-product-app/frontend-shared';
 
 @Component({
@@ -11,6 +11,7 @@ import { ProductListModel as Product } from '@my-product-app/frontend-shared';
   styleUrls: ['./product-card.component.scss'],
 })
 export class ProductCardComponent {
+  readonly loginStore = inject(LoginStore);
   @Input() product!: Product;
 
   // Signals instead of EventEmitters

@@ -21,8 +21,7 @@ import { HttpService } from '@my-product-app/frontend-core';
 })
 export class AuthService {
   readonly httpService = inject(HttpService);
-
-  constructor(private apollo: Apollo) {}
+  readonly apollo = inject(Apollo);
 
   registerCompanyUser(
     variables: RegisterCompanyUserMutationVariables

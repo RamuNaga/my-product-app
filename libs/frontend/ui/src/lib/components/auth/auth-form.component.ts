@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  ViewChild,
+  ViewContainerRef,
+  ComponentRef,
+  AfterViewInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TailwindHostComponent } from '../tailwind-host/tailwind-host.component';
@@ -16,6 +24,7 @@ import {
   UserRole,
 } from '@my-product-app/frontend-graphql-types';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SignupStepperComponent } from './signup-stepper.component';
 
 @Component({
   selector: 'lib-auth-form',
@@ -30,27 +39,55 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./auth-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthFormComponent {
+export class AuthFormComponent implements AfterViewInit {
   readonly authService = inject(AuthService);
   readonly signupStore = inject(SignupFormStore);
   readonly snackBar = inject(MatSnackBar);
 
   selectedTabIndex = 0;
 
-  // Lazy-loaded component references
+  // Lazy-loaded login component
   loginComponent: any;
-  signupStepperComponent: any;
+
+  // Reference to dynamically created stepper component
+  private stepperComponentRef?: ComponentRef<SignupStepperComponent>;
+
+  @ViewChild('signupStepperHost', { read: ViewContainerRef, static: true })
+  signupStepperHost!: ViewContainerRef;
 
   constructor() {
     this.signupStore.initForm();
-    this.loadChildComponents();
+    this.loadLoginComponent();
   }
 
-  private async loadChildComponents() {
-    this.loginComponent = (await import('./login.component')).LoginComponent;
-    this.signupStepperComponent = (
-      await import('./signup-stepper.component')
-    ).SignupStepperComponent;
+  ngAfterViewInit() {
+    this.loadStepperComponent();
+  }
+
+  /** Load login component lazily */
+  private async loadLoginComponent() {
+    const { LoginComponent } = await import('./login.component');
+    this.loginComponent = LoginComponent;
+  }
+
+  /** Dynamically load signup stepper and subscribe to submit event */
+  private async loadStepperComponent() {
+    const { SignupStepperComponent } = await import(
+      './signup-stepper.component'
+    );
+
+    // Clear container in case of reload
+    this.signupStepperHost.clear();
+
+    // Create component dynamically
+    this.stepperComponentRef = this.signupStepperHost.createComponent(
+      SignupStepperComponent
+    );
+
+    // Subscribe to stepper's submitEvent
+    this.stepperComponentRef.instance.submitEvent.subscribe(() => {
+      this.handleFormSubmit();
+    });
   }
 
   switchToSignup() {
@@ -85,6 +122,7 @@ export class AuthFormComponent {
     return this.signupStore.isNewCompany();
   }
 
+  /** Called when the stepper emits submitEvent */
   handleFormSubmit(): void {
     const form = this.signupForm;
     if (!form) return;
@@ -96,10 +134,6 @@ export class AuthFormComponent {
     this.submitRegistration(payload);
   }
 
-  /**
-   * Validates the form before submission.
-   * Returns `true` if form is valid, `false` otherwise.
-   */
   private isFormValidForSubmission(form: any): boolean {
     if (!form.valid) {
       this.markAllAsTouched(form);
@@ -121,9 +155,6 @@ export class AuthFormComponent {
     return true;
   }
 
-  /**
-   * Builds the API payload for registration based on form values.
-   */
   private buildRegisterPayload(formValue: any): RegisterCompanyUserInput {
     const { company, location, user, existingCompany } = formValue;
 
@@ -152,9 +183,6 @@ export class AuthFormComponent {
     }
   }
 
-  /**
-   * Submits the registration request and handles responses.
-   */
   private submitRegistration(payload: RegisterCompanyUserInput): void {
     this.authService
       .registerCompanyUser({ registerCompanyUserInput: payload })
@@ -173,26 +201,17 @@ export class AuthFormComponent {
       });
   }
 
-  /**
-   * Handles the UI updates after successful registration.
-   */
   private handleSuccessfulRegistration(): void {
     this.showSuccessSnackbar('Company user registered successfully!');
     this.resetSignupForm();
     this.switchToLogin();
   }
 
-  /**
-   * Resets all signup form values and reinitializes store state.
-   */
   private resetSignupForm(): void {
     this.signupForm.reset();
     this.signupStore.initForm();
   }
 
-  /**
-   * Snackbar helpers
-   */
   private showSuccessSnackbar(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 3000,

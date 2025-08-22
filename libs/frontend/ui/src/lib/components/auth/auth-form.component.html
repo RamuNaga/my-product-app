@@ -8,9 +8,7 @@
       </mat-tab>
 
       <mat-tab label="Sign Up">
-        <ng-container *ngIf="signupStepperComponent">
-          <ng-container *ngComponentOutlet="signupStepperComponent"></ng-container>
-        </ng-container>
+        <ng-template #signupStepperHost></ng-template>
       </mat-tab>
     </mat-tab-group>
   </mat-card>

@@ -22,6 +22,12 @@ export class LoginStore {
   private _error = signal<string | null>(null);
   readonly errorMessage = computed(() => this._error());
 
+  readonly canCreateWorkOrder = computed(() => {
+    const user = this.loginResponse()?.user;
+    if (!user || !user.role) return false;
+    return ['ADMIN', 'MANAGER'].includes(user.role.toUpperCase());
+  });
+
   login(email: string, password: string) {
     this._isLoading.set(true);
     this._error.set(null);
