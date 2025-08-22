@@ -4,13 +4,19 @@ import {
   CreateWorkOrderGQL,
   CreateWorkorderInput,
   CreateWorkOrderMutation,
+  Workorder as GqlWorkorder,
 } from '@my-product-app/frontend-graphql-types';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root',
-})
+import { GET_WORKORDERS } from '../graphql/get-workorders.graphql';
+import {
+  WorkorderListResponse,
+  WorkorderQueryVariables,
+} from '@my-product-app/frontend-shared';
+import { mapGqlWorkordersToListModel } from '@my-product-app/frontend-shared';
+
+@Injectable({ providedIn: 'root' })
 export class WorkorderService {
   private apollo = inject(Apollo);
   private createWorkOrderGQL = inject(CreateWorkOrderGQL);
@@ -18,30 +24,38 @@ export class WorkorderService {
   createWorkOrder(
     input: CreateWorkorderInput
   ): Observable<CreateWorkOrderMutation['createWorkOrder']> {
-    return this.createWorkOrderGQL
-      .mutate({
-        input, // pass input directly here
+    return this.createWorkOrderGQL.mutate({ input }).pipe(
+      map((result) => {
+        if (result.data?.createWorkOrder) {
+          return result.data.createWorkOrder;
+        }
+        throw new Error('No data returned from createWorkOrder mutation');
       })
-      .pipe(
-        map((result) => {
-          if (result.data?.createWorkOrder) {
-            return result.data.createWorkOrder;
-          }
-          throw new Error('No data returned from createWorkOrder mutation');
-        })
-      );
+    );
   }
 
-  // Generic query for workorders using Apollo directly
-  getWorkOrders<T = any>(query: any): Observable<T[]> {
+  getWorkOrders(
+    variables: WorkorderQueryVariables
+  ): Observable<WorkorderListResponse> {
+    type GetWorkOrdersResult = {
+      workorders: { workorders: GqlWorkorder[]; total: number };
+    };
+
     return this.apollo
-      .watchQuery<{ workorders: T[] }>({ query })
+      .watchQuery<GetWorkOrdersResult>({
+        query: GET_WORKORDERS,
+        variables,
+        fetchPolicy: 'network-only', // or 'cache-first' depending on UX
+      })
       .valueChanges.pipe(
         map((result) => {
-          if (result.data?.workorders) {
-            return result.data.workorders;
-          }
-          throw new Error('No data returned from workorders query');
+          const gqlWorkorders = result.data?.workorders?.workorders ?? [];
+          const total = result.data?.workorders?.total ?? 0;
+
+          return {
+            workorders: mapGqlWorkordersToListModel(gqlWorkorders),
+            total,
+          };
         })
       );
   }

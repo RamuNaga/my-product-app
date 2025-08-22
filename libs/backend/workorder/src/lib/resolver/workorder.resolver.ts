@@ -11,6 +11,7 @@ import {
 import { WorkOrderService } from '../service/workorder.service';
 import { UseGuards } from '@nestjs/common';
 import { Roles, UserPayload } from '@my-product-app/backend-shared';
+import { WorkordersResponse } from '../graphql/workorder-list.model';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Resolver(() => Workorder)
@@ -27,9 +28,28 @@ export class WorkorderResolver {
     return this.workorderService.create(input, user);
   }
 
-  @Query(() => [Workorder], { name: 'workorders' })
-  findAll() {
-    return this.workorderService.findAll();
+  @Query(() => WorkordersResponse, { name: 'workorders' })
+  async getWorkOrders(
+    @Args('workOrderCode', { type: () => String, nullable: true })
+    workOrderCode?: string,
+    @Args('clientLocation', { type: () => String, nullable: true })
+    clientLocation?: string,
+    @Args('status', { type: () => String, nullable: true }) status?: string,
+    @Args('page', { type: () => Int, nullable: true, defaultValue: 1 })
+    page?: number,
+    @Args('pageSize', { type: () => Int, nullable: true, defaultValue: 10 })
+    pageSize?: number
+  ) {
+    console.log('getWorkOrders calling:');
+    const { workorders, total } = await this.workorderService.findFiltered({
+      workOrderCode,
+      clientLocation,
+      status,
+      page,
+      pageSize,
+    });
+
+    return { workorders, total };
   }
 
   @Query(() => Workorder, { name: 'workorder' })

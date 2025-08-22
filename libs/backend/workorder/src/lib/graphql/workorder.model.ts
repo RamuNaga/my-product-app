@@ -12,8 +12,8 @@ export class Workorder {
   @Field()
   workOrderCode!: string; // Added missing field
 
-  @Field(() => Product)
-  product!: Product;
+  @Field(() => Product, { nullable: true })
+  product?: Product;
 
   @Field()
   clientLocation!: string;

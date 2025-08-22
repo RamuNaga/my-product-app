@@ -1,5 +1,3 @@
-# mutations/createWorkorder.graphql
-
 mutation CreateWorkOrder($input: CreateWorkorderInput!) {
   createWorkOrder(input: $input) {
     ...WorkorderBaseFields

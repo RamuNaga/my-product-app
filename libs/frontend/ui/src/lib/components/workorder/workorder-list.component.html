@@ -16,16 +16,12 @@
   <lib-select-field
     label="Status"
     formControlName="statusControl"
-    [options]="[
-      { label: 'All', value: '' },
-      { label: 'Pending', value: 'Pending' },
-      { label: 'Approved', value: 'Approved' }
-    ]"
+    [options]="statusOptions"
     (selectionChange)="onFilterChange()"
   ></lib-select-field>
 
   <div class="filter-buttons">
-    <button mat-raised-button color="primary" (click)="fetchWorkorders()">
+    <button mat-raised-button color="primary" (click)="loadWorkorders()">
       Search
     </button>
     <button mat-stroked-button color="accent" (click)="exportToCSV()">
@@ -34,18 +30,16 @@
   </div>
 </div>
 
-<mat-card>
-  <mat-card-content>
-    <div *ngIf="isLoading(); else gridTemplate" class="loader">
-      <lib-ui-material-loader></lib-ui-material-loader>
-    </div>
+<ng-container>
+  <div *ngIf="isLoading(); else gridTemplate" class="loader">
+    <lib-ui-material-loader></lib-ui-material-loader>
+  </div>
 
-    <ng-template #gridTemplate>
-      <lib-data-grid
-        #dataGrid
-        [dataSourceData]="rowData()"
-        [displayedColumns]="displayedColumns"
-      ></lib-data-grid>
-    </ng-template>
-  </mat-card-content>
-</mat-card>
+  <ng-template #gridTemplate>
+    <lib-data-grid
+      #dataGrid
+      [dataSourceData]="rowData()"
+      [displayedColumns]="displayedColumns"
+    ></lib-data-grid>
+  </ng-template>
+</ng-container>

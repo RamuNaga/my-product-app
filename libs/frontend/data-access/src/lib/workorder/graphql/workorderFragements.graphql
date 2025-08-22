@@ -42,6 +42,12 @@ fragment WorkorderListFields on Workorder {
   deliveryDate
   status
   priority
+  product {
+    id
+    name
+    productCode
+    price
+  }
 }
 
 # Full details for single workorder view

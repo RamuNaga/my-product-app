@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect, viewChild } from '@angular/core';
+import { Component, inject, signal, effect, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,8 +10,21 @@ import { DataGridComponent } from '../data-grid/data-grid.component';
 import { MaterialLoaderComponent } from '../loader/loader.component';
 import { InputFieldComponent } from '../form-controls/input-field.component';
 import { SelectFieldComponent } from '../form-controls/select-field.component';
-import { LoginStore } from '@my-product-app/frontend-shared';
+import {
+  LoginStore,
+  WORKORDER_LIST_STORE,
+} from '@my-product-app/frontend-shared';
 import { Option } from '@my-product-app/frontend-data-access';
+import { formatDateDDMMYYYY } from '@my-product-app/frontend-core';
+
+export enum WorkOrderStatus {
+  REQUESTED = 'REQUESTED',
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
 
 @Component({
   selector: 'lib-workorder-list',
@@ -33,6 +46,7 @@ import { Option } from '@my-product-app/frontend-data-access';
   styleUrls: ['./workorder-list.component.scss'],
 })
 export class WorkOrderListComponent {
+  readonly store = inject(WORKORDER_LIST_STORE);
   readonly loginStore = inject(LoginStore);
 
   filterForm = new FormGroup({
@@ -41,13 +55,18 @@ export class WorkOrderListComponent {
     statusControl: new FormControl(''),
   });
 
+  // ✅ Signals for filters
+  workorderCode = signal('');
+  clientLocation = signal('');
+  status = signal('');
+
+  greencoreLocations = signal<Option[]>([]);
   rowData = signal<any[]>([]);
   isLoading = signal(false);
-  greencoreLocations = signal<Option[]>([]);
 
   displayedColumns: string[] = [
     'sno',
-    'workorderCode',
+    'workOrderCode',
     'status',
     'clientLocation',
     'productName',
@@ -55,11 +74,18 @@ export class WorkOrderListComponent {
     'deliveryDate',
   ];
 
-  dataGrid = viewChild(DataGridComponent);
+  statusOptions = [
+    { label: 'All', value: '' },
+    ...Object.values(WorkOrderStatus).map((status) => ({
+      label: status.charAt(0) + status.slice(1).toLowerCase(),
+      value: status,
+    })),
+  ];
+
+  @ViewChild(DataGridComponent) dataGrid!: DataGridComponent;
 
   constructor() {
-    this.fetchWorkorders();
-
+    // Sync locations from login store
     effect(() => {
       const locations = this.loginStore.companyLocation() || [];
       this.greencoreLocations.set(
@@ -69,42 +95,60 @@ export class WorkOrderListComponent {
         }))
       );
     });
+
+    // ✅ Sync form controls to signals
+    this.filterForm
+      .get('workorderCodeControl')!
+      .valueChanges.subscribe((v) => this.workorderCode.set(v || ''));
+    this.filterForm
+      .get('clientLocationControl')!
+      .valueChanges.subscribe((v) => this.clientLocation.set(v || ''));
+    this.filterForm
+      .get('statusControl')!
+      .valueChanges.subscribe((v) => this.status.set(v || ''));
+
+    // ✅ Effect to trigger API call when any filter changes
+    effect(() => {
+      console.log(
+        'Filter effect called with:',
+        this.workorderCode(),
+        this.clientLocation(),
+        this.status()
+      );
+
+      this.store.setFilter('workOrderCode', this.workorderCode());
+      this.store.setFilter('clientLocation', this.clientLocation());
+      this.store.setFilter('status', this.status());
+
+      this.loadWorkorders();
+    });
   }
 
-  fetchWorkorders() {
+  async loadWorkorders() {
+    console.log('loadWorkorders calling');
     this.isLoading.set(true);
-    setTimeout(() => {
-      this.rowData.set([
-        {
-          sno: 1,
-          workorderCode: 'WO-001',
-          status: 'Pending',
-          clientLocation: 'New York',
-          productName: 'Widget A',
-          productCode: 'P001',
-          deliveryDate: '2025-08-25',
-        },
-        {
-          sno: 2,
-          workorderCode: 'WO-002',
-          status: 'Approved',
-          clientLocation: 'Chicago',
-          productName: 'Widget B',
-          productCode: 'P002',
-          deliveryDate: '2025-08-30',
-        },
-      ]);
-      this.isLoading.set(false);
-    }, 500);
+    await this.store.fetchWorkorders();
+
+    this.rowData.set(
+      this.store.workorders().map((wo, i) => ({
+        sno: i + 1,
+        workOrderCode: wo.workOrderCode,
+        status: wo.status,
+        clientLocation: wo.clientLocation,
+        productName: wo?.product?.name,
+        productCode: wo?.product?.productCode,
+        deliveryDate: formatDateDDMMYYYY(wo.deliveryDate),
+      }))
+    );
+
+    this.isLoading.set(false);
   }
 
   onFilterChange() {
     const filterString = Object.values(this.filterForm.value)
       .join(' ')
       .toLowerCase();
-
-    const grid = this.dataGrid();
-    grid?.applyFilter(filterString);
+    this.dataGrid?.applyFilter(filterString);
   }
 
   exportToCSV() {

@@ -11,6 +11,8 @@ import {
 import { provideApollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { InMemoryCache, ApolloClientOptions } from '@apollo/client/core';
+import { firstValueFrom, tap } from 'rxjs';
+
 import {
   AuthInterceptor,
   HttpService,
@@ -19,9 +21,14 @@ import {
 } from '@my-product-app/frontend-core';
 import { environment } from '../environments/environments';
 
-export function apolloClientFactory(): ApolloClientOptions<any> {
-  const httpLink = inject(HttpLink);
+import {
+  //workorderStoreProvider,
+  workorderListStoreProvider,
+} from '@my-product-app/frontend-shared';
 
+// ---------------------- Apollo Client Factory ----------------------
+export function apolloClientFactory(): ApolloClientOptions<unknown> {
+  const httpLink = inject(HttpLink);
   return {
     cache: new InMemoryCache(),
     link: httpLink.create({
@@ -30,21 +37,27 @@ export function apolloClientFactory(): ApolloClientOptions<any> {
   };
 }
 
+// ---------------------- Runtime Config Loader ----------------------
 export function loadRuntimeConfigFactory(
   configStore: RuntimeConfigStore,
   http: HttpService
-) {
-  return () =>
-    http
-      .get<RuntimeEnvConfig>(
-        `/assets/runtime-config.${environment.envName}.json`
-      ) // or dynamic
-      .toPromise()
-      .then((config) => {
-        if (config) configStore.setConfig(config);
-      });
+): () => Promise<void> {
+  return async () => {
+    await firstValueFrom(
+      http
+        .get<RuntimeEnvConfig>(
+          `/assets/runtime-config.${environment.envName}.json`
+        )
+        .pipe(
+          tap((cfg) => {
+            if (cfg) configStore.setConfig(cfg);
+          })
+        )
+    );
+  };
 }
 
+// ---------------------- Application Providers ----------------------
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -62,5 +75,9 @@ export const appConfig: ApplicationConfig = {
     },
     provideHttpClient(withInterceptorsFromDi()),
     provideApollo(apolloClientFactory),
+
+    // Global DI for Workorder stores
+    //workorderStoreProvider,
+    workorderListStoreProvider,
   ],
 };

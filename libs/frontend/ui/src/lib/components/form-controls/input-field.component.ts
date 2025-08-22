@@ -24,9 +24,10 @@ export class InputFieldComponent implements ControlValueAccessor {
   value: any = '';
   isDisabled = false;
 
+  // eslint-disable-next-line @angular-eslint/prefer-inject
   constructor(@Optional() @Self() public ngControl: NgControl) {
     if (ngControl) {
-      ngControl.valueAccessor = this; // ✅ Manual assignment, so no providers needed
+      ngControl.valueAccessor = this;
     }
   }
 

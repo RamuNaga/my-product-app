@@ -42,6 +42,7 @@ export class WorkOrderService {
     return `W${datePart}${sequence}`;
   }
 
+  //  Create WorkOrder and return product relation as well
   async create(data: CreateWorkorderInput, user: UserPayload) {
     const product = await this.prisma.product.findUnique({
       where: { id: data.productId },
@@ -67,9 +68,117 @@ export class WorkOrderService {
       companyId: user?.companyId,
       attachments: [],
     };
-    console.log('WorkOrder Create Data:', cleanData);
 
-    return this.prisma.workOrder.create({ data: cleanData });
+    return this.prisma.workOrder.create({
+      data: cleanData,
+      include: {
+        product: true,
+      },
+    });
+  }
+
+  //  Find all work orders with product
+  async findAll() {
+    return this.prisma.workOrder.findMany({
+      include: {
+        product: true, //  Include product
+      },
+    });
+  }
+
+  //  Find one with product
+  async findOne(id: number) {
+    const workorder = await this.prisma.workOrder.findUnique({
+      where: { id },
+      include: {
+        product: true, //  Include product
+      },
+    });
+    if (!workorder) {
+      throw new NotFoundException('WorkOrder not found');
+    }
+    return workorder;
+  }
+
+  //  Update with product
+  async update(id: number, data: UpdateWorkorderInput) {
+    const workorder = await this.prisma.workOrder.findUnique({
+      where: { id },
+    });
+    if (!workorder) {
+      throw new NotFoundException('WorkOrder not found');
+    }
+
+    return this.prisma.workOrder.update({
+      where: { id },
+      data: {
+        ...data,
+        updatedAt: new Date(),
+      },
+      include: {
+        product: true, //  Include product after update
+      },
+    });
+  }
+
+  // , userId: number in furture userId means currentUser who is cancelled this workorder
+  async cancel(id: number) {
+    const workorder = await this.prisma.workOrder.findUnique({ where: { id } });
+
+    if (!workorder) {
+      throw new NotFoundException('WorkOrder not found');
+    }
+
+    return this.prisma.workOrder.update({
+      where: { id },
+      data: {
+        status: WorkOrderStatus.CANCELLED,
+        updatedAt: new Date(),
+      },
+    });
+  }
+
+  //  Filtered list with product
+  async findFiltered(filters: {
+    workOrderCode?: string;
+    clientLocation?: string;
+    status?: string;
+    page?: number;
+    pageSize?: number;
+  }) {
+    const {
+      workOrderCode,
+      clientLocation,
+      status,
+      page = 1,
+      pageSize = 10,
+    } = filters;
+
+    const where: any = {};
+
+    if (workOrderCode) {
+      where.workOrderCode = { contains: workOrderCode, mode: 'insensitive' };
+    }
+    if (clientLocation) {
+      where.clientLocation = { equals: clientLocation };
+    }
+    if (status) {
+      where.status = { equals: status };
+    }
+
+    const total = await this.prisma.workOrder.count({ where });
+
+    const workorders = await this.prisma.workOrder.findMany({
+      where,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        product: true, //  Always include product
+      },
+    });
+
+    return { workorders, total };
   }
 
   async approveWorkorder(input: ApproveWorkorderInput, approvedById: number) {
@@ -107,48 +216,8 @@ export class WorkOrderService {
     return this.prisma.workOrder.update({
       where: { id },
       data: updateData,
-    });
-  }
-  // , userId: number in furture userId means currentUser who is cancelled this workorder
-  async cancel(id: number) {
-    const workorder = await this.prisma.workOrder.findUnique({ where: { id } });
-
-    if (!workorder) {
-      throw new NotFoundException('WorkOrder not found');
-    }
-
-    return this.prisma.workOrder.update({
-      where: { id },
-      data: {
-        status: WorkOrderStatus.CANCELLED,
-        updatedAt: new Date(),
-      },
-    });
-  }
-
-  async findAll() {
-    return this.prisma.workOrder.findMany();
-  }
-
-  async findOne(id: number) {
-    const workorder = await this.prisma.workOrder.findUnique({ where: { id } });
-    if (!workorder) {
-      throw new NotFoundException('WorkOrder not found');
-    }
-    return workorder;
-  }
-
-  async update(id: number, data: UpdateWorkorderInput) {
-    const workorder = await this.prisma.workOrder.findUnique({ where: { id } });
-    if (!workorder) {
-      throw new NotFoundException('WorkOrder not found');
-    }
-
-    return this.prisma.workOrder.update({
-      where: { id },
-      data: {
-        ...data,
-        updatedAt: new Date(),
+      include: {
+        product: true,
       },
     });
   }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 
 import {
@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  constructor(private apollo: Apollo) {}
+  readonly apollo = inject(Apollo);
 
   findAllProducts(): Observable<FindAllProductQuery['products']> {
     return this.apollo

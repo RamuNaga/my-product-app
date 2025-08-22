@@ -24,6 +24,41 @@ module.exports = [
           style: 'kebab-case',
         },
       ],
+      '@nx/enforce-module-boundaries': [
+        'error',
+        {
+          enforceBuildableLibDependency: true,
+          allow: [
+            '^@my-product-app/frontend-graphql-types',
+            '^@my-product-app/frontend-data-access',
+            '^@my-product-app/frontend-shared',
+            '^@my-product-app/frontend-core',
+          ], // explicitly allow imports from shared lib
+          depConstraints: [
+            {
+              sourceTag: 'type:shared',
+              onlyDependOnLibsWithTags: ['type:shared', 'type:buildable'],
+            },
+            {
+              sourceTag: 'scope:frontend',
+              onlyDependOnLibsWithTags: [
+                'scope:frontend',
+                'type:shared',
+                'type:ui',
+                'platform:angular',
+              ],
+            },
+            {
+              sourceTag: 'platform:angular',
+              onlyDependOnLibsWithTags: [
+                'platform:angular',
+                'type:shared',
+                'type:ui',
+              ],
+            },
+          ],
+        },
+      ],
     },
   },
   {

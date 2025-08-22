@@ -1,10 +1,11 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { ProductService } from '@my-product-app/frontend-data-access';
 import { ProductListModel as Product } from './product.model';
 import { catchError, of, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ProductListStore {
+  readonly productService = inject(ProductService);
   // Writable signals
   private _products = signal<Product[]>([]);
   private _isLoading = signal(false);
@@ -18,8 +19,6 @@ export class ProductListStore {
   readonly isDeferReady = computed(() => this._deferReady());
 
   private _hasLoadedOnce = false;
-
-  constructor(private productService: ProductService) {}
 
   /** Load products from the backend, merge with existing ones */
   loadProducts(forceReload = false) {
