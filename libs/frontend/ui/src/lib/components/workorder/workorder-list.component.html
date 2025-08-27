@@ -40,6 +40,10 @@
       #dataGrid
       [dataSourceData]="rowData()"
       [displayedColumns]="displayedColumns"
+      [showApprove]="true"
+      (editClicked)="onEdit($event)"
+      (deleteClicked)="onDelete($event)"
+      (approveClicked)="onApprove($event)"
     ></lib-data-grid>
   </ng-template>
 </ng-container>

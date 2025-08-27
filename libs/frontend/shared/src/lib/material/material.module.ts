@@ -21,6 +21,9 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
   exports: [
@@ -47,6 +50,9 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatMenuModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatTableModule,
+    MatSortModule,
+    ScrollingModule,
   ],
 })
 export class MaterialModule {}

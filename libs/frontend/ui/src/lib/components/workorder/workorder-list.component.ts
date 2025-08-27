@@ -109,13 +109,6 @@ export class WorkOrderListComponent {
 
     // ✅ Effect to trigger API call when any filter changes
     effect(() => {
-      console.log(
-        'Filter effect called with:',
-        this.workorderCode(),
-        this.clientLocation(),
-        this.status()
-      );
-
       this.store.setFilter('workOrderCode', this.workorderCode());
       this.store.setFilter('clientLocation', this.clientLocation());
       this.store.setFilter('status', this.status());
@@ -125,7 +118,6 @@ export class WorkOrderListComponent {
   }
 
   async loadWorkorders() {
-    console.log('loadWorkorders calling');
     this.isLoading.set(true);
     await this.store.fetchWorkorders();
 
@@ -167,5 +159,25 @@ export class WorkOrderListComponent {
     a.download = 'workorders.csv';
     a.click();
     window.URL.revokeObjectURL(url);
+  }
+
+  /**  Actions from DataGrid */
+  onEdit(workorder: any) {
+    console.log('Edit clicked:', workorder);
+    // Navigate or open edit dialog
+  }
+
+  onDelete(workorder: any) {
+    console.log('Delete clicked:', workorder);
+    // Confirm & delete logic
+  }
+
+  onApprove(workorder: any) {
+    console.log('Approve clicked:', workorder);
+    if (workorder.status !== WorkOrderStatus.REQUESTED) {
+      console.warn('Cannot approve unless status is REQUESTED.');
+      return;
+    }
+    // Open approval dialog or perform status change
   }
 }
