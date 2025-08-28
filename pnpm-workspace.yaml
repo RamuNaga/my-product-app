@@ -1,3 +1,7 @@
+packages:
+  - apps/*
+  - libs/*
+
 ignoredBuiltDependencies:
   - '@apollo/protobufjs'
   - '@nestjs/core'
@@ -11,5 +15,3 @@ ignoredBuiltDependencies:
   - msgpackr-extract
   - nx
   - prisma
-  - 'libs/*'
-  - 'apps/*'
