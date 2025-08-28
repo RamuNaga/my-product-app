@@ -21,36 +21,54 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 2. Setup Node.js and pnpm
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
+      # 2. Setup Node.js
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
 
-      # 3. Set Nx SHAs for affected commands
+      # 3. Setup PNPM v10
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      # 4. Debug step: confirm pnpm-workspace.yaml exists
+      - name: Debug pnpm workspace
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -la
+          cat pnpm-workspace.yaml || echo "pnpm-workspace.yaml not found"
+
+      # 5. Set Nx SHAs for affected commands
       - uses: nrwl/nx-set-shas@v4
 
-      # 4. Install dependencies
+      # 6. Install dependencies
       - run: pnpm install --frozen-lockfile
+        working-directory: ${{ github.workspace }}
 
-      # 5. Install Cypress binary
+      # 7. Install Cypress binary
       - run: pnpm exec cypress install
+        working-directory: ${{ github.workspace }}
 
-      # 6. Start Nx Cloud distributed agents (3 agents)
+      # 8. Start Nx Cloud distributed agents (3 agents)
       - run: pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
+        working-directory: ${{ github.workspace }}
 
-      # 7. Run lint in parallel via Nx Cloud
+      # 9. Run lint in parallel
       - run: pnpm exec nx affected -t lint --parallel=3
+        working-directory: ${{ github.workspace }}
 
-      # 8. Run tests in parallel via Nx Cloud
+      # 10. Run tests in parallel
       - run: pnpm exec nx affected -t test --parallel=3 --configuration=ci
+        working-directory: ${{ github.workspace }}
 
-      # 9. Run build in parallel via Nx Cloud
+      # 11. Run build in parallel
       - run: pnpm exec nx affected -t build --parallel=3
+        working-directory: ${{ github.workspace }}
 
-      # 10. Run e2e tests in parallel via Nx Cloud
+      # 12. Run e2e tests in parallel
       - run: pnpm exec nx affected -t e2e --parallel=3 --configuration=ci
+        working-directory: ${{ github.workspace }}
+        env:
+          # Required for Cypress to run in CI
+          CI: true
