@@ -9,8 +9,11 @@ import {
 import { signalStore, withMethods, withState } from '@ngrx/signals';
 import { firstValueFrom } from 'rxjs';
 
-import { WorkorderService } from '@my-product-app/frontend-data-access';
-import { WorkorderListModel, WorkorderListResponse } from './workorder.model';
+import {
+  WorkorderService,
+  WorkorderListModel,
+  WorkorderListResponse,
+} from '@my-product-app/frontend-data-access';
 
 // ------------------ Workorder List Store ------------------
 export interface WorkorderListState {

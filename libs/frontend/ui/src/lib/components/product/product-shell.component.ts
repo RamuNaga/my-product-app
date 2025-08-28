@@ -21,8 +21,8 @@ export class ProductShellComponent implements OnInit {
 
   selectedIndex = signal(0);
   store = inject(ProductListStore);
-
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  router = inject(Router);
+  route = inject(ActivatedRoute);
 
   onTabChange(index: number): void {
     this.selectedIndex.set(index);

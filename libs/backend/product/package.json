@@ -14,7 +14,8 @@
     "@prisma/client": "^6.7.0",
     "tslib": "^2.3.0",
     "@my-product-app/prisma": "workspace:*",
-    "@my-product-app/backend-shared": "workspace:*"
+    "@my-product-app/backend-shared": "workspace:*",
+    "class-transformer": "^0.5.1"
   },
   "devDependencies": {
     "@types/multer": "^1.4.13"

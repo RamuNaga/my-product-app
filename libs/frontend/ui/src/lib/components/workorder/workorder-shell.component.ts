@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MaterialModule } from '@my-product-app/frontend-shared';
 
@@ -15,7 +15,8 @@ export class WorkorderShellComponent {
     { label: 'Create Work Order', path: 'form' },
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  router = inject(Router);
+  route = inject(ActivatedRoute);
 
   selectedIndex(): number {
     const current = this.route.snapshot.firstChild?.routeConfig?.path;

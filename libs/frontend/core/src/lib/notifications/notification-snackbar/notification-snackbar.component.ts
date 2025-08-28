@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
-import { MaterialModule } from '@my-product-app/frontend-shared';
+import { MatIconModule } from '@angular/material/icon';
 
 export interface NotificationSnackbarData {
   type: 'error' | 'success';
@@ -11,7 +11,7 @@ export interface NotificationSnackbarData {
 @Component({
   selector: 'core-notification-snackbar',
   standalone: true,
-  imports: [MaterialModule, NgClass],
+  imports: [MatIconModule, NgClass],
   template: `
     <div class="snackbar-container" [ngClass]="data.type">
       <mat-icon *ngIf="data.type === 'error'">error</mat-icon>

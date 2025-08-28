@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { CompanyService } from '@my-product-app/frontend-data-access';
 import { ApolloError } from '@apollo/client/errors';
 import { CompanyModel as Company } from './company.model';
@@ -17,7 +17,7 @@ export class SearchCompanyStore {
   private _deferReady = signal(false);
   readonly isDeferReady = computed(() => this._deferReady());
 
-  constructor(private companyService: CompanyService) {}
+  private companyService = inject(CompanyService);
 
   searchCompanies(searchTerm: string) {
     if (!searchTerm || searchTerm.length < 2) {

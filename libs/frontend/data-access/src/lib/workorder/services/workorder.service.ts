@@ -13,8 +13,8 @@ import { GET_WORKORDERS } from '../graphql/get-workorders.graphql';
 import {
   WorkorderListResponse,
   WorkorderQueryVariables,
-} from '@my-product-app/frontend-shared';
-import { mapGqlWorkordersToListModel } from '@my-product-app/frontend-shared';
+} from '../workorder.model';
+import { mapGqlWorkordersToListModel } from '../workorder.mapper';
 
 @Injectable({ providedIn: 'root' })
 export class WorkorderService {

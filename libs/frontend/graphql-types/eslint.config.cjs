@@ -5,6 +5,8 @@ module.exports = [
   ...baseConfig,
   ...nx.configs['flat/angular'],
   ...nx.configs['flat/angular-template'],
+
+  // TypeScript files
   {
     files: ['**/*.ts'],
     rules: {
@@ -53,9 +55,19 @@ module.exports = [
       ],
     },
   },
+
+  // HTML files
   {
     files: ['**/*.html'],
-    // Override or add rules here
     rules: {},
+  },
+
+  // Override for generated GraphQL files
+  {
+    files: ['libs/frontend/graphql-types/src/lib/generated/**/*.ts'],
+    rules: {
+      '@angular-eslint/prefer-inject': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
   },
 ];

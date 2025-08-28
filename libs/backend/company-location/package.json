@@ -6,6 +6,12 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "@nestjs/common": "^11.1.0",
+    "@my-product-app/backend-shared": "0.0.1",
+    "@my-product-app/prisma": "0.0.1",
+    "class-validator": "^0.14.1",
+    "class-transformer": "^0.5.1",
+    "@nestjs/graphql": "^13.1.0"
   }
 }

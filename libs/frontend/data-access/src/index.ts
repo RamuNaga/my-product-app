@@ -8,3 +8,6 @@ export * from './lib/interfaces/location.interface';
 export * from './lib/auth/company/company.service';
 export * from './lib/auth/company/search-company';
 export * from './lib/workorder/services/workorder.service';
+export * from './lib/workorder/workorder.model';
+export * from './lib/workorder/workorder.mapper';
+export * from './lib/workorder/graphql/get-workorders.graphql';

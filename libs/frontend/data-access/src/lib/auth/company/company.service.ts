@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { Company } from '@my-product-app/frontend-graphql-types';
   providedIn: 'root',
 })
 export class CompanyService {
-  constructor(private apollo: Apollo) {}
+  private apollo = inject(Apollo);
 
   searchCompanies(searchTerm: string): Observable<Company[]> {
     return this.apollo
