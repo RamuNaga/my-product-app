@@ -5,6 +5,13 @@
   "prefix": "app",
   "sourceRoot": "apps/frontend/src",
   "tags": ["type:app", "scope:frontend"],
+  "implicitDependencies": [
+    "frontend-core",
+    "frontend-graphql-types",
+    "frontend-data-access",
+    "frontend-shared",
+    "ui"
+  ],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
