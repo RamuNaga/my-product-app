@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, Optional, Self } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import {
   ControlValueAccessor,
   NgControl,
