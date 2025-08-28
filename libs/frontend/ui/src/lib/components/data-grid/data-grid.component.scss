@@ -3,3 +3,14 @@
   width: 100%;
   display: block;
 }
+.delete-btn {
+  color: #f5675d; /* Icon color */
+}
+
+.delete-btn:hover {
+  color: #c22323; /* darker red on hover */
+}
+.edit-btn {
+  //background-color: #2196f3; /* Material primary blue */
+  color: #2196f3; /* Icon color */
+}
