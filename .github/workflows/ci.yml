@@ -9,37 +9,48 @@ on:
       - master
 
 permissions:
-  actions: read
   contents: read
 
 jobs:
   main:
     runs-on: ubuntu-latest
+
     steps:
-      # Checkout the code with full history for Nx to calculate affected commands
+      # 1. Checkout full history for Nx affected
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # Setup pnpm and Node.js using pnpm/action-setup
+      # 2. Setup Node.js and pnpm
       - uses: pnpm/action-setup@v4
         with:
           version: 9
 
-      # (Optional) Enable Nx Cloud task distribution, uncomment if you want to use Nx Cloud
-      # - run: pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
 
-      # Cache dependencies using pnpm
+      # 3. Set Nx SHAs for affected commands
+      - uses: nrwl/nx-set-shas@v4
+
+      # 4. Install dependencies
       - run: pnpm install --frozen-lockfile
 
-      # Install Cypress dependencies
+      # 5. Install Cypress binary
       - run: pnpm exec cypress install
 
-      # (Optional) Record logs to Nx Cloud (if Nx Cloud is set up)
-      # - run: pnpm exec nx-cloud record -- echo Hello World
+      # 6. Start Nx Cloud distributed agents (3 agents)
+      - run: pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
 
-      # Run Nx affected tasks: lint, test, build, and e2e tests
-      - run: pnpm exec nx affected -t lint test build e2e
+      # 7. Run lint in parallel via Nx Cloud
+      - run: pnpm exec nx affected -t lint --parallel=3
 
-      # Optionally, set Nx SHA values to ensure consistency
-      - uses: nrwl/nx-set-shas@v4
+      # 8. Run tests in parallel via Nx Cloud
+      - run: pnpm exec nx affected -t test --parallel=3 --configuration=ci
+
+      # 9. Run build in parallel via Nx Cloud
+      - run: pnpm exec nx affected -t build --parallel=3
+
+      # 10. Run e2e tests in parallel via Nx Cloud
+      - run: pnpm exec nx affected -t e2e --parallel=3 --configuration=ci
