@@ -2,8 +2,11 @@
   "name": "@my-product-app/frontend-core",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^19.2.0",
-    "@angular/core": "^19.2.0"
+    "@angular/common": "~20.1.6",
+    "@angular/core": "~20.1.6",
+    "rxjs": "~7.8.0",
+    "@angular/material": "~20.1.6",
+    "jest-preset-angular": "~15.0.0"
   },
   "style": "./styles/main.scss"
 }

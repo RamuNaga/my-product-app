@@ -2,8 +2,9 @@
   "name": "@my-product-app/frontend-graphql-types",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^19.2.0",
-    "@angular/core": "^19.2.0"
+    "@angular/core": "~20.1.6",
+    "apollo-angular": "^10.0.3",
+    "jest-preset-angular": "~15.0.0"
   },
   "style": "./styles/main.scss"
 }

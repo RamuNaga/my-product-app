@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Optional, Self } from '@angular/core';
+import { Component, inject, Input, Optional, Self } from '@angular/core';
 import {
   ControlValueAccessor,
   NgControl,
@@ -24,10 +24,14 @@ export class InputFieldComponent implements ControlValueAccessor {
   value: any = '';
   isDisabled = false;
 
-  // eslint-disable-next-line @angular-eslint/prefer-inject
-  constructor(@Optional() @Self() public ngControl: NgControl) {
-    if (ngControl) {
-      ngControl.valueAccessor = this;
+  public ngControl: NgControl | null = inject(NgControl, {
+    self: true,
+    optional: true,
+  });
+
+  constructor() {
+    if (this.ngControl) {
+      this.ngControl.valueAccessor = this;
     }
   }
 

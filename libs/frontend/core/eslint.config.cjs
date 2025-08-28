@@ -21,7 +21,7 @@ module.exports = [
         'error',
         {
           type: 'element',
-          prefix: 'core',
+          prefix: 'lib',
           style: 'kebab-case',
         },
       ],

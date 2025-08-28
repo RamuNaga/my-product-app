@@ -9,7 +9,7 @@ export interface NotificationSnackbarData {
 }
 
 @Component({
-  selector: 'core-notification-snackbar',
+  selector: 'lib-notification-snackbar',
   standalone: true,
   imports: [MatIconModule, NgClass],
   template: `

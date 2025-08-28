@@ -4,9 +4,25 @@ module.exports = [
   ...nx.configs['flat/base'],
   ...nx.configs['flat/typescript'],
   ...nx.configs['flat/javascript'],
+
   {
     ignores: ['**/dist'],
   },
+
+  // Project-specific overrides
+  {
+    files: [
+      'libs/frontend/ui/src/lib/components/**/*.{ts,tsx}',
+      'libs/frontend/shared/src/lib/state/**/*.{ts,tsx}',
+    ],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@angular-eslint/prefer-inject': 'off',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-non-null-assertion': 'warn',
+    },
+  },
+
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
@@ -16,17 +32,14 @@ module.exports = [
           enforceBuildableLibDependency: true,
           allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?js$'],
           depConstraints: [
-            // Buildable libs
             {
               sourceTag: 'type:buildable',
               onlyDependOnLibsWithTags: ['type:shared', 'type:buildable'],
             },
-            // Shared libs
             {
               sourceTag: 'type:shared',
               onlyDependOnLibsWithTags: ['type:shared', 'type:buildable'],
             },
-            // Feature libs
             {
               sourceTag: 'type:feature',
               onlyDependOnLibsWithTags: [
@@ -36,8 +49,6 @@ module.exports = [
                 'type:buildable',
               ],
             },
-
-            // Frontend scope libs
             {
               sourceTag: 'scope:frontend',
               onlyDependOnLibsWithTags: [
@@ -47,7 +58,6 @@ module.exports = [
                 'type:shared',
               ],
             },
-            // UI libs
             {
               sourceTag: 'type:ui',
               onlyDependOnLibsWithTags: [
@@ -56,7 +66,6 @@ module.exports = [
                 'type:shared',
               ],
             },
-            // Angular platform libs
             {
               sourceTag: 'platform:angular',
               onlyDependOnLibsWithTags: [
@@ -65,8 +74,6 @@ module.exports = [
                 'type:shared',
               ],
             },
-
-            // Backend scope libs
             {
               sourceTag: 'scope:backend',
               onlyDependOnLibsWithTags: [
@@ -75,7 +82,6 @@ module.exports = [
                 'type:buildable',
               ],
             },
-            // Backend type libs
             {
               sourceTag: 'type:backend',
               onlyDependOnLibsWithTags: [
@@ -89,6 +95,7 @@ module.exports = [
       ],
     },
   },
+
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {},

@@ -2,8 +2,15 @@
   "name": "@my-product-app/frontend-shared",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^19.2.0",
-    "@angular/core": "^19.2.0"
+    "@angular/core": "~20.1.6",
+    "@angular/router": "~20.1.6",
+    "@angular/material": "~20.1.6",
+    "@angular/cdk": "~20.1.6",
+    "@apollo/client": "^3.13.8",
+    "rxjs": "~7.8.0",
+    "@angular/forms": "~20.1.6",
+    "@ngrx/signals": "^20.0.0",
+    "jest-preset-angular": "~15.0.0"
   },
   "style": "./styles/main.scss"
 }

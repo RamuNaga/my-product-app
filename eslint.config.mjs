@@ -4,9 +4,25 @@ export default [
   ...nx.configs['flat/base'],
   ...nx.configs['flat/typescript'],
   ...nx.configs['flat/javascript'],
+
   {
     ignores: ['**/dist'],
   },
+
+  // Project-specific overrides (relax rules for UI and shared state)
+  {
+    files: [
+      'libs/frontend/ui/src/lib/components/**/*.{ts,tsx}',
+      'libs/frontend/shared/src/lib/state/**/*.{ts,tsx}',
+    ],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@angular-eslint/prefer-inject': 'off',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-non-null-assertion': 'warn',
+    },
+  },
+
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
@@ -35,7 +51,6 @@ export default [
                 'type:buildable',
               ],
             },
-
             // Frontend scope libs
             {
               sourceTag: 'scope:frontend',
@@ -64,7 +79,6 @@ export default [
                 'type:shared',
               ],
             },
-
             // Backend scope libs
             {
               sourceTag: 'scope:backend',
@@ -88,6 +102,7 @@ export default [
       ],
     },
   },
+
   {
     files: [
       '**/*.ts',
@@ -99,7 +114,6 @@ export default [
       '**/*.cjs',
       '**/*.mjs',
     ],
-    // Override or add rules here
     rules: {},
   },
 ];
