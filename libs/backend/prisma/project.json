@@ -24,11 +24,14 @@
       }
     },
     "generate": {
-      "executor": "@nx/js:run-commands",
+      "executor": "@nx/js:node",
       "options": {
-        "command": "pnpm prisma generate --schema=libs/backend/prisma/prisma/schema.prisma",
-        "cwd": ".",
-        "parallel": false
+        "outputPath": "dist/tmp",
+        "args": [
+          "prisma",
+          "generate",
+          "--schema=libs/backend/prisma/prisma/schema.prisma"
+        ]
       }
     }
   }
