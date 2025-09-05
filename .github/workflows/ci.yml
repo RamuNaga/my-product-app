@@ -49,30 +49,23 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 7. Generate Prisma client before any backend build
-      - name: Generate Prisma client
-        run: pnpm prisma:generate
-
-      # 8. Install Cypress binary
+      # 7. Install Cypress binary
       - run: pnpm exec cypress install
 
-      # 9. Start Nx Cloud distributed agents (optional, if using Nx Cloud)
-      - run: pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
+      # 8. Generate Prisma client for all affected backend projects
+      - name: Generate Prisma client
+        run: pnpm exec nx run-many --target=generate --projects=prisma --parallel
 
-      # 10. Run lint in parallel
+      # 9. Run lint in parallel
       - run: pnpm exec nx affected -t lint --parallel=3
 
-      # 11. Run tests in parallel
+      # 10. Run tests in parallel
       - run: pnpm exec nx affected -t test --parallel=3 --configuration=ci
 
-      # 12. Run build in parallel
-      - run: |
-          # Ensure Prisma generation is completed for all affected backend projects
-          pnpm exec nx run-many --target=generate --projects=prisma --parallel
-          # Then build all affected projects
-          pnpm exec nx affected -t build --parallel=3
+      # 11. Run builds in parallel
+      - run: pnpm exec nx affected -t build --parallel=3
 
-      # 13. Run e2e tests in parallel
+      # 12. Run e2e tests in parallel
       - run: pnpm exec nx affected -t e2e --parallel=3 --configuration=ci
         env:
           CI: true
