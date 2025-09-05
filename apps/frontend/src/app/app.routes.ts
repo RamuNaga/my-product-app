@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { APP_ROUTES, authGuard } from '@my-product-app/frontend-shared';
-import { ShellComponent } from '@my-product-app/frontend-ui';
 
 export const appRoutes: Routes = [
   {
@@ -17,7 +16,10 @@ export const appRoutes: Routes = [
   },
   {
     path: APP_ROUTES.HOME,
-    component: ShellComponent,
+    loadComponent: () =>
+      import(
+        '@my-product-app/frontend-ui/components/layout/shell.component'
+      ).then((m) => m.ShellComponent),
     canActivate: [authGuard],
     children: [
       {
@@ -25,7 +27,6 @@ export const appRoutes: Routes = [
         redirectTo: APP_ROUTES.DASHBOARD,
         pathMatch: 'full',
       },
-
       {
         path: APP_ROUTES.DASHBOARD,
         loadComponent: () =>
@@ -47,13 +48,7 @@ export const appRoutes: Routes = [
             '@my-product-app/frontend-ui/components/workorder/workorder.routes'
           ).then((m) => m.workOrderRoutes),
       },
-      // {
-      //   path: APP_ROUTES.SAUCES,
-      //   loadComponent: () =>
-      //     import(
-      //       '@my-product-app/frontend-ui/components/sauces/sauces.component'
-      //     ).then((m) => m.SaucesComponent),
-      // },
+      // Lazy-load other routes here...
     ],
   },
 ];
