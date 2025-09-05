@@ -1,26 +1,16 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc/libs/frontend/ui",
-    "declaration": true,
-    "declarationMap": true,
-    "inlineSources": true,
-    "types": []
+    "declaration": true
   },
-
-  "exclude": [
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "**/*.ngtypecheck.ts",
-    "jest.config.ts",
-    "src/test-setup.ts"
-  ],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts", "**/*.ngtypecheck.ts"],
   "include": ["src/**/*.ts"],
   "angularCompilerOptions": {
-    "experimentalTemplateReactivity": true,
-    "controlFlow": true,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
-  }
+    "compilationMode": "full"
+  },
+  "references": [
+    { "path": "../data-access/tsconfig.lib.json" },
+    { "path": "../shared/tsconfig.lib.json" }
+  ]
 }

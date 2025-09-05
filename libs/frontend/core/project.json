@@ -12,14 +12,25 @@
     "scope:frontend"
   ],
   "targets": {
+    // "build": {
+    //   "executor": "@nx/angular:package",
+    //   "outputs": ["{options.outputPath}"],
+    //   "options": {
+    //     "tsConfig": "libs/frontend/core/tsconfig.lib.json",
+    //     "project": "libs/frontend/core/ng-package.json"
+    //   }
+    // },
     "build": {
-      "executor": "@nx/angular:package",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "outputPath": "dist/libs/frontend/core",
+        "main": "libs/frontend/core/src/index.ts",
         "tsConfig": "libs/frontend/core/tsconfig.lib.json",
-        "project": "libs/frontend/core/ng-package.json"
+        "assets": ["libs/frontend/core/*.md"]
       }
     },
+
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],

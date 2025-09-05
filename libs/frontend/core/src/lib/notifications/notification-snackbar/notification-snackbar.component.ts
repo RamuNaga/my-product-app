@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,7 +11,7 @@ export interface NotificationSnackbarData {
 @Component({
   selector: 'lib-notification-snackbar',
   standalone: true,
-  imports: [MatIconModule, NgClass],
+  imports: [CommonModule, MatIconModule, NgClass],
   template: `
     <div class="snackbar-container" [ngClass]="data.type">
       <mat-icon *ngIf="data.type === 'error'">error</mat-icon>

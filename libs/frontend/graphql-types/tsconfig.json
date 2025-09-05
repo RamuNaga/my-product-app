@@ -18,8 +18,9 @@
       "path": "./tsconfig.spec.json"
     }
   ],
-  "extends": "../../../tsconfig.base.json",
+
   "angularCompilerOptions": {
+    "compilationMode": "full",
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,

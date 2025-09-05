@@ -1,5 +1,4 @@
 import { Injectable, inject } from '@angular/core';
-import { Apollo } from 'apollo-angular';
 import {
   CreateWorkOrderGQL,
   CreateWorkorderInput,
@@ -8,17 +7,17 @@ import {
 } from '@my-product-app/frontend-graphql-types';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-import { GET_WORKORDERS } from '../graphql/get-workorders.graphql';
 import {
   WorkorderListResponse,
   WorkorderQueryVariables,
 } from '../workorder.model';
 import { mapGqlWorkordersToListModel } from '../workorder.mapper';
+import { GetWorkOrdersGQL } from '@my-product-app/frontend-graphql-types';
 
 @Injectable({ providedIn: 'root' })
 export class WorkorderService {
-  private apollo = inject(Apollo);
+  private getWorkOrdersGQL = inject(GetWorkOrdersGQL);
+
   private createWorkOrderGQL = inject(CreateWorkOrderGQL);
 
   createWorkOrder(
@@ -37,26 +36,17 @@ export class WorkorderService {
   getWorkOrders(
     variables: WorkorderQueryVariables
   ): Observable<WorkorderListResponse> {
-    type GetWorkOrdersResult = {
-      workorders: { workorders: GqlWorkorder[]; total: number };
-    };
-
-    return this.apollo
-      .watchQuery<GetWorkOrdersResult>({
-        query: GET_WORKORDERS,
-        variables,
-        fetchPolicy: 'network-only', // or 'cache-first' depending on UX
+    return this.getWorkOrdersGQL.watch({ ...variables }).valueChanges.pipe(
+      map((result) => {
+        const gqlWorkorders = result.data?.workorders?.workorders ?? [];
+        const total = result.data?.workorders?.total ?? 0;
+        return {
+          workorders: mapGqlWorkordersToListModel(
+            gqlWorkorders as GqlWorkorder[]
+          ),
+          total,
+        };
       })
-      .valueChanges.pipe(
-        map((result) => {
-          const gqlWorkorders = result.data?.workorders?.workorders ?? [];
-          const total = result.data?.workorders?.total ?? 0;
-
-          return {
-            workorders: mapGqlWorkordersToListModel(gqlWorkorders),
-            total,
-          };
-        })
-      );
+    );
   }
 }

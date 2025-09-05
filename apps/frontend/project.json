@@ -34,7 +34,7 @@
         "styles": ["apps/frontend/src/styles.scss"],
         "scripts": [],
         "stylePreprocessorOptions": {
-          "includePaths": ["libs/frontend/ui/src/lib/styles"]
+          "includePaths": ["libs/frontend/shared/src/lib/styles"]
         }
       },
       "configurations": {

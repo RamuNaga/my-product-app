@@ -1,6 +1,5 @@
 export * from './lib/auth/auth.service';
 export * from './lib/product/product.service';
-export * from './lib/product/product.queries.graphql';
 export * from './lib/workorder/services/work-order-form.service';
 export * from './lib/options/options.service';
 export * from './lib/locations/location.service';
@@ -10,4 +9,3 @@ export * from './lib/auth/company/search-company';
 export * from './lib/workorder/services/workorder.service';
 export * from './lib/workorder/workorder.model';
 export * from './lib/workorder/workorder.mapper';
-export * from './lib/workorder/graphql/get-workorders.graphql';

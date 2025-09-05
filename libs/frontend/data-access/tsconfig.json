@@ -16,16 +16,13 @@
     },
     {
       "path": "./tsconfig.spec.json"
-    },
-    { "path": "../shared" }
+    }
   ],
-  "extends": "../../../tsconfig.base.json",
+
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true,
-    "experimentalTemplateReactivity": true,
-    "controlFlow": true
+    "strictTemplates": true
   }
 }

@@ -28,7 +28,7 @@ export class CompanyService {
       id: company.id,
       name: company.name,
       type: company.type as unknown as GQLCompanyType,
-      contact: company.contact === null ? undefined : company.contact,
+      contact: company.contact ?? '',
     }));
   }
 }

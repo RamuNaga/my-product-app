@@ -1,25 +1,24 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc/libs/frontend/data-access",
     "declaration": true,
-    "declarationMap": true,
-    "inlineSources": true,
-    "types": []
+    "allowJs": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "composite": true
   },
-  // "exclude": [
-  //   "src/**/*.spec.ts",
-  //   "src/test-setup.ts",
-  //   "jest.config.ts",
-  //   "src/**/*.test.ts",
-  //   "**/*.ngtypecheck.ts"
-  // ],
-  "exclude": [
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "**/*.ngtypecheck.ts",
-    "jest.config.ts",
-    "src/test-setup.ts"
-  ],
-  "include": ["src/**/*.ts"]
+  "exclude": ["**/*.spec.ts", "**/*.test.ts", "**/*.ngtypecheck.ts"],
+  "include": ["src/**/*.ts"],
+  "angularCompilerOptions": {
+    "compilationMode": "full",
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true,
+    "enableIvy": true,
+    "strictMetadataEmit": true
+  }
 }

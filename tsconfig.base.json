@@ -1,28 +1,30 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "rootDir": "./",
+    "rootDir": ".",
+    "outDir": "./dist/out-tsc",
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "Node",
     "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
+    "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2015",
     "useDefineForClassFields": true,
-    "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": ["ES2020", "DOM"],
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "baseUrl": ".",
-    "types": ["node"],
     "strict": true,
-    "noImplicitAny": true,
     "strictNullChecks": true,
+    "strictBindCallApply": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
+    "types": ["node"],
+    "baseUrl": ".",
     "paths": {
       "@my-product-app/backend-company": ["libs/backend/company/src/index.ts"],
       "@my-product-app/backend-company-location": [
@@ -33,48 +35,24 @@
       ],
       "@my-product-app/backend-shared": ["libs/backend/shared/src/index.ts"],
       "@my-product-app/backend-shared/*": ["libs/backend/shared/src/lib/*"],
-      "@my-product-app/backend-shared/types/*": [
-        "libs/backend/shared/src/lib/types/*"
-      ],
-
-      "@my-product-app/frontend-core": [
-        "libs/frontend/core/src/index.ts",
-        "dist/libs/frontend/core"
-      ],
+      "@my-product-app/frontend-core": ["libs/frontend/core/src/index.ts"],
       "@my-product-app/frontend-core/*": ["libs/frontend/core/src/lib/*"],
-
       "@my-product-app/frontend-data-access": [
-        "libs/frontend/data-access/src/index.ts",
-        "dist/libs/frontend/data-access"
+        "libs/frontend/data-access/src/index.ts"
       ],
       "@my-product-app/frontend-data-access/*": [
         "libs/frontend/data-access/src/lib/*"
       ],
-
       "@my-product-app/frontend-graphql-types": [
-        "libs/frontend/graphql-types/src/index.ts",
-        "dist/libs/frontend/graphql-types"
+        "libs/frontend/graphql-types/src/index.ts"
       ],
       "@my-product-app/frontend-graphql-types/*": [
         "libs/frontend/graphql-types/src/lib/*"
       ],
-
-      "@my-product-app/frontend-shared": [
-        "libs/frontend/shared/src/index.ts",
-        "dist/libs/frontend/shared"
-      ],
+      "@my-product-app/frontend-shared": ["libs/frontend/shared/src/index.ts"],
       "@my-product-app/frontend-shared/*": ["libs/frontend/shared/src/lib/*"],
-
-      "@my-product-app/frontend-ui": [
-        "libs/frontend/ui/src/index.ts",
-        "dist/libs/frontend/ui"
-      ],
+      "@my-product-app/frontend-ui": ["libs/frontend/ui/src/index.ts"],
       "@my-product-app/frontend-ui/*": ["libs/frontend/ui/src/lib/*"],
-      "@my-product-app/frontend-ui/styles": [
-        "libs/frontend/ui/src/lib/styles",
-        "dist/libs/frontend/ui/styles/theme"
-      ],
-
       "@my-product-app/logger": ["libs/backend/logger/src/index.ts"],
       "@my-product-app/prisma": ["libs/backend/prisma/src/index.ts"],
       "@my-product-app/product": ["libs/backend/product/src/index.ts"],
@@ -82,5 +60,5 @@
       "@my-product-app/workorder": ["libs/backend/workorder/src/index.ts"]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": ["node_modules", "dist", "tmp"]
 }

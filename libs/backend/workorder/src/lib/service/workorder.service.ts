@@ -65,7 +65,7 @@ export class WorkOrderService {
       productId: data.productId,
       status: WorkOrderStatus.REQUESTED,
       priority: Priority.LOW,
-      companyId: user?.companyId,
+      companyId: user?.companyId ?? 0,
       attachments: [],
     };
 

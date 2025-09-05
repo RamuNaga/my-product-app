@@ -11,13 +11,29 @@
     "platform:angular",
     "scope:frontend"
   ],
+  "implicitDependencies": [
+    "frontend-core",
+    "frontend-graphql-types",
+    "frontend-data-access"
+  ],
   "targets": {
+    // "build": {
+    //   "executor": "@nx/angular:package",
+    //   "outputs": ["{options.outputPath}"],
+    //   "options": {
+    //     "tsConfig": "libs/frontend/shared/tsconfig.lib.json",
+    //     "project": "libs/frontend/shared/ng-package.json"
+    //   }
+    // },
+
     "build": {
-      "executor": "@nx/angular:package",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "outputPath": "dist/libs/frontend/shared",
+        "main": "libs/frontend/shared/src/index.ts",
         "tsConfig": "libs/frontend/shared/tsconfig.lib.json",
-        "project": "libs/frontend/shared/ng-package.json"
+        "assets": ["libs/frontend/shared/*.md"]
       }
     },
     "test": {

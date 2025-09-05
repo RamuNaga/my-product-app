@@ -41,13 +41,20 @@ export class WorkorderResolver {
     pageSize?: number
   ) {
     console.log('getWorkOrders calling:');
-    const { workorders, total } = await this.workorderService.findFiltered({
-      workOrderCode,
-      clientLocation,
-      status,
-      page,
-      pageSize,
-    });
+
+    const filters = Object.fromEntries(
+      Object.entries({
+        workOrderCode,
+        clientLocation,
+        status,
+        page,
+        pageSize,
+      }).filter(([_, v]) => v !== undefined)
+    );
+
+    const { workorders, total } = await this.workorderService.findFiltered(
+      filters
+    );
 
     return { workorders, total };
   }

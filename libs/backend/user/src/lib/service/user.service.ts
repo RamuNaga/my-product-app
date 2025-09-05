@@ -110,7 +110,7 @@ export class UserService {
     return {
       ...user,
       role: user.role as GQLUserRole,
-      companyId: user.companyId === null ? undefined : user.companyId,
+      companyId: user.companyId ?? 0,
     };
   }
 }

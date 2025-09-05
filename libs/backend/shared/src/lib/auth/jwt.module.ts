@@ -12,12 +12,19 @@ import { Reflector } from '@nestjs/core';
     NestJwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: {
-          expiresIn: configService.get<string>('JWT_EXPIRATION') || '3600s',
-        },
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const secret = configService.get<string>('JWT_SECRET');
+        if (!secret) {
+          throw new Error('JWT_SECRET not set in environment variables');
+        }
+
+        return {
+          secret,
+          signOptions: {
+            expiresIn: configService.get<string>('JWT_EXPIRATION') || '3600s',
+          },
+        };
+      },
     }),
   ],
   providers: [JwtStrategy, JwtAuthGuard, Reflector],

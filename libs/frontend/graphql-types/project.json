@@ -11,14 +11,26 @@
     "scope:frontend"
   ],
   "targets": {
+    // "build": {
+    //   "executor": "@nx/angular:package",
+    //   "outputs": ["{options.outputPath}"],
+    //   "options": {
+    //     "tsConfig": "libs/frontend/graphql-types/tsconfig.lib.json",
+    //     "project": "libs/frontend/graphql-types/ng-package.json"
+    //   }
+    // },
+
     "build": {
-      "executor": "@nx/angular:package",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "outputPath": "dist/libs/frontend/graphql-types",
+        "main": "libs/frontend/graphql-types/src/index.ts",
         "tsConfig": "libs/frontend/graphql-types/tsconfig.lib.json",
-        "project": "libs/frontend/graphql-types/ng-package.json"
+        "assets": ["libs/frontend/graphql-types/*.md"]
       }
     },
+
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],

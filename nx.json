@@ -38,10 +38,19 @@
     "@nx/jest:jest": {
       "cache": true,
       "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
-      "options": { "passWithNoTests": true },
-      "configurations": { "ci": { "ci": true, "codeCoverage": true } }
+      "options": {
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
     },
-    "e2e-ci--**/*": { "dependsOn": ["^build"] },
+    "e2e-ci--**/*": {
+      "dependsOn": ["^build"]
+    },
     "@nx/js:tsc": {
       "cache": true,
       "dependsOn": ["^build"],
@@ -58,7 +67,12 @@
         "ciTargetName": "e2e-ci"
       }
     },
-    { "plugin": "@nx/eslint/plugin", "options": { "targetName": "lint" } },
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    },
     {
       "plugin": "@nx/webpack/plugin",
       "options": {
@@ -77,12 +91,21 @@
       "style": "scss",
       "unitTestRunner": "jest"
     },
-    "@nx/angular:library": { "linter": "eslint", "unitTestRunner": "jest" },
-    "@nx/angular:component": { "style": "scss" }
+    "@nx/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nx/angular:component": {
+      "style": "scss"
+    }
   },
   "projects": {
-    "logger": { "tags": ["type:lib", "scope:backend", "area:logger"] },
-    "prisma": { "tags": ["type:lib", "scope:backend", "area:prisma"] },
+    "logger": {
+      "tags": ["type:lib", "scope:backend", "area:logger"]
+    },
+    "prisma": {
+      "tags": ["type:lib", "scope:backend", "area:prisma"]
+    },
     "backend-shared": {
       "tags": ["type:lib", "scope:backend", "area:shared"],
       "implicitDependencies": ["prisma"]
@@ -127,7 +150,9 @@
       "tags": ["type:service", "scope:backend", "area:workorder"],
       "implicitDependencies": ["prisma", "backend-shared", "workorder"]
     },
-    "frontend": { "tags": ["type:app", "scope:frontend"] },
+    "frontend": {
+      "tags": ["type:app", "scope:frontend"]
+    },
     "frontend-core": {
       "tags": [
         "type:core",
@@ -179,12 +204,18 @@
         "sourceTag": "type:service",
         "onlyDependOnLibsWithTags": ["type:feature", "type:lib"]
       },
-      { "sourceTag": "type:feature", "onlyDependOnLibsWithTags": ["type:lib"] },
+      {
+        "sourceTag": "type:feature",
+        "onlyDependOnLibsWithTags": ["type:lib"]
+      },
       {
         "sourceTag": "type:gateway",
         "onlyDependOnLibsWithTags": ["type:lib", "type:feature"]
       },
-      { "sourceTag": "area:logger", "onlyDependOnLibsWithTags": [] },
+      {
+        "sourceTag": "area:logger",
+        "onlyDependOnLibsWithTags": []
+      },
       {
         "sourceTag": "type:graphql-types",
         "onlyDependOnLibsWithTags": [

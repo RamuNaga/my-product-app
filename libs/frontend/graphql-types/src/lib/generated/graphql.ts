@@ -385,6 +385,17 @@ export type CreateWorkOrderMutationVariables = Exact<{
 
 export type CreateWorkOrderMutation = { __typename?: 'Mutation', createWorkOrder: { __typename?: 'Workorder', id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null } };
 
+export type GetWorkOrdersQueryVariables = Exact<{
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+  workOrderCode?: InputMaybe<Scalars['String']['input']>;
+  clientLocation?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetWorkOrdersQuery = { __typename?: 'Query', workorders: { __typename?: 'WorkordersResponse', total: number, workorders: Array<{ __typename?: 'Workorder', id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, product?: { __typename?: 'Product', id: number, name: string, productCode: string, price: number } | null }> } };
+
 export type UpdateWorkOrderMutationVariables = Exact<{
   input: UpdateWorkorderInput;
 }>;
@@ -636,6 +647,33 @@ export const CreateWorkOrderDocument = gql`
   })
   export class CreateWorkOrderGQL extends Apollo.Mutation<CreateWorkOrderMutation, CreateWorkOrderMutationVariables> {
     document = CreateWorkOrderDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetWorkOrdersDocument = gql`
+    query GetWorkOrders($page: Int, $pageSize: Int, $workOrderCode: String, $clientLocation: String, $status: String) {
+  workorders(
+    page: $page
+    pageSize: $pageSize
+    workOrderCode: $workOrderCode
+    clientLocation: $clientLocation
+    status: $status
+  ) {
+    workorders {
+      ...WorkorderListFields
+    }
+    total
+  }
+}
+    ${WorkorderListFieldsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetWorkOrdersGQL extends Apollo.Query<GetWorkOrdersQuery, GetWorkOrdersQueryVariables> {
+    document = GetWorkOrdersDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

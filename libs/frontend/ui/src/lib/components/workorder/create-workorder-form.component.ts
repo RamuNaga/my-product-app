@@ -147,7 +147,7 @@ export class CreateWorkOrderFormComponent {
       vendorOrClient,
       quantity: Number(quantity),
       deliveryDate: deliveryDate.toISOString(),
-      description,
+      description: description ?? null, // avoid undefined
     };
 
     this.submitting.set(true);
