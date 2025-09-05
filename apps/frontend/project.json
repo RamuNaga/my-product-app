@@ -53,9 +53,7 @@
           ],
           "outputHashing": "all",
           "aot": true,
-          "buildOptimizer": true,
           "optimization": true,
-          "extractCss": true,
           "sourceMap": false
         },
         "development": {
