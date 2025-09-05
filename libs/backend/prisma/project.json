@@ -24,7 +24,7 @@
       }
     },
     "generate": {
-      "executor": "@nx/workspace:run-commands",
+      "executor": "@nrwl/workspace:run-commands",
       "options": {
         "command": "pnpm prisma generate --schema=libs/backend/prisma/prisma/schema.prisma",
         "cwd": ".",
