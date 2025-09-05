@@ -25,7 +25,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: 10
-          run_install: false # We’ll install manually later
+          run_install: false
 
       # 3. Setup Node.js and enable pnpm caching
       - uses: actions/setup-node@v4
@@ -49,23 +49,30 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 7. Install Cypress binary
+      # 7. Generate Prisma client before any backend build
+      - name: Generate Prisma client
+        run: pnpm prisma:generate
+
+      # 8. Install Cypress binary
       - run: pnpm exec cypress install
 
-      # 8. Start Nx Cloud distributed agents (3 agents)
+      # 9. Start Nx Cloud distributed agents (optional, if using Nx Cloud)
       - run: pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
 
-      # 9. Run lint in parallel
+      # 10. Run lint in parallel
       - run: pnpm exec nx affected -t lint --parallel=3
 
-      # 10. Run tests in parallel
+      # 11. Run tests in parallel
       - run: pnpm exec nx affected -t test --parallel=3 --configuration=ci
 
-      # 11. Run build in parallel
-      - run: pnpm exec nx affected -t build --parallel=3
+      # 12. Run build in parallel
+      - run: |
+          # Ensure Prisma generation is completed for all affected backend projects
+          pnpm exec nx run-many --target=generate --projects=prisma --parallel
+          # Then build all affected projects
+          pnpm exec nx affected -t build --parallel=3
 
-      # 12. Run e2e tests in parallel
+      # 13. Run e2e tests in parallel
       - run: pnpm exec nx affected -t e2e --parallel=3 --configuration=ci
         env:
-          # Required for Cypress to run in CI
           CI: true
