@@ -57,7 +57,7 @@ jobs:
       # - run: pnpm exec cypress install
 
       # 9. Start Nx Cloud distributed agents (optional, if using Nx Cloud)
-      - run: pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
+      - run: pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
 
       # 10. Run lint in parallel
       - run: pnpm exec nx affected -t lint --parallel=3
