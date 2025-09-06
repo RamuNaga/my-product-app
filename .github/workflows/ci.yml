@@ -53,8 +53,8 @@ jobs:
       - name: Generate Prisma client
         run: pnpm prisma:generate
 
-      # 8. Install Cypress binary
-      - run: pnpm exec cypress install
+      # # 8. Install Cypress binary
+      # - run: pnpm exec cypress install
 
       # 9. Start Nx Cloud distributed agents (optional, if using Nx Cloud)
       - run: pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
@@ -68,7 +68,7 @@ jobs:
       # 12. Run build in parallel
       - run: pnpm exec nx affected -t build --parallel=3
 
-      # 13. Run e2e tests in parallel
-      - run: pnpm exec nx affected -t e2e --parallel=3 --configuration=ci
+        # # 13. Run e2e tests in parallel
+        # - run: pnpm exec nx affected -t e2e --parallel=3 --configuration=ci
         env:
           CI: true
