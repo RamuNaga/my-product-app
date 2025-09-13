@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../generated/workorder-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_WORKORDER")
+}
+
+enum WorkOrderStatus {
+  REQUESTED
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+  CANCELLED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum PurchaseOrderStatus {
+  PENDING
+  ORDERED
+  DELIVERED
+  CANCELLED
+}
+
+enum IssueType {
+  MACHINERY
+  PACKING
+  LABOUR
+  QUALITY
+  OTHER
+}
+
+model WorkOrder {
+  id             Int             @id @default(autoincrement())
+  workOrderCode  String          @unique
+  productId      Int             // from Product service
+  clientLocation String
+  vendorOrClient String
+  quantity       Int
+  deliveryDate   DateTime
+  description    String?
+  status         WorkOrderStatus @default(REQUESTED)
+  createdById    Int             // from User service
+  approvedById   Int?            // from User service
+  companyId      Int?            // from User service
+  priority       Priority?       @default(MEDIUM)
+  attachments    String[]
+  assignedTo     String?
+  comments       String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model PurchaseOrder {
+  id           Int                 @id @default(autoincrement())
+  poNumber     String              @unique
+  workOrderId  Int
+  productId    Int                 // from Product service
+  ingredientId Int                 // from Product service
+  quantity     Int
+  supplierId   Int                 // from User/Vendor service
+  deliveryDate DateTime
+  status       PurchaseOrderStatus @default(PENDING)
+  comments     String?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+}
+
+model ProductionPlan {
+  id             Int      @id @default(autoincrement())
+  workOrderId    Int
+  lineNumber     Int
+  startTime      DateTime
+  endTime        DateTime?
+  hiskRiskLabour Int
+  lowRiskLabour  Int
+  packLabour     Int
+  targetPerMin   Int
+  actualProduced Int?
+  issues         String?
+}
+
+model ProductionIssue {
+  id          Int      @id @default(autoincrement())
+  planId      Int
+  issueType   IssueType
+  description String
+  occurredAt  DateTime
+  resolvedAt  DateTime?
+}

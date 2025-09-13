@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../generated/user-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_USER")
+}
+
+enum CompanyType {
+  MANUFACTURER
+  CLIENT
+  SUPPLIER
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  OPERATOR
+  STAFF
+  VIEWER
+}
+
+model Company {
+  id        Int               @id @default(autoincrement())
+  name      String            @unique
+  type      CompanyType       @default(MANUFACTURER)
+  contact   String?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+model CompanyLocation {
+  id         Int      @id @default(autoincrement())
+  location   String
+  address    String
+  city       String
+  country    String
+  postalCode String
+  county     String?
+  contact    String?
+  companyId  Int?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  role      UserRole @default(STAFF)
+  companyId Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Vendor {
+  id        Int      @id @default(autoincrement())
+  name      String
+  companyId Int?
+  address   String?
+  contact   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
