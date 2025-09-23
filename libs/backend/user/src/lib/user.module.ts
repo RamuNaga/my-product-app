@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { UserService } from './service/user.service';
 import { UserResolver } from './resolver/user.resolver';
+import { UserPrismaModule } from '@my-product-app/backend-prisma/user-prisma';
 import { SharedModule } from '@my-product-app/backend-shared';
-import { PrismaService } from '@my-product-app/prisma';
 
 @Module({
-  imports: [SharedModule],
-  providers: [UserService, UserResolver, PrismaService],
+  imports: [SharedModule,UserPrismaModule],
+  providers: [UserService, UserResolver],
   exports: [UserService, UserResolver],
 })
 export class UserModule {}

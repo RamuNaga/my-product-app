@@ -1,18 +1,22 @@
 // src/shared/graphql/base.resolver.ts
 import { Query, Mutation, Args, Resolver, ID } from '@nestjs/graphql';
-import { PrismaService } from '@my-product-app/prisma';
 
 type ClassType<T = any> = new (...args: any[]) => T;
 
 /**
- * A generic base resolver that provides CRUD operations using PrismaService
+ * A generic base resolver that provides CRUD operations using any PrismaService
  */
-export function createBaseResolver<TModel, CreateInput, UpdateInput>(
+export function createBaseResolver<
+  TModel,
+  CreateInput,
+  UpdateInput,
+  TPrismaService
+>(
   suffix: string,
   returnType: ClassType,
   createInputType: ClassType,
   updateInputType: ClassType,
-  getModel: (prisma: PrismaService) => {
+  getModel: (prisma: TPrismaService) => {
     findMany: () => Promise<TModel[]>;
     findUnique: (args: { where: { id: number } }) => Promise<TModel | null>;
     create: (args: { data: CreateInput }) => Promise<TModel>;
@@ -25,7 +29,7 @@ export function createBaseResolver<TModel, CreateInput, UpdateInput>(
 ) {
   @Resolver({ isAbstract: true })
   abstract class BaseResolver {
-    constructor(public prisma: PrismaService) {}
+    constructor(public prisma: TPrismaService) {}
 
     @Query(() => [returnType], { name: `findAll${suffix}` })
     async findAll(): Promise<TModel[]> {

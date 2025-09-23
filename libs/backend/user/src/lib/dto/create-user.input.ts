@@ -20,7 +20,7 @@ export class CreateUserInput {
   @IsEnum(UserRole, { message: 'Invalid role' })
   role!: UserRole;
 
-  @Field({ nullable: true })
+  @Field()
   @IsInt({ message: 'Company ID must be a number' })
-  companyId?: number;
+  companyId!: number;
 }

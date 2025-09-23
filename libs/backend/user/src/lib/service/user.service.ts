@@ -5,17 +5,17 @@ import {
 } from '@nestjs/common';
 import { CreateUserInput } from '../dto/create-user.input';
 import { User } from '../graphql/user.model';
-import { PrismaService } from '@my-product-app/prisma';
+import { UserPrismaService } from '@my-product-app/backend-prisma/user-prisma';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { UserRole as GQLUserRole } from '@my-product-app/backend-shared'; // updated
-import { User as PrismaUser, UserRole as PrismaUserRole } from '@prisma/client';
+import { User as PrismaUser } from '@my-product-app/backend-prisma/user-client';
+import { UserRole as PrismaUserRole } from '@my-product-app/backend-shared';
 import { UserWithoutPassword } from '../interfaces/user.interface';
 
 @Injectable()
 export class UserService {
   constructor(
-    private prisma: PrismaService,
+    private prisma: UserPrismaService,
     private readonly jwtService: JwtService
   ) {}
 
@@ -109,7 +109,7 @@ export class UserService {
   ): UserWithoutPassword {
     return {
       ...user,
-      role: user.role as GQLUserRole,
+      role: user.role as PrismaUserRole,
       companyId: user.companyId ?? 0,
     };
   }

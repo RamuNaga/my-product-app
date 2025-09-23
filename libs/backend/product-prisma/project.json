@@ -1,0 +1,47 @@
+{
+  "name": "product-prisma",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/backend/product-prisma/src",
+  "projectType": "library",
+  "tags": ["type:lib", "scope:backend", "area:product-prisma"],
+
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/product-prisma",
+        "main": "libs/backend/product-prisma/src/index.ts",
+        "tsConfig": "libs/backend/product-prisma/tsconfig.lib.json",
+        "assets": ["libs/backend/product-prisma/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/backend/product-prisma/jest.config.ts"
+      }
+    },
+    "generate": {
+      "executor": "@nx/js:node",
+      "options": {
+        "outputPath": "dist/tmp",
+        "args": [
+          "prisma",
+          "generate",
+          "--schema=libs/backend/product-prisma/prisma/schema.prisma"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/backend/product-prisma/**/*.ts",
+          "libs/backend/product-prisma/**/*.tsx"
+        ]
+      }
+    }
+  }
+}

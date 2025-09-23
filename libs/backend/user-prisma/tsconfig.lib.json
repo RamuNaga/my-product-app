@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "outDir": "../../../dist/out-tsc",
+    "declaration": true,
+    "declarationMap": true,
+    "composite": true,
+    "types": ["node"],
+    "target": "ES2021",
+    "moduleResolution": "node",
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true
+  },
+
+  "include": ["src/**/*.ts", "generated/**/*.ts"],
+
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+}

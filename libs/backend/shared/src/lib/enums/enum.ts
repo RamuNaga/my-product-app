@@ -1,5 +1,11 @@
 import { registerEnumType } from '@nestjs/graphql';
-import { WorkOrderStatus, Priority, UserRole } from '@prisma/client';
+
+import { UserRole } from '@my-product-app/backend-prisma/user-client';
+
+import {
+  WorkOrderStatus,
+  Priority,
+} from '@my-product-app/backend-prisma/workorder-client';
 
 registerEnumType(WorkOrderStatus, {
   name: 'WorkOrderStatus',

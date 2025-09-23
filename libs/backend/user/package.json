@@ -6,11 +6,11 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
+    "@my-product-app/user-prisma": "workspace:*",
     "tslib": "^2.3.0",
     "@nestjs/common": "^11.1.0",
     "@nestjs/graphql": "^13.1.0",
     "class-validator": "^0.14.1",
-    "@my-product-app/prisma": "workspace:*",
     "@my-product-app/backend-shared": "workspace:*",
     "bcrypt": "^6.0.0",
     "@nestjs/jwt": "^11.0.0",

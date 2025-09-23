@@ -8,12 +8,21 @@ module.exports = [
       '@nx/enforce-module-boundaries': [
         'error',
         {
-          allow: ['^@my-product-app/prisma', '^@my-product-app/logger'],
+          allow: [
+            '^@my-product-app/logger',
+            '^@my-product-app/backend-prisma/user-client',
+            '^@my-product-app/backend-prisma/Workorder-client',
+          ],
           enforceBuildableLibDependency: true,
           depConstraints: [
             {
               sourceTag: 'type:shared',
-              onlyDependOnLibsWithTags: ['type:shared', 'type:buildable'],
+              onlyDependOnLibsWithTags: [
+                'type:shared',
+                'type:buildable',
+                'type:user-prisma',
+                'type:workorder-prisma',
+              ],
             },
             {
               sourceTag: 'scope:user',

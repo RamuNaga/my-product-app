@@ -5,7 +5,7 @@
     "outDir": "./dist/out-tsc",
     "target": "ES2020",
     "module": "ES2020",
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "sourceMap": true,
     "declaration": true,
     "emitDecoratorMetadata": true,
@@ -55,10 +55,32 @@
       "@my-product-app/frontend-ui/*": ["libs/frontend/ui/src/lib/*"],
       "@my-product-app/logger": ["libs/backend/logger/src/index.ts"],
       "@my-product-app/prisma": ["libs/backend/prisma/src/index.ts"],
+
+      "@my-product-app/backend-prisma/user-client": [
+        "libs/backend/user-prisma/generated/user-client/index.d.ts"
+      ],
+      "@my-product-app/backend-prisma/user-prisma": [
+        "libs/backend/user-prisma/src/index.ts"
+      ],
+
+      "@my-product-app/backend-prisma/product-client": [
+        "libs/backend/product-prisma/generated/product-client/index.d.ts"
+      ],
+      "@my-product-app/backend-prisma/product-prisma": [
+        "libs/backend/product-prisma/src/index.ts"
+      ],
+      "@my-product-app/backend-prisma/workorder-client": [
+        "libs/backend/workorder-prisma/generated/workorder-client/index.d.ts"
+      ],
+      "@my-product-app/backend-prisma/workorder-prisma": [
+        "libs/backend/workorder-prisma/src/index.ts"
+      ],
+
       "@my-product-app/product": ["libs/backend/product/src/index.ts"],
       "@my-product-app/user": ["libs/backend/user/src/index.ts"],
       "@my-product-app/workorder": ["libs/backend/workorder/src/index.ts"]
     }
   },
+
   "exclude": ["node_modules", "dist", "tmp"]
 }

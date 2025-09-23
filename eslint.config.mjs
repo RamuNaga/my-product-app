@@ -6,7 +6,12 @@ export default [
   ...nx.configs['flat/javascript'],
 
   {
-    ignores: ['**/dist'],
+    ignores: [
+      '**/dist',
+      'coverage/**',
+      'node_modules/**',
+      'libs/backend/user-prisma/generated/**',
+    ],
   },
 
   // Project-specific overrides (relax rules for UI and shared state)

@@ -6,7 +6,14 @@ module.exports = [
   ...nx.configs['flat/javascript'],
 
   {
-    ignores: ['**/dist'],
+    ignores: [
+      '**/dist',
+      'dist/**',
+      'coverage/**',
+      'node_modules/**',
+      'libs/backend/user-prisma/generated/user-client/**',
+      'libs/backend/user-prisma/generated/user-client/**/*',
+    ],
   },
 
   // Project-specific overrides

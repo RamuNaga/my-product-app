@@ -14,6 +14,7 @@ module.exports = [
             '^@my-product-app/user',
             '@my-product-app/backend-company',
             '@my-product-app/backend-company-location',
+            '@my-product-app/backend-prisma/user-prisma',
           ],
           enforceBuildableLibDependency: true,
           depConstraints: [

@@ -2,7 +2,11 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "defaultBase": "master",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "!{projectRoot}/generated/**",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
@@ -15,7 +19,8 @@
       "!{projectRoot}/cypress/**/*",
       "!{projectRoot}/**/*.cy.[jt]s?(x)",
       "!{projectRoot}/cypress.config.[jt]s",
-      "!{projectRoot}/eslint.config.js"
+      "!{projectRoot}/eslint.config.js",
+      "!{projectRoot}/generated/**"
     ],
     "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
   },
@@ -106,33 +111,36 @@
     "prisma": {
       "tags": ["type:lib", "scope:backend", "area:prisma"]
     },
+    "user-prisma": {
+      "tags": ["type:lib", "scope:backend", "area:user-prisma"]
+    },
     "backend-shared": {
       "tags": ["type:lib", "scope:backend", "area:shared"],
-      "implicitDependencies": ["prisma"]
+      "implicitDependencies": ["user-prisma", "workorder-prisma"]
     },
     "company": {
       "tags": ["type:feature", "scope:backend", "area:company"],
-      "implicitDependencies": ["prisma", "backend-shared"]
+      "implicitDependencies": ["user-prisma", "backend-shared"]
     },
     "company-location": {
       "tags": ["type:feature", "scope:backend", "area:company-location"],
-      "implicitDependencies": ["prisma", "backend-shared", "company"]
+      "implicitDependencies": ["user-prisma", "backend-shared", "company"]
     },
     "registration": {
       "tags": ["type:feature", "scope:backend", "area:registration"],
-      "implicitDependencies": ["prisma", "backend-shared", "company"]
+      "implicitDependencies": ["user-prisma", "backend-shared", "company"]
     },
     "product": {
       "tags": ["type:feature", "scope:backend", "area:product"],
-      "implicitDependencies": ["prisma", "backend-shared"]
+      "implicitDependencies": ["product-prisma", "backend-shared"]
     },
     "user": {
       "tags": ["type:feature", "scope:backend", "area:user"],
-      "implicitDependencies": ["prisma", "backend-shared"]
+      "implicitDependencies": ["user-prisma", "backend-shared"]
     },
     "workorder": {
       "tags": ["type:feature", "scope:backend", "area:workorder"],
-      "implicitDependencies": ["prisma", "backend-shared"]
+      "implicitDependencies": ["workorder-prisma", "backend-shared"]
     },
     "api-gateway": {
       "tags": ["type:gateway", "scope:backend", "area:gateway"],
