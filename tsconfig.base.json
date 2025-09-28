@@ -36,6 +36,18 @@
       "@my-product-app/backend-company-prisma": [
         "libs/backend/company-prisma/src/index.ts"
       ],
+      "@my-product-app/backend-prisma/company-client": [
+        "libs/backend/company-prisma/generated/company-client/index.d.ts"
+      ],
+      "@my-product-app/backend-prisma/company-location-client": [
+        "libs/backend/company-location-prisma/generated/company-location-client/index.d.ts"
+      ],
+      "@my-product-app/backend-prisma/company-location-prisma": [
+        "libs/backend/company-location-prisma/src/index.ts"
+      ],
+      "@my-product-app/backend-prisma/company-prisma": [
+        "libs/backend/company-prisma/src/index.ts"
+      ],
       "@my-product-app/backend-prisma/product-client": [
         "libs/backend/product-prisma/generated/product-client/index.d.ts"
       ],
@@ -48,26 +60,13 @@
       "@my-product-app/backend-prisma/user-prisma": [
         "libs/backend/user-prisma/src/index.ts"
       ],
-      "@my-product-app/backend-prisma/company-client": [
-        "libs/backend/company-prisma/generated/company-client/index.d.ts"
-      ],
-      "@my-product-app/backend-prisma/company-prisma": [
-        "libs/backend/company-prisma/src/index.ts"
-      ],
-
-      "@my-product-app/backend-prisma/company-location-client": [
-        "libs/backend/company-location-prisma/generated/company-location-client/index.d.ts"
-      ],
-      "@my-product-app/backend-prisma/company-location-prisma": [
-        "libs/backend/company-location-prisma/src/index.ts"
-      ],
-
       "@my-product-app/backend-prisma/workorder-client": [
         "libs/backend/workorder-prisma/generated/workorder-client/index.d.ts"
       ],
       "@my-product-app/backend-prisma/workorder-prisma": [
         "libs/backend/workorder-prisma/src/index.ts"
       ],
+      "@my-product-app/backend-proto": ["libs/backend/proto/src/index.ts"],
       "@my-product-app/backend-registration": [
         "libs/backend/registration/src/index.ts"
       ],

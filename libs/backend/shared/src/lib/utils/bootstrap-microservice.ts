@@ -7,11 +7,18 @@ import { AppLoggerService, LoggingInterceptor } from '@my-product-app/logger';
 import * as bodyParser from 'body-parser';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
+interface GrpcOptions {
+  package: string; // proto package name (e.g. "user", "company")
+  protoPath: string; // path to proto file
+  url?: string; // optional override for host:port
+}
+
 interface BootstrapOptions {
   hostEnv: string;
   portEnv: string;
   fallbackPort: number;
   serviceName: string;
+  grpc?: GrpcOptions; // if provided, gRPC will be enabled
 }
 
 async function tryGetLogger(
@@ -64,11 +71,32 @@ export async function bootstrapMicroservice(
 
     console.log(`Starting ${options.serviceName} on ${host}:${port}`);
 
-    // Connect Microservice
-    app.connectMicroservice<MicroserviceOptions>({
-      transport: Transport.TCP,
-      options: { host, port: microservicePort },
-    });
+    // Switchable gRPC or TCP microservice
+    if (options.grpc) {
+      app.connectMicroservice<MicroserviceOptions>({
+        transport: Transport.GRPC,
+        options: {
+          package: options.grpc.package,
+          protoPath: options.grpc.protoPath,
+          url: options.grpc.url || `${host}:${microservicePort}`,
+        },
+      });
+
+      console.log(
+        `${options.serviceName} gRPC microservice running on ${
+          options.grpc.url || `${host}:${microservicePort}`
+        }`
+      );
+    } else {
+      app.connectMicroservice<MicroserviceOptions>({
+        transport: Transport.TCP,
+        options: { host, port: microservicePort },
+      });
+
+      console.log(
+        `${options.serviceName} TCP microservice running on ${host}:${microservicePort}`
+      );
+    }
 
     await app.startAllMicroservices();
 
@@ -80,9 +108,6 @@ export async function bootstrapMicroservice(
 
     await app.listen(port);
     console.log(`${options.serviceName} is running on http://${host}:${port}`);
-    console.log(
-      `${options.serviceName} TCP microservice running on ${host}:${microservicePort}`
-    );
     console.log(
       `${options.serviceName} /ping endpoint is available at http://${host}:${port}/ping`
     );

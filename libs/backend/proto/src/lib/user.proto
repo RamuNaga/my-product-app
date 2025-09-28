@@ -1,0 +1,38 @@
+syntax = "proto3";
+package user;
+
+enum UserRole {
+  ADMIN = 0;
+  MANAGER = 1;
+  OPERATOR = 2;
+  STAFF = 3;
+  VIEWER = 4;
+}
+
+message User {
+  int32 id = 1;
+  string username = 2;
+  string email = 3;
+  string password = 4;
+  UserRole role = 5;
+  int32 companyId = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
+}
+
+message CreateUserRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+  UserRole role = 4;
+  int32 companyId = 5;
+}
+
+message UserResponse {
+  User user = 1;
+}
+
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (UserResponse);
+  rpc GetUserById (google.protobuf.Int32Value) returns (UserResponse);
+}

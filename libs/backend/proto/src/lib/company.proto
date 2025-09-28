@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package company;
+
+enum CompanyType {
+  MANUFACTURER = 0;
+  CLIENT = 1;
+  SUPPLIER = 2;
+}
+
+message Company {
+  int32 id = 1;
+  string name = 2;
+  CompanyType type = 3;
+  string contact = 4;
+  string createdAt = 5;
+  string updatedAt = 6;
+}
+
+message CreateCompanyRequest {
+  string name = 1;
+  CompanyType type = 2;
+  string contact = 3;
+}
+
+message CompanyResponse {
+  Company company = 1;
+}
+
+service CompanyService {
+  rpc CreateCompany (CreateCompanyRequest) returns (CompanyResponse);
+  rpc GetCompanyById (google.protobuf.Int32Value) returns (CompanyResponse);
+}

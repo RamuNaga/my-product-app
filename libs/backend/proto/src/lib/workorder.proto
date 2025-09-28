@@ -1,0 +1,190 @@
+syntax = "proto3";
+
+package workorder;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+// ===================== Enums =====================
+
+enum WorkOrderStatus {
+  REQUESTED = 0;
+  PENDING = 1;
+  APPROVED = 2;
+  REJECTED = 3;
+  COMPLETED = 4;
+  CANCELLED = 5;
+}
+
+enum Priority {
+  LOW = 0;
+  MEDIUM = 1;
+  HIGH = 2;
+}
+
+enum PurchaseOrderStatus {
+  PENDING = 0;
+  ORDERED = 1;
+  DELIVERED = 2;
+  CANCELLED = 3;
+}
+
+enum IssueType {
+  MACHINERY = 0;
+  PACKING = 1;
+  LABOUR = 2;
+  QUALITY = 3;
+  OTHER = 4;
+}
+
+// ===================== Messages =====================
+
+message WorkOrder {
+  int32 id = 1;
+  string workOrderCode = 2;
+  int32 productId = 3;
+  string clientLocation = 4;
+  string vendorOrClient = 5;
+  int32 quantity = 6;
+  google.protobuf.Timestamp deliveryDate = 7;
+  string description = 8;
+  WorkOrderStatus status = 9;
+  int32 createdById = 10;
+  google.protobuf.Int32Value approvedById = 11;
+  google.protobuf.Int32Value companyId = 12;
+  Priority priority = 13;
+  repeated string attachments = 14;
+  string assignedTo = 15;
+  string comments = 16;
+  google.protobuf.Timestamp createdAt = 17;
+  google.protobuf.Timestamp updatedAt = 18;
+}
+
+message CreateWorkOrderRequest {
+  string workOrderCode = 1;
+  int32 productId = 2;
+  string clientLocation = 3;
+  string vendorOrClient = 4;
+  int32 quantity = 5;
+  google.protobuf.Timestamp deliveryDate = 6;
+  string description = 7;
+  int32 createdById = 8;
+  Priority priority = 9;
+  repeated string attachments = 10;
+  string assignedTo = 11;
+  string comments = 12;
+}
+
+message WorkOrderResponse {
+  WorkOrder workOrder = 1;
+}
+
+// --------------------- PurchaseOrder ---------------------
+
+message PurchaseOrder {
+  int32 id = 1;
+  string poNumber = 2;
+  int32 workOrderId = 3;
+  int32 productId = 4;
+  int32 ingredientId = 5;
+  int32 quantity = 6;
+  int32 supplierId = 7;
+  google.protobuf.Timestamp deliveryDate = 8;
+  PurchaseOrderStatus status = 9;
+  string comments = 10;
+  google.protobuf.Timestamp createdAt = 11;
+  google.protobuf.Timestamp updatedAt = 12;
+}
+
+message CreatePurchaseOrderRequest {
+  string poNumber = 1;
+  int32 workOrderId = 2;
+  int32 productId = 3;
+  int32 ingredientId = 4;
+  int32 quantity = 5;
+  int32 supplierId = 6;
+  google.protobuf.Timestamp deliveryDate = 7;
+  PurchaseOrderStatus status = 8;
+  string comments = 9;
+}
+
+message PurchaseOrderResponse {
+  PurchaseOrder purchaseOrder = 1;
+}
+
+// --------------------- ProductionPlan ---------------------
+
+message ProductionPlan {
+  int32 id = 1;
+  int32 workOrderId = 2;
+  int32 lineNumber = 3;
+  google.protobuf.Timestamp startTime = 4;
+  google.protobuf.Timestamp endTime = 5;
+  int32 hiskRiskLabour = 6;
+  int32 lowRiskLabour = 7;
+  int32 packLabour = 8;
+  int32 targetPerMin = 9;
+  google.protobuf.Int32Value actualProduced = 10;
+  string issues = 11;
+}
+
+message CreateProductionPlanRequest {
+  int32 workOrderId = 1;
+  int32 lineNumber = 2;
+  google.protobuf.Timestamp startTime = 3;
+  google.protobuf.Timestamp endTime = 4;
+  int32 hiskRiskLabour = 5;
+  int32 lowRiskLabour = 6;
+  int32 packLabour = 7;
+  int32 targetPerMin = 8;
+  google.protobuf.Int32Value actualProduced = 9;
+  string issues = 10;
+}
+
+message ProductionPlanResponse {
+  ProductionPlan productionPlan = 1;
+}
+
+// --------------------- ProductionIssue ---------------------
+
+message ProductionIssue {
+  int32 id = 1;
+  int32 planId = 2;
+  IssueType issueType = 3;
+  string description = 4;
+  google.protobuf.Timestamp occurredAt = 5;
+  google.protobuf.Timestamp resolvedAt = 6;
+}
+
+message CreateProductionIssueRequest {
+  int32 planId = 1;
+  IssueType issueType = 2;
+  string description = 3;
+  google.protobuf.Timestamp occurredAt = 4;
+  google.protobuf.Timestamp resolvedAt = 5;
+}
+
+message ProductionIssueResponse {
+  ProductionIssue productionIssue = 1;
+}
+
+// ===================== Service =====================
+
+service WorkOrderService {
+  // WorkOrder RPCs
+  rpc CreateWorkOrder(CreateWorkOrderRequest) returns (WorkOrderResponse);
+  rpc GetWorkOrderById(google.protobuf.Int32Value) returns (WorkOrderResponse);
+
+  // PurchaseOrder RPCs
+  rpc CreatePurchaseOrder(CreatePurchaseOrderRequest) returns (PurchaseOrderResponse);
+  rpc GetPurchaseOrderById(google.protobuf.Int32Value) returns (PurchaseOrderResponse);
+  rpc ListPurchaseOrdersByWorkOrderId(google.protobuf.Int32Value) returns (stream PurchaseOrderResponse);
+
+  // ProductionPlan RPCs
+  rpc CreateProductionPlan(CreateProductionPlanRequest) returns (ProductionPlanResponse);
+  rpc GetProductionPlanById(google.protobuf.Int32Value) returns (ProductionPlanResponse);
+
+  // ProductionIssue RPCs
+  rpc CreateProductionIssue(CreateProductionIssueRequest) returns (ProductionIssueResponse);
+  rpc GetProductionIssueById(google.protobuf.Int32Value) returns (ProductionIssueResponse);
+}

@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package product;
+
+message Product {
+  int32 id = 1;
+  string productCode = 2;
+  string name = 3;
+  string description = 4;
+  string image = 5;
+  string productWeight = 6;
+  double price = 7;
+  int32 companyId = 8;
+  string createdAt = 9;
+  string updatedAt = 10;
+}
+
+message CreateProductRequest {
+  string productCode = 1;
+  string name = 2;
+  string description = 3;
+  string image = 4;
+  string productWeight = 5;
+  double price = 6;
+  int32 companyId = 7;
+}
+
+message ProductResponse {
+  Product product = 1;
+}
+
+service ProductService {
+  rpc CreateProduct (CreateProductRequest) returns (ProductResponse);
+  rpc GetProductById (google.protobuf.Int32Value) returns (ProductResponse);
+}
