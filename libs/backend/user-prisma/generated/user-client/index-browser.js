@@ -20,11 +20,11 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.16.1
+ * Prisma Client JS version: 6.16.2
  * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
  */
 Prisma.prismaVersion = {
-  client: "6.16.1",
+  client: "6.16.2",
   engine: "1c57fdcd7e44b29b9313256c76699e91c3ac3c43"
 }
 
@@ -120,29 +120,6 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.CompanyScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  type: 'type',
-  contact: 'contact',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CompanyLocationScalarFieldEnum = {
-  id: 'id',
-  location: 'location',
-  address: 'address',
-  city: 'city',
-  country: 'country',
-  postalCode: 'postalCode',
-  county: 'county',
-  contact: 'contact',
-  companyId: 'companyId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   username: 'username',
@@ -178,12 +155,6 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-exports.CompanyType = exports.$Enums.CompanyType = {
-  MANUFACTURER: 'MANUFACTURER',
-  CLIENT: 'CLIENT',
-  SUPPLIER: 'SUPPLIER'
-};
-
 exports.UserRole = exports.$Enums.UserRole = {
   ADMIN: 'ADMIN',
   MANAGER: 'MANAGER',
@@ -193,8 +164,6 @@ exports.UserRole = exports.$Enums.UserRole = {
 };
 
 exports.Prisma.ModelName = {
-  Company: 'Company',
-  CompanyLocation: 'CompanyLocation',
   User: 'User',
   Vendor: 'Vendor'
 };

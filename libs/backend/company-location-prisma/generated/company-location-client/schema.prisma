@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/company-location-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_COMPANY_LOCATION")
+}
+
+model CompanyLocation {
+  id         Int      @id @default(autoincrement())
+  location   String
+  address    String
+  city       String
+  country    String
+  postalCode String
+  county     String?
+  contact    String?
+  companyId  Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

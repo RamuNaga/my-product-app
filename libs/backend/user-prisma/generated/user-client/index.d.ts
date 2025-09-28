@@ -14,16 +14,6 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
- * Model Company
- * 
- */
-export type Company = $Result.DefaultSelection<Prisma.$CompanyPayload>
-/**
- * Model CompanyLocation
- * 
- */
-export type CompanyLocation = $Result.DefaultSelection<Prisma.$CompanyLocationPayload>
-/**
  * Model User
  * 
  */
@@ -38,16 +28,7 @@ export type Vendor = $Result.DefaultSelection<Prisma.$VendorPayload>
  * Enums
  */
 export namespace $Enums {
-  export const CompanyType: {
-  MANUFACTURER: 'MANUFACTURER',
-  CLIENT: 'CLIENT',
-  SUPPLIER: 'SUPPLIER'
-};
-
-export type CompanyType = (typeof CompanyType)[keyof typeof CompanyType]
-
-
-export const UserRole: {
+  export const UserRole: {
   ADMIN: 'ADMIN',
   MANAGER: 'MANAGER',
   OPERATOR: 'OPERATOR',
@@ -58,10 +39,6 @@ export const UserRole: {
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 }
-
-export type CompanyType = $Enums.CompanyType
-
-export const CompanyType: typeof $Enums.CompanyType
 
 export type UserRole = $Enums.UserRole
 
@@ -74,8 +51,8 @@ export const UserRole: typeof $Enums.UserRole
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Companies
- * const companies = await prisma.company.findMany()
+ * // Fetch zero or more Users
+ * const users = await prisma.user.findMany()
  * ```
  *
  *
@@ -95,8 +72,8 @@ export class PrismaClient<
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Companies
-   * const companies = await prisma.company.findMany()
+   * // Fetch zero or more Users
+   * const users = await prisma.user.findMany()
    * ```
    *
    *
@@ -186,26 +163,6 @@ export class PrismaClient<
   }>>
 
       /**
-   * `prisma.company`: Exposes CRUD operations for the **Company** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Companies
-    * const companies = await prisma.company.findMany()
-    * ```
-    */
-  get company(): Prisma.CompanyDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.companyLocation`: Exposes CRUD operations for the **CompanyLocation** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more CompanyLocations
-    * const companyLocations = await prisma.companyLocation.findMany()
-    * ```
-    */
-  get companyLocation(): Prisma.CompanyLocationDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
     * Example usage:
     * ```ts
@@ -282,7 +239,7 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.16.1
+   * Prisma Client JS version: 6.16.2
    * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
    */
   export type PrismaVersion = {
@@ -664,8 +621,6 @@ export namespace Prisma {
 
 
   export const ModelName: {
-    Company: 'Company',
-    CompanyLocation: 'CompanyLocation',
     User: 'User',
     Vendor: 'Vendor'
   };
@@ -686,158 +641,10 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "company" | "companyLocation" | "user" | "vendor"
+      modelProps: "user" | "vendor"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
-      Company: {
-        payload: Prisma.$CompanyPayload<ExtArgs>
-        fields: Prisma.CompanyFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.CompanyFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.CompanyFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
-          }
-          findFirst: {
-            args: Prisma.CompanyFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.CompanyFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
-          }
-          findMany: {
-            args: Prisma.CompanyFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>[]
-          }
-          create: {
-            args: Prisma.CompanyCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
-          }
-          createMany: {
-            args: Prisma.CompanyCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.CompanyCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>[]
-          }
-          delete: {
-            args: Prisma.CompanyDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
-          }
-          update: {
-            args: Prisma.CompanyUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
-          }
-          deleteMany: {
-            args: Prisma.CompanyDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.CompanyUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.CompanyUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>[]
-          }
-          upsert: {
-            args: Prisma.CompanyUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
-          }
-          aggregate: {
-            args: Prisma.CompanyAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateCompany>
-          }
-          groupBy: {
-            args: Prisma.CompanyGroupByArgs<ExtArgs>
-            result: $Utils.Optional<CompanyGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.CompanyCountArgs<ExtArgs>
-            result: $Utils.Optional<CompanyCountAggregateOutputType> | number
-          }
-        }
-      }
-      CompanyLocation: {
-        payload: Prisma.$CompanyLocationPayload<ExtArgs>
-        fields: Prisma.CompanyLocationFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.CompanyLocationFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyLocationPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.CompanyLocationFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyLocationPayload>
-          }
-          findFirst: {
-            args: Prisma.CompanyLocationFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyLocationPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.CompanyLocationFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyLocationPayload>
-          }
-          findMany: {
-            args: Prisma.CompanyLocationFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyLocationPayload>[]
-          }
-          create: {
-            args: Prisma.CompanyLocationCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyLocationPayload>
-          }
-          createMany: {
-            args: Prisma.CompanyLocationCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.CompanyLocationCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyLocationPayload>[]
-          }
-          delete: {
-            args: Prisma.CompanyLocationDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyLocationPayload>
-          }
-          update: {
-            args: Prisma.CompanyLocationUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyLocationPayload>
-          }
-          deleteMany: {
-            args: Prisma.CompanyLocationDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.CompanyLocationUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.CompanyLocationUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyLocationPayload>[]
-          }
-          upsert: {
-            args: Prisma.CompanyLocationUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyLocationPayload>
-          }
-          aggregate: {
-            args: Prisma.CompanyLocationAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateCompanyLocation>
-          }
-          groupBy: {
-            args: Prisma.CompanyLocationGroupByArgs<ExtArgs>
-            result: $Utils.Optional<CompanyLocationGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.CompanyLocationCountArgs<ExtArgs>
-            result: $Utils.Optional<CompanyLocationCountAggregateOutputType> | number
-          }
-        }
-      }
       User: {
         payload: Prisma.$UserPayload<ExtArgs>
         fields: Prisma.UserFieldRefs
@@ -1082,8 +889,6 @@ export namespace Prisma {
     omit?: Prisma.GlobalOmitConfig
   }
   export type GlobalOmitConfig = {
-    company?: CompanyOmit
-    companyLocation?: CompanyLocationOmit
     user?: UserOmit
     vendor?: VendorOmit
   }
@@ -1165,2159 +970,6 @@ export namespace Prisma {
   /**
    * Models
    */
-
-  /**
-   * Model Company
-   */
-
-  export type AggregateCompany = {
-    _count: CompanyCountAggregateOutputType | null
-    _avg: CompanyAvgAggregateOutputType | null
-    _sum: CompanySumAggregateOutputType | null
-    _min: CompanyMinAggregateOutputType | null
-    _max: CompanyMaxAggregateOutputType | null
-  }
-
-  export type CompanyAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type CompanySumAggregateOutputType = {
-    id: number | null
-  }
-
-  export type CompanyMinAggregateOutputType = {
-    id: number | null
-    name: string | null
-    type: $Enums.CompanyType | null
-    contact: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type CompanyMaxAggregateOutputType = {
-    id: number | null
-    name: string | null
-    type: $Enums.CompanyType | null
-    contact: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type CompanyCountAggregateOutputType = {
-    id: number
-    name: number
-    type: number
-    contact: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type CompanyAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type CompanySumAggregateInputType = {
-    id?: true
-  }
-
-  export type CompanyMinAggregateInputType = {
-    id?: true
-    name?: true
-    type?: true
-    contact?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type CompanyMaxAggregateInputType = {
-    id?: true
-    name?: true
-    type?: true
-    contact?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type CompanyCountAggregateInputType = {
-    id?: true
-    name?: true
-    type?: true
-    contact?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type CompanyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Company to aggregate.
-     */
-    where?: CompanyWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Companies to fetch.
-     */
-    orderBy?: CompanyOrderByWithRelationInput | CompanyOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: CompanyWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Companies from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Companies.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Companies
-    **/
-    _count?: true | CompanyCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: CompanyAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: CompanySumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: CompanyMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: CompanyMaxAggregateInputType
-  }
-
-  export type GetCompanyAggregateType<T extends CompanyAggregateArgs> = {
-        [P in keyof T & keyof AggregateCompany]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateCompany[P]>
-      : GetScalarType<T[P], AggregateCompany[P]>
-  }
-
-
-
-
-  export type CompanyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CompanyWhereInput
-    orderBy?: CompanyOrderByWithAggregationInput | CompanyOrderByWithAggregationInput[]
-    by: CompanyScalarFieldEnum[] | CompanyScalarFieldEnum
-    having?: CompanyScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: CompanyCountAggregateInputType | true
-    _avg?: CompanyAvgAggregateInputType
-    _sum?: CompanySumAggregateInputType
-    _min?: CompanyMinAggregateInputType
-    _max?: CompanyMaxAggregateInputType
-  }
-
-  export type CompanyGroupByOutputType = {
-    id: number
-    name: string
-    type: $Enums.CompanyType
-    contact: string | null
-    createdAt: Date
-    updatedAt: Date
-    _count: CompanyCountAggregateOutputType | null
-    _avg: CompanyAvgAggregateOutputType | null
-    _sum: CompanySumAggregateOutputType | null
-    _min: CompanyMinAggregateOutputType | null
-    _max: CompanyMaxAggregateOutputType | null
-  }
-
-  type GetCompanyGroupByPayload<T extends CompanyGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<CompanyGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof CompanyGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], CompanyGroupByOutputType[P]>
-            : GetScalarType<T[P], CompanyGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type CompanySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    type?: boolean
-    contact?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["company"]>
-
-  export type CompanySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    type?: boolean
-    contact?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["company"]>
-
-  export type CompanySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    type?: boolean
-    contact?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["company"]>
-
-  export type CompanySelectScalar = {
-    id?: boolean
-    name?: boolean
-    type?: boolean
-    contact?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "contact" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
-
-  export type $CompanyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Company"
-    objects: {}
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      name: string
-      type: $Enums.CompanyType
-      contact: string | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["company"]>
-    composites: {}
-  }
-
-  type CompanyGetPayload<S extends boolean | null | undefined | CompanyDefaultArgs> = $Result.GetResult<Prisma.$CompanyPayload, S>
-
-  type CompanyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<CompanyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: CompanyCountAggregateInputType | true
-    }
-
-  export interface CompanyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Company'], meta: { name: 'Company' } }
-    /**
-     * Find zero or one Company that matches the filter.
-     * @param {CompanyFindUniqueArgs} args - Arguments to find a Company
-     * @example
-     * // Get one Company
-     * const company = await prisma.company.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends CompanyFindUniqueArgs>(args: SelectSubset<T, CompanyFindUniqueArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Company that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {CompanyFindUniqueOrThrowArgs} args - Arguments to find a Company
-     * @example
-     * // Get one Company
-     * const company = await prisma.company.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends CompanyFindUniqueOrThrowArgs>(args: SelectSubset<T, CompanyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Company that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyFindFirstArgs} args - Arguments to find a Company
-     * @example
-     * // Get one Company
-     * const company = await prisma.company.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends CompanyFindFirstArgs>(args?: SelectSubset<T, CompanyFindFirstArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Company that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyFindFirstOrThrowArgs} args - Arguments to find a Company
-     * @example
-     * // Get one Company
-     * const company = await prisma.company.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends CompanyFindFirstOrThrowArgs>(args?: SelectSubset<T, CompanyFindFirstOrThrowArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Companies that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Companies
-     * const companies = await prisma.company.findMany()
-     * 
-     * // Get first 10 Companies
-     * const companies = await prisma.company.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const companyWithIdOnly = await prisma.company.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends CompanyFindManyArgs>(args?: SelectSubset<T, CompanyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Company.
-     * @param {CompanyCreateArgs} args - Arguments to create a Company.
-     * @example
-     * // Create one Company
-     * const Company = await prisma.company.create({
-     *   data: {
-     *     // ... data to create a Company
-     *   }
-     * })
-     * 
-     */
-    create<T extends CompanyCreateArgs>(args: SelectSubset<T, CompanyCreateArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Companies.
-     * @param {CompanyCreateManyArgs} args - Arguments to create many Companies.
-     * @example
-     * // Create many Companies
-     * const company = await prisma.company.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends CompanyCreateManyArgs>(args?: SelectSubset<T, CompanyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Companies and returns the data saved in the database.
-     * @param {CompanyCreateManyAndReturnArgs} args - Arguments to create many Companies.
-     * @example
-     * // Create many Companies
-     * const company = await prisma.company.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Companies and only return the `id`
-     * const companyWithIdOnly = await prisma.company.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends CompanyCreateManyAndReturnArgs>(args?: SelectSubset<T, CompanyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Company.
-     * @param {CompanyDeleteArgs} args - Arguments to delete one Company.
-     * @example
-     * // Delete one Company
-     * const Company = await prisma.company.delete({
-     *   where: {
-     *     // ... filter to delete one Company
-     *   }
-     * })
-     * 
-     */
-    delete<T extends CompanyDeleteArgs>(args: SelectSubset<T, CompanyDeleteArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Company.
-     * @param {CompanyUpdateArgs} args - Arguments to update one Company.
-     * @example
-     * // Update one Company
-     * const company = await prisma.company.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends CompanyUpdateArgs>(args: SelectSubset<T, CompanyUpdateArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Companies.
-     * @param {CompanyDeleteManyArgs} args - Arguments to filter Companies to delete.
-     * @example
-     * // Delete a few Companies
-     * const { count } = await prisma.company.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends CompanyDeleteManyArgs>(args?: SelectSubset<T, CompanyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Companies.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Companies
-     * const company = await prisma.company.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends CompanyUpdateManyArgs>(args: SelectSubset<T, CompanyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Companies and returns the data updated in the database.
-     * @param {CompanyUpdateManyAndReturnArgs} args - Arguments to update many Companies.
-     * @example
-     * // Update many Companies
-     * const company = await prisma.company.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Companies and only return the `id`
-     * const companyWithIdOnly = await prisma.company.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends CompanyUpdateManyAndReturnArgs>(args: SelectSubset<T, CompanyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Company.
-     * @param {CompanyUpsertArgs} args - Arguments to update or create a Company.
-     * @example
-     * // Update or create a Company
-     * const company = await prisma.company.upsert({
-     *   create: {
-     *     // ... data to create a Company
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Company we want to update
-     *   }
-     * })
-     */
-    upsert<T extends CompanyUpsertArgs>(args: SelectSubset<T, CompanyUpsertArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Companies.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyCountArgs} args - Arguments to filter Companies to count.
-     * @example
-     * // Count the number of Companies
-     * const count = await prisma.company.count({
-     *   where: {
-     *     // ... the filter for the Companies we want to count
-     *   }
-     * })
-    **/
-    count<T extends CompanyCountArgs>(
-      args?: Subset<T, CompanyCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], CompanyCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Company.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends CompanyAggregateArgs>(args: Subset<T, CompanyAggregateArgs>): Prisma.PrismaPromise<GetCompanyAggregateType<T>>
-
-    /**
-     * Group by Company.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends CompanyGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: CompanyGroupByArgs['orderBy'] }
-        : { orderBy?: CompanyGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, CompanyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCompanyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Company model
-   */
-  readonly fields: CompanyFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Company.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Company model
-   */
-  interface CompanyFieldRefs {
-    readonly id: FieldRef<"Company", 'Int'>
-    readonly name: FieldRef<"Company", 'String'>
-    readonly type: FieldRef<"Company", 'CompanyType'>
-    readonly contact: FieldRef<"Company", 'String'>
-    readonly createdAt: FieldRef<"Company", 'DateTime'>
-    readonly updatedAt: FieldRef<"Company", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Company findUnique
-   */
-  export type CompanyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Filter, which Company to fetch.
-     */
-    where: CompanyWhereUniqueInput
-  }
-
-  /**
-   * Company findUniqueOrThrow
-   */
-  export type CompanyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Filter, which Company to fetch.
-     */
-    where: CompanyWhereUniqueInput
-  }
-
-  /**
-   * Company findFirst
-   */
-  export type CompanyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Filter, which Company to fetch.
-     */
-    where?: CompanyWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Companies to fetch.
-     */
-    orderBy?: CompanyOrderByWithRelationInput | CompanyOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Companies.
-     */
-    cursor?: CompanyWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Companies from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Companies.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Companies.
-     */
-    distinct?: CompanyScalarFieldEnum | CompanyScalarFieldEnum[]
-  }
-
-  /**
-   * Company findFirstOrThrow
-   */
-  export type CompanyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Filter, which Company to fetch.
-     */
-    where?: CompanyWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Companies to fetch.
-     */
-    orderBy?: CompanyOrderByWithRelationInput | CompanyOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Companies.
-     */
-    cursor?: CompanyWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Companies from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Companies.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Companies.
-     */
-    distinct?: CompanyScalarFieldEnum | CompanyScalarFieldEnum[]
-  }
-
-  /**
-   * Company findMany
-   */
-  export type CompanyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Filter, which Companies to fetch.
-     */
-    where?: CompanyWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Companies to fetch.
-     */
-    orderBy?: CompanyOrderByWithRelationInput | CompanyOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Companies.
-     */
-    cursor?: CompanyWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Companies from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Companies.
-     */
-    skip?: number
-    distinct?: CompanyScalarFieldEnum | CompanyScalarFieldEnum[]
-  }
-
-  /**
-   * Company create
-   */
-  export type CompanyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * The data needed to create a Company.
-     */
-    data: XOR<CompanyCreateInput, CompanyUncheckedCreateInput>
-  }
-
-  /**
-   * Company createMany
-   */
-  export type CompanyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Companies.
-     */
-    data: CompanyCreateManyInput | CompanyCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Company createManyAndReturn
-   */
-  export type CompanyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * The data used to create many Companies.
-     */
-    data: CompanyCreateManyInput | CompanyCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Company update
-   */
-  export type CompanyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * The data needed to update a Company.
-     */
-    data: XOR<CompanyUpdateInput, CompanyUncheckedUpdateInput>
-    /**
-     * Choose, which Company to update.
-     */
-    where: CompanyWhereUniqueInput
-  }
-
-  /**
-   * Company updateMany
-   */
-  export type CompanyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Companies.
-     */
-    data: XOR<CompanyUpdateManyMutationInput, CompanyUncheckedUpdateManyInput>
-    /**
-     * Filter which Companies to update
-     */
-    where?: CompanyWhereInput
-    /**
-     * Limit how many Companies to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Company updateManyAndReturn
-   */
-  export type CompanyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * The data used to update Companies.
-     */
-    data: XOR<CompanyUpdateManyMutationInput, CompanyUncheckedUpdateManyInput>
-    /**
-     * Filter which Companies to update
-     */
-    where?: CompanyWhereInput
-    /**
-     * Limit how many Companies to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Company upsert
-   */
-  export type CompanyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * The filter to search for the Company to update in case it exists.
-     */
-    where: CompanyWhereUniqueInput
-    /**
-     * In case the Company found by the `where` argument doesn't exist, create a new Company with this data.
-     */
-    create: XOR<CompanyCreateInput, CompanyUncheckedCreateInput>
-    /**
-     * In case the Company was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<CompanyUpdateInput, CompanyUncheckedUpdateInput>
-  }
-
-  /**
-   * Company delete
-   */
-  export type CompanyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Filter which Company to delete.
-     */
-    where: CompanyWhereUniqueInput
-  }
-
-  /**
-   * Company deleteMany
-   */
-  export type CompanyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Companies to delete
-     */
-    where?: CompanyWhereInput
-    /**
-     * Limit how many Companies to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Company without action
-   */
-  export type CompanyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-  }
-
-
-  /**
-   * Model CompanyLocation
-   */
-
-  export type AggregateCompanyLocation = {
-    _count: CompanyLocationCountAggregateOutputType | null
-    _avg: CompanyLocationAvgAggregateOutputType | null
-    _sum: CompanyLocationSumAggregateOutputType | null
-    _min: CompanyLocationMinAggregateOutputType | null
-    _max: CompanyLocationMaxAggregateOutputType | null
-  }
-
-  export type CompanyLocationAvgAggregateOutputType = {
-    id: number | null
-    companyId: number | null
-  }
-
-  export type CompanyLocationSumAggregateOutputType = {
-    id: number | null
-    companyId: number | null
-  }
-
-  export type CompanyLocationMinAggregateOutputType = {
-    id: number | null
-    location: string | null
-    address: string | null
-    city: string | null
-    country: string | null
-    postalCode: string | null
-    county: string | null
-    contact: string | null
-    companyId: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type CompanyLocationMaxAggregateOutputType = {
-    id: number | null
-    location: string | null
-    address: string | null
-    city: string | null
-    country: string | null
-    postalCode: string | null
-    county: string | null
-    contact: string | null
-    companyId: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type CompanyLocationCountAggregateOutputType = {
-    id: number
-    location: number
-    address: number
-    city: number
-    country: number
-    postalCode: number
-    county: number
-    contact: number
-    companyId: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type CompanyLocationAvgAggregateInputType = {
-    id?: true
-    companyId?: true
-  }
-
-  export type CompanyLocationSumAggregateInputType = {
-    id?: true
-    companyId?: true
-  }
-
-  export type CompanyLocationMinAggregateInputType = {
-    id?: true
-    location?: true
-    address?: true
-    city?: true
-    country?: true
-    postalCode?: true
-    county?: true
-    contact?: true
-    companyId?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type CompanyLocationMaxAggregateInputType = {
-    id?: true
-    location?: true
-    address?: true
-    city?: true
-    country?: true
-    postalCode?: true
-    county?: true
-    contact?: true
-    companyId?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type CompanyLocationCountAggregateInputType = {
-    id?: true
-    location?: true
-    address?: true
-    city?: true
-    country?: true
-    postalCode?: true
-    county?: true
-    contact?: true
-    companyId?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type CompanyLocationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which CompanyLocation to aggregate.
-     */
-    where?: CompanyLocationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CompanyLocations to fetch.
-     */
-    orderBy?: CompanyLocationOrderByWithRelationInput | CompanyLocationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: CompanyLocationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CompanyLocations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CompanyLocations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned CompanyLocations
-    **/
-    _count?: true | CompanyLocationCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: CompanyLocationAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: CompanyLocationSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: CompanyLocationMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: CompanyLocationMaxAggregateInputType
-  }
-
-  export type GetCompanyLocationAggregateType<T extends CompanyLocationAggregateArgs> = {
-        [P in keyof T & keyof AggregateCompanyLocation]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateCompanyLocation[P]>
-      : GetScalarType<T[P], AggregateCompanyLocation[P]>
-  }
-
-
-
-
-  export type CompanyLocationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CompanyLocationWhereInput
-    orderBy?: CompanyLocationOrderByWithAggregationInput | CompanyLocationOrderByWithAggregationInput[]
-    by: CompanyLocationScalarFieldEnum[] | CompanyLocationScalarFieldEnum
-    having?: CompanyLocationScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: CompanyLocationCountAggregateInputType | true
-    _avg?: CompanyLocationAvgAggregateInputType
-    _sum?: CompanyLocationSumAggregateInputType
-    _min?: CompanyLocationMinAggregateInputType
-    _max?: CompanyLocationMaxAggregateInputType
-  }
-
-  export type CompanyLocationGroupByOutputType = {
-    id: number
-    location: string
-    address: string
-    city: string
-    country: string
-    postalCode: string
-    county: string | null
-    contact: string | null
-    companyId: number | null
-    createdAt: Date
-    updatedAt: Date
-    _count: CompanyLocationCountAggregateOutputType | null
-    _avg: CompanyLocationAvgAggregateOutputType | null
-    _sum: CompanyLocationSumAggregateOutputType | null
-    _min: CompanyLocationMinAggregateOutputType | null
-    _max: CompanyLocationMaxAggregateOutputType | null
-  }
-
-  type GetCompanyLocationGroupByPayload<T extends CompanyLocationGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<CompanyLocationGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof CompanyLocationGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], CompanyLocationGroupByOutputType[P]>
-            : GetScalarType<T[P], CompanyLocationGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type CompanyLocationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    location?: boolean
-    address?: boolean
-    city?: boolean
-    country?: boolean
-    postalCode?: boolean
-    county?: boolean
-    contact?: boolean
-    companyId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["companyLocation"]>
-
-  export type CompanyLocationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    location?: boolean
-    address?: boolean
-    city?: boolean
-    country?: boolean
-    postalCode?: boolean
-    county?: boolean
-    contact?: boolean
-    companyId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["companyLocation"]>
-
-  export type CompanyLocationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    location?: boolean
-    address?: boolean
-    city?: boolean
-    country?: boolean
-    postalCode?: boolean
-    county?: boolean
-    contact?: boolean
-    companyId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["companyLocation"]>
-
-  export type CompanyLocationSelectScalar = {
-    id?: boolean
-    location?: boolean
-    address?: boolean
-    city?: boolean
-    country?: boolean
-    postalCode?: boolean
-    county?: boolean
-    contact?: boolean
-    companyId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type CompanyLocationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "location" | "address" | "city" | "country" | "postalCode" | "county" | "contact" | "companyId" | "createdAt" | "updatedAt", ExtArgs["result"]["companyLocation"]>
-
-  export type $CompanyLocationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "CompanyLocation"
-    objects: {}
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      location: string
-      address: string
-      city: string
-      country: string
-      postalCode: string
-      county: string | null
-      contact: string | null
-      companyId: number | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["companyLocation"]>
-    composites: {}
-  }
-
-  type CompanyLocationGetPayload<S extends boolean | null | undefined | CompanyLocationDefaultArgs> = $Result.GetResult<Prisma.$CompanyLocationPayload, S>
-
-  type CompanyLocationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<CompanyLocationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: CompanyLocationCountAggregateInputType | true
-    }
-
-  export interface CompanyLocationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CompanyLocation'], meta: { name: 'CompanyLocation' } }
-    /**
-     * Find zero or one CompanyLocation that matches the filter.
-     * @param {CompanyLocationFindUniqueArgs} args - Arguments to find a CompanyLocation
-     * @example
-     * // Get one CompanyLocation
-     * const companyLocation = await prisma.companyLocation.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends CompanyLocationFindUniqueArgs>(args: SelectSubset<T, CompanyLocationFindUniqueArgs<ExtArgs>>): Prisma__CompanyLocationClient<$Result.GetResult<Prisma.$CompanyLocationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one CompanyLocation that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {CompanyLocationFindUniqueOrThrowArgs} args - Arguments to find a CompanyLocation
-     * @example
-     * // Get one CompanyLocation
-     * const companyLocation = await prisma.companyLocation.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends CompanyLocationFindUniqueOrThrowArgs>(args: SelectSubset<T, CompanyLocationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CompanyLocationClient<$Result.GetResult<Prisma.$CompanyLocationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first CompanyLocation that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyLocationFindFirstArgs} args - Arguments to find a CompanyLocation
-     * @example
-     * // Get one CompanyLocation
-     * const companyLocation = await prisma.companyLocation.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends CompanyLocationFindFirstArgs>(args?: SelectSubset<T, CompanyLocationFindFirstArgs<ExtArgs>>): Prisma__CompanyLocationClient<$Result.GetResult<Prisma.$CompanyLocationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first CompanyLocation that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyLocationFindFirstOrThrowArgs} args - Arguments to find a CompanyLocation
-     * @example
-     * // Get one CompanyLocation
-     * const companyLocation = await prisma.companyLocation.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends CompanyLocationFindFirstOrThrowArgs>(args?: SelectSubset<T, CompanyLocationFindFirstOrThrowArgs<ExtArgs>>): Prisma__CompanyLocationClient<$Result.GetResult<Prisma.$CompanyLocationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more CompanyLocations that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyLocationFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all CompanyLocations
-     * const companyLocations = await prisma.companyLocation.findMany()
-     * 
-     * // Get first 10 CompanyLocations
-     * const companyLocations = await prisma.companyLocation.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const companyLocationWithIdOnly = await prisma.companyLocation.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends CompanyLocationFindManyArgs>(args?: SelectSubset<T, CompanyLocationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyLocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a CompanyLocation.
-     * @param {CompanyLocationCreateArgs} args - Arguments to create a CompanyLocation.
-     * @example
-     * // Create one CompanyLocation
-     * const CompanyLocation = await prisma.companyLocation.create({
-     *   data: {
-     *     // ... data to create a CompanyLocation
-     *   }
-     * })
-     * 
-     */
-    create<T extends CompanyLocationCreateArgs>(args: SelectSubset<T, CompanyLocationCreateArgs<ExtArgs>>): Prisma__CompanyLocationClient<$Result.GetResult<Prisma.$CompanyLocationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many CompanyLocations.
-     * @param {CompanyLocationCreateManyArgs} args - Arguments to create many CompanyLocations.
-     * @example
-     * // Create many CompanyLocations
-     * const companyLocation = await prisma.companyLocation.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends CompanyLocationCreateManyArgs>(args?: SelectSubset<T, CompanyLocationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many CompanyLocations and returns the data saved in the database.
-     * @param {CompanyLocationCreateManyAndReturnArgs} args - Arguments to create many CompanyLocations.
-     * @example
-     * // Create many CompanyLocations
-     * const companyLocation = await prisma.companyLocation.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many CompanyLocations and only return the `id`
-     * const companyLocationWithIdOnly = await prisma.companyLocation.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends CompanyLocationCreateManyAndReturnArgs>(args?: SelectSubset<T, CompanyLocationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyLocationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a CompanyLocation.
-     * @param {CompanyLocationDeleteArgs} args - Arguments to delete one CompanyLocation.
-     * @example
-     * // Delete one CompanyLocation
-     * const CompanyLocation = await prisma.companyLocation.delete({
-     *   where: {
-     *     // ... filter to delete one CompanyLocation
-     *   }
-     * })
-     * 
-     */
-    delete<T extends CompanyLocationDeleteArgs>(args: SelectSubset<T, CompanyLocationDeleteArgs<ExtArgs>>): Prisma__CompanyLocationClient<$Result.GetResult<Prisma.$CompanyLocationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one CompanyLocation.
-     * @param {CompanyLocationUpdateArgs} args - Arguments to update one CompanyLocation.
-     * @example
-     * // Update one CompanyLocation
-     * const companyLocation = await prisma.companyLocation.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends CompanyLocationUpdateArgs>(args: SelectSubset<T, CompanyLocationUpdateArgs<ExtArgs>>): Prisma__CompanyLocationClient<$Result.GetResult<Prisma.$CompanyLocationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more CompanyLocations.
-     * @param {CompanyLocationDeleteManyArgs} args - Arguments to filter CompanyLocations to delete.
-     * @example
-     * // Delete a few CompanyLocations
-     * const { count } = await prisma.companyLocation.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends CompanyLocationDeleteManyArgs>(args?: SelectSubset<T, CompanyLocationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more CompanyLocations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyLocationUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many CompanyLocations
-     * const companyLocation = await prisma.companyLocation.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends CompanyLocationUpdateManyArgs>(args: SelectSubset<T, CompanyLocationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more CompanyLocations and returns the data updated in the database.
-     * @param {CompanyLocationUpdateManyAndReturnArgs} args - Arguments to update many CompanyLocations.
-     * @example
-     * // Update many CompanyLocations
-     * const companyLocation = await prisma.companyLocation.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more CompanyLocations and only return the `id`
-     * const companyLocationWithIdOnly = await prisma.companyLocation.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends CompanyLocationUpdateManyAndReturnArgs>(args: SelectSubset<T, CompanyLocationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyLocationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one CompanyLocation.
-     * @param {CompanyLocationUpsertArgs} args - Arguments to update or create a CompanyLocation.
-     * @example
-     * // Update or create a CompanyLocation
-     * const companyLocation = await prisma.companyLocation.upsert({
-     *   create: {
-     *     // ... data to create a CompanyLocation
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the CompanyLocation we want to update
-     *   }
-     * })
-     */
-    upsert<T extends CompanyLocationUpsertArgs>(args: SelectSubset<T, CompanyLocationUpsertArgs<ExtArgs>>): Prisma__CompanyLocationClient<$Result.GetResult<Prisma.$CompanyLocationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of CompanyLocations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyLocationCountArgs} args - Arguments to filter CompanyLocations to count.
-     * @example
-     * // Count the number of CompanyLocations
-     * const count = await prisma.companyLocation.count({
-     *   where: {
-     *     // ... the filter for the CompanyLocations we want to count
-     *   }
-     * })
-    **/
-    count<T extends CompanyLocationCountArgs>(
-      args?: Subset<T, CompanyLocationCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], CompanyLocationCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a CompanyLocation.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyLocationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends CompanyLocationAggregateArgs>(args: Subset<T, CompanyLocationAggregateArgs>): Prisma.PrismaPromise<GetCompanyLocationAggregateType<T>>
-
-    /**
-     * Group by CompanyLocation.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyLocationGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends CompanyLocationGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: CompanyLocationGroupByArgs['orderBy'] }
-        : { orderBy?: CompanyLocationGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, CompanyLocationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCompanyLocationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the CompanyLocation model
-   */
-  readonly fields: CompanyLocationFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for CompanyLocation.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__CompanyLocationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the CompanyLocation model
-   */
-  interface CompanyLocationFieldRefs {
-    readonly id: FieldRef<"CompanyLocation", 'Int'>
-    readonly location: FieldRef<"CompanyLocation", 'String'>
-    readonly address: FieldRef<"CompanyLocation", 'String'>
-    readonly city: FieldRef<"CompanyLocation", 'String'>
-    readonly country: FieldRef<"CompanyLocation", 'String'>
-    readonly postalCode: FieldRef<"CompanyLocation", 'String'>
-    readonly county: FieldRef<"CompanyLocation", 'String'>
-    readonly contact: FieldRef<"CompanyLocation", 'String'>
-    readonly companyId: FieldRef<"CompanyLocation", 'Int'>
-    readonly createdAt: FieldRef<"CompanyLocation", 'DateTime'>
-    readonly updatedAt: FieldRef<"CompanyLocation", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * CompanyLocation findUnique
-   */
-  export type CompanyLocationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompanyLocation
-     */
-    select?: CompanyLocationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompanyLocation
-     */
-    omit?: CompanyLocationOmit<ExtArgs> | null
-    /**
-     * Filter, which CompanyLocation to fetch.
-     */
-    where: CompanyLocationWhereUniqueInput
-  }
-
-  /**
-   * CompanyLocation findUniqueOrThrow
-   */
-  export type CompanyLocationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompanyLocation
-     */
-    select?: CompanyLocationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompanyLocation
-     */
-    omit?: CompanyLocationOmit<ExtArgs> | null
-    /**
-     * Filter, which CompanyLocation to fetch.
-     */
-    where: CompanyLocationWhereUniqueInput
-  }
-
-  /**
-   * CompanyLocation findFirst
-   */
-  export type CompanyLocationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompanyLocation
-     */
-    select?: CompanyLocationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompanyLocation
-     */
-    omit?: CompanyLocationOmit<ExtArgs> | null
-    /**
-     * Filter, which CompanyLocation to fetch.
-     */
-    where?: CompanyLocationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CompanyLocations to fetch.
-     */
-    orderBy?: CompanyLocationOrderByWithRelationInput | CompanyLocationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for CompanyLocations.
-     */
-    cursor?: CompanyLocationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CompanyLocations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CompanyLocations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of CompanyLocations.
-     */
-    distinct?: CompanyLocationScalarFieldEnum | CompanyLocationScalarFieldEnum[]
-  }
-
-  /**
-   * CompanyLocation findFirstOrThrow
-   */
-  export type CompanyLocationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompanyLocation
-     */
-    select?: CompanyLocationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompanyLocation
-     */
-    omit?: CompanyLocationOmit<ExtArgs> | null
-    /**
-     * Filter, which CompanyLocation to fetch.
-     */
-    where?: CompanyLocationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CompanyLocations to fetch.
-     */
-    orderBy?: CompanyLocationOrderByWithRelationInput | CompanyLocationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for CompanyLocations.
-     */
-    cursor?: CompanyLocationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CompanyLocations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CompanyLocations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of CompanyLocations.
-     */
-    distinct?: CompanyLocationScalarFieldEnum | CompanyLocationScalarFieldEnum[]
-  }
-
-  /**
-   * CompanyLocation findMany
-   */
-  export type CompanyLocationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompanyLocation
-     */
-    select?: CompanyLocationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompanyLocation
-     */
-    omit?: CompanyLocationOmit<ExtArgs> | null
-    /**
-     * Filter, which CompanyLocations to fetch.
-     */
-    where?: CompanyLocationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CompanyLocations to fetch.
-     */
-    orderBy?: CompanyLocationOrderByWithRelationInput | CompanyLocationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing CompanyLocations.
-     */
-    cursor?: CompanyLocationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CompanyLocations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CompanyLocations.
-     */
-    skip?: number
-    distinct?: CompanyLocationScalarFieldEnum | CompanyLocationScalarFieldEnum[]
-  }
-
-  /**
-   * CompanyLocation create
-   */
-  export type CompanyLocationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompanyLocation
-     */
-    select?: CompanyLocationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompanyLocation
-     */
-    omit?: CompanyLocationOmit<ExtArgs> | null
-    /**
-     * The data needed to create a CompanyLocation.
-     */
-    data: XOR<CompanyLocationCreateInput, CompanyLocationUncheckedCreateInput>
-  }
-
-  /**
-   * CompanyLocation createMany
-   */
-  export type CompanyLocationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many CompanyLocations.
-     */
-    data: CompanyLocationCreateManyInput | CompanyLocationCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * CompanyLocation createManyAndReturn
-   */
-  export type CompanyLocationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompanyLocation
-     */
-    select?: CompanyLocationSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompanyLocation
-     */
-    omit?: CompanyLocationOmit<ExtArgs> | null
-    /**
-     * The data used to create many CompanyLocations.
-     */
-    data: CompanyLocationCreateManyInput | CompanyLocationCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * CompanyLocation update
-   */
-  export type CompanyLocationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompanyLocation
-     */
-    select?: CompanyLocationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompanyLocation
-     */
-    omit?: CompanyLocationOmit<ExtArgs> | null
-    /**
-     * The data needed to update a CompanyLocation.
-     */
-    data: XOR<CompanyLocationUpdateInput, CompanyLocationUncheckedUpdateInput>
-    /**
-     * Choose, which CompanyLocation to update.
-     */
-    where: CompanyLocationWhereUniqueInput
-  }
-
-  /**
-   * CompanyLocation updateMany
-   */
-  export type CompanyLocationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update CompanyLocations.
-     */
-    data: XOR<CompanyLocationUpdateManyMutationInput, CompanyLocationUncheckedUpdateManyInput>
-    /**
-     * Filter which CompanyLocations to update
-     */
-    where?: CompanyLocationWhereInput
-    /**
-     * Limit how many CompanyLocations to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * CompanyLocation updateManyAndReturn
-   */
-  export type CompanyLocationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompanyLocation
-     */
-    select?: CompanyLocationSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompanyLocation
-     */
-    omit?: CompanyLocationOmit<ExtArgs> | null
-    /**
-     * The data used to update CompanyLocations.
-     */
-    data: XOR<CompanyLocationUpdateManyMutationInput, CompanyLocationUncheckedUpdateManyInput>
-    /**
-     * Filter which CompanyLocations to update
-     */
-    where?: CompanyLocationWhereInput
-    /**
-     * Limit how many CompanyLocations to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * CompanyLocation upsert
-   */
-  export type CompanyLocationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompanyLocation
-     */
-    select?: CompanyLocationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompanyLocation
-     */
-    omit?: CompanyLocationOmit<ExtArgs> | null
-    /**
-     * The filter to search for the CompanyLocation to update in case it exists.
-     */
-    where: CompanyLocationWhereUniqueInput
-    /**
-     * In case the CompanyLocation found by the `where` argument doesn't exist, create a new CompanyLocation with this data.
-     */
-    create: XOR<CompanyLocationCreateInput, CompanyLocationUncheckedCreateInput>
-    /**
-     * In case the CompanyLocation was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<CompanyLocationUpdateInput, CompanyLocationUncheckedUpdateInput>
-  }
-
-  /**
-   * CompanyLocation delete
-   */
-  export type CompanyLocationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompanyLocation
-     */
-    select?: CompanyLocationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompanyLocation
-     */
-    omit?: CompanyLocationOmit<ExtArgs> | null
-    /**
-     * Filter which CompanyLocation to delete.
-     */
-    where: CompanyLocationWhereUniqueInput
-  }
-
-  /**
-   * CompanyLocation deleteMany
-   */
-  export type CompanyLocationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which CompanyLocations to delete
-     */
-    where?: CompanyLocationWhereInput
-    /**
-     * Limit how many CompanyLocations to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * CompanyLocation without action
-   */
-  export type CompanyLocationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompanyLocation
-     */
-    select?: CompanyLocationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompanyLocation
-     */
-    omit?: CompanyLocationOmit<ExtArgs> | null
-  }
-
 
   /**
    * Model User
@@ -5464,35 +3116,6 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-  export const CompanyScalarFieldEnum: {
-    id: 'id',
-    name: 'name',
-    type: 'type',
-    contact: 'contact',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
-
-
-  export const CompanyLocationScalarFieldEnum: {
-    id: 'id',
-    location: 'location',
-    address: 'address',
-    city: 'city',
-    country: 'country',
-    postalCode: 'postalCode',
-    county: 'county',
-    contact: 'contact',
-    companyId: 'companyId',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type CompanyLocationScalarFieldEnum = (typeof CompanyLocationScalarFieldEnum)[keyof typeof CompanyLocationScalarFieldEnum]
-
-
   export const UserScalarFieldEnum: {
     id: 'id',
     username: 'username',
@@ -5578,16 +3201,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'CompanyType'
+   * Reference to a field of type 'UserRole'
    */
-  export type EnumCompanyTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CompanyType'>
+  export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>
     
 
 
   /**
-   * Reference to a field of type 'CompanyType[]'
+   * Reference to a field of type 'UserRole[]'
    */
-  export type ListEnumCompanyTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CompanyType[]'>
+  export type ListEnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole[]'>
     
 
 
@@ -5602,20 +3225,6 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'UserRole'
-   */
-  export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>
-    
-
-
-  /**
-   * Reference to a field of type 'UserRole[]'
-   */
-  export type ListEnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole[]'>
     
 
 
@@ -5635,149 +3244,6 @@ export namespace Prisma {
    * Deep Input Types
    */
 
-
-  export type CompanyWhereInput = {
-    AND?: CompanyWhereInput | CompanyWhereInput[]
-    OR?: CompanyWhereInput[]
-    NOT?: CompanyWhereInput | CompanyWhereInput[]
-    id?: IntFilter<"Company"> | number
-    name?: StringFilter<"Company"> | string
-    type?: EnumCompanyTypeFilter<"Company"> | $Enums.CompanyType
-    contact?: StringNullableFilter<"Company"> | string | null
-    createdAt?: DateTimeFilter<"Company"> | Date | string
-    updatedAt?: DateTimeFilter<"Company"> | Date | string
-  }
-
-  export type CompanyOrderByWithRelationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    type?: SortOrder
-    contact?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CompanyWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    name?: string
-    AND?: CompanyWhereInput | CompanyWhereInput[]
-    OR?: CompanyWhereInput[]
-    NOT?: CompanyWhereInput | CompanyWhereInput[]
-    type?: EnumCompanyTypeFilter<"Company"> | $Enums.CompanyType
-    contact?: StringNullableFilter<"Company"> | string | null
-    createdAt?: DateTimeFilter<"Company"> | Date | string
-    updatedAt?: DateTimeFilter<"Company"> | Date | string
-  }, "id" | "name">
-
-  export type CompanyOrderByWithAggregationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    type?: SortOrder
-    contact?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: CompanyCountOrderByAggregateInput
-    _avg?: CompanyAvgOrderByAggregateInput
-    _max?: CompanyMaxOrderByAggregateInput
-    _min?: CompanyMinOrderByAggregateInput
-    _sum?: CompanySumOrderByAggregateInput
-  }
-
-  export type CompanyScalarWhereWithAggregatesInput = {
-    AND?: CompanyScalarWhereWithAggregatesInput | CompanyScalarWhereWithAggregatesInput[]
-    OR?: CompanyScalarWhereWithAggregatesInput[]
-    NOT?: CompanyScalarWhereWithAggregatesInput | CompanyScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Company"> | number
-    name?: StringWithAggregatesFilter<"Company"> | string
-    type?: EnumCompanyTypeWithAggregatesFilter<"Company"> | $Enums.CompanyType
-    contact?: StringNullableWithAggregatesFilter<"Company"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
-  }
-
-  export type CompanyLocationWhereInput = {
-    AND?: CompanyLocationWhereInput | CompanyLocationWhereInput[]
-    OR?: CompanyLocationWhereInput[]
-    NOT?: CompanyLocationWhereInput | CompanyLocationWhereInput[]
-    id?: IntFilter<"CompanyLocation"> | number
-    location?: StringFilter<"CompanyLocation"> | string
-    address?: StringFilter<"CompanyLocation"> | string
-    city?: StringFilter<"CompanyLocation"> | string
-    country?: StringFilter<"CompanyLocation"> | string
-    postalCode?: StringFilter<"CompanyLocation"> | string
-    county?: StringNullableFilter<"CompanyLocation"> | string | null
-    contact?: StringNullableFilter<"CompanyLocation"> | string | null
-    companyId?: IntNullableFilter<"CompanyLocation"> | number | null
-    createdAt?: DateTimeFilter<"CompanyLocation"> | Date | string
-    updatedAt?: DateTimeFilter<"CompanyLocation"> | Date | string
-  }
-
-  export type CompanyLocationOrderByWithRelationInput = {
-    id?: SortOrder
-    location?: SortOrder
-    address?: SortOrder
-    city?: SortOrder
-    country?: SortOrder
-    postalCode?: SortOrder
-    county?: SortOrderInput | SortOrder
-    contact?: SortOrderInput | SortOrder
-    companyId?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CompanyLocationWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: CompanyLocationWhereInput | CompanyLocationWhereInput[]
-    OR?: CompanyLocationWhereInput[]
-    NOT?: CompanyLocationWhereInput | CompanyLocationWhereInput[]
-    location?: StringFilter<"CompanyLocation"> | string
-    address?: StringFilter<"CompanyLocation"> | string
-    city?: StringFilter<"CompanyLocation"> | string
-    country?: StringFilter<"CompanyLocation"> | string
-    postalCode?: StringFilter<"CompanyLocation"> | string
-    county?: StringNullableFilter<"CompanyLocation"> | string | null
-    contact?: StringNullableFilter<"CompanyLocation"> | string | null
-    companyId?: IntNullableFilter<"CompanyLocation"> | number | null
-    createdAt?: DateTimeFilter<"CompanyLocation"> | Date | string
-    updatedAt?: DateTimeFilter<"CompanyLocation"> | Date | string
-  }, "id">
-
-  export type CompanyLocationOrderByWithAggregationInput = {
-    id?: SortOrder
-    location?: SortOrder
-    address?: SortOrder
-    city?: SortOrder
-    country?: SortOrder
-    postalCode?: SortOrder
-    county?: SortOrderInput | SortOrder
-    contact?: SortOrderInput | SortOrder
-    companyId?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: CompanyLocationCountOrderByAggregateInput
-    _avg?: CompanyLocationAvgOrderByAggregateInput
-    _max?: CompanyLocationMaxOrderByAggregateInput
-    _min?: CompanyLocationMinOrderByAggregateInput
-    _sum?: CompanyLocationSumOrderByAggregateInput
-  }
-
-  export type CompanyLocationScalarWhereWithAggregatesInput = {
-    AND?: CompanyLocationScalarWhereWithAggregatesInput | CompanyLocationScalarWhereWithAggregatesInput[]
-    OR?: CompanyLocationScalarWhereWithAggregatesInput[]
-    NOT?: CompanyLocationScalarWhereWithAggregatesInput | CompanyLocationScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"CompanyLocation"> | number
-    location?: StringWithAggregatesFilter<"CompanyLocation"> | string
-    address?: StringWithAggregatesFilter<"CompanyLocation"> | string
-    city?: StringWithAggregatesFilter<"CompanyLocation"> | string
-    country?: StringWithAggregatesFilter<"CompanyLocation"> | string
-    postalCode?: StringWithAggregatesFilter<"CompanyLocation"> | string
-    county?: StringNullableWithAggregatesFilter<"CompanyLocation"> | string | null
-    contact?: StringNullableWithAggregatesFilter<"CompanyLocation"> | string | null
-    companyId?: IntNullableWithAggregatesFilter<"CompanyLocation"> | number | null
-    createdAt?: DateTimeWithAggregatesFilter<"CompanyLocation"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"CompanyLocation"> | Date | string
-  }
 
   export type UserWhereInput = {
     AND?: UserWhereInput | UserWhereInput[]
@@ -5910,161 +3376,6 @@ export namespace Prisma {
     contact?: StringNullableWithAggregatesFilter<"Vendor"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Vendor"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Vendor"> | Date | string
-  }
-
-  export type CompanyCreateInput = {
-    name: string
-    type?: $Enums.CompanyType
-    contact?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type CompanyUncheckedCreateInput = {
-    id?: number
-    name: string
-    type?: $Enums.CompanyType
-    contact?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type CompanyUpdateInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    type?: EnumCompanyTypeFieldUpdateOperationsInput | $Enums.CompanyType
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CompanyUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    type?: EnumCompanyTypeFieldUpdateOperationsInput | $Enums.CompanyType
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CompanyCreateManyInput = {
-    id?: number
-    name: string
-    type?: $Enums.CompanyType
-    contact?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type CompanyUpdateManyMutationInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    type?: EnumCompanyTypeFieldUpdateOperationsInput | $Enums.CompanyType
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CompanyUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    type?: EnumCompanyTypeFieldUpdateOperationsInput | $Enums.CompanyType
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CompanyLocationCreateInput = {
-    location: string
-    address: string
-    city: string
-    country: string
-    postalCode: string
-    county?: string | null
-    contact?: string | null
-    companyId?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type CompanyLocationUncheckedCreateInput = {
-    id?: number
-    location: string
-    address: string
-    city: string
-    country: string
-    postalCode: string
-    county?: string | null
-    contact?: string | null
-    companyId?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type CompanyLocationUpdateInput = {
-    location?: StringFieldUpdateOperationsInput | string
-    address?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    country?: StringFieldUpdateOperationsInput | string
-    postalCode?: StringFieldUpdateOperationsInput | string
-    county?: NullableStringFieldUpdateOperationsInput | string | null
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    companyId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CompanyLocationUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    location?: StringFieldUpdateOperationsInput | string
-    address?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    country?: StringFieldUpdateOperationsInput | string
-    postalCode?: StringFieldUpdateOperationsInput | string
-    county?: NullableStringFieldUpdateOperationsInput | string | null
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    companyId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CompanyLocationCreateManyInput = {
-    id?: number
-    location: string
-    address: string
-    city: string
-    country: string
-    postalCode: string
-    county?: string | null
-    contact?: string | null
-    companyId?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type CompanyLocationUpdateManyMutationInput = {
-    location?: StringFieldUpdateOperationsInput | string
-    address?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    country?: StringFieldUpdateOperationsInput | string
-    postalCode?: StringFieldUpdateOperationsInput | string
-    county?: NullableStringFieldUpdateOperationsInput | string | null
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    companyId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CompanyLocationUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    location?: StringFieldUpdateOperationsInput | string
-    address?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    country?: StringFieldUpdateOperationsInput | string
-    postalCode?: StringFieldUpdateOperationsInput | string
-    county?: NullableStringFieldUpdateOperationsInput | string | null
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    companyId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateInput = {
@@ -6234,26 +3545,11 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type EnumCompanyTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.CompanyType | EnumCompanyTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.CompanyType[] | ListEnumCompanyTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.CompanyType[] | ListEnumCompanyTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumCompanyTypeFilter<$PrismaModel> | $Enums.CompanyType
-  }
-
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  export type EnumUserRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -6265,208 +3561,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
-  }
-
-  export type CompanyCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    type?: SortOrder
-    contact?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CompanyAvgOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type CompanyMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    type?: SortOrder
-    contact?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CompanyMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    type?: SortOrder
-    contact?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CompanySumOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type StringWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type EnumCompanyTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.CompanyType | EnumCompanyTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.CompanyType[] | ListEnumCompanyTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.CompanyType[] | ListEnumCompanyTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumCompanyTypeWithAggregatesFilter<$PrismaModel> | $Enums.CompanyType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumCompanyTypeFilter<$PrismaModel>
-    _max?: NestedEnumCompanyTypeFilter<$PrismaModel>
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type CompanyLocationCountOrderByAggregateInput = {
-    id?: SortOrder
-    location?: SortOrder
-    address?: SortOrder
-    city?: SortOrder
-    country?: SortOrder
-    postalCode?: SortOrder
-    county?: SortOrder
-    contact?: SortOrder
-    companyId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CompanyLocationAvgOrderByAggregateInput = {
-    id?: SortOrder
-    companyId?: SortOrder
-  }
-
-  export type CompanyLocationMaxOrderByAggregateInput = {
-    id?: SortOrder
-    location?: SortOrder
-    address?: SortOrder
-    city?: SortOrder
-    country?: SortOrder
-    postalCode?: SortOrder
-    county?: SortOrder
-    contact?: SortOrder
-    companyId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CompanyLocationMinOrderByAggregateInput = {
-    id?: SortOrder
-    location?: SortOrder
-    address?: SortOrder
-    city?: SortOrder
-    country?: SortOrder
-    postalCode?: SortOrder
-    county?: SortOrder
-    contact?: SortOrder
-    companyId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CompanyLocationSumOrderByAggregateInput = {
-    id?: SortOrder
-    companyId?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type EnumUserRoleFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
-    not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
 
   export type UserCountOrderByAggregateInput = {
@@ -6512,6 +3606,40 @@ export namespace Prisma {
     companyId?: SortOrder
   }
 
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type StringWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
   export type EnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
     in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
@@ -6520,6 +3648,51 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserRoleFilter<$PrismaModel>
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type VendorCountOrderByAggregateInput = {
@@ -6562,20 +3735,46 @@ export namespace Prisma {
     companyId?: SortOrder
   }
 
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
-  export type EnumCompanyTypeFieldUpdateOperationsInput = {
-    set?: $Enums.CompanyType
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
+  export type EnumUserRoleFieldUpdateOperationsInput = {
+    set?: $Enums.UserRole
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -6586,6 +3785,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -6594,8 +3797,8 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type EnumUserRoleFieldUpdateOperationsInput = {
-    set?: $Enums.UserRole
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -6623,25 +3826,11 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type NestedEnumCompanyTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.CompanyType | EnumCompanyTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.CompanyType[] | ListEnumCompanyTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.CompanyType[] | ListEnumCompanyTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumCompanyTypeFilter<$PrismaModel> | $Enums.CompanyType
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  export type NestedEnumUserRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
@@ -6699,42 +3888,14 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type NestedEnumCompanyTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.CompanyType | EnumCompanyTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.CompanyType[] | ListEnumCompanyTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.CompanyType[] | ListEnumCompanyTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumCompanyTypeWithAggregatesFilter<$PrismaModel> | $Enums.CompanyType
+  export type NestedEnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserRoleWithAggregatesFilter<$PrismaModel> | $Enums.UserRole
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumCompanyTypeFilter<$PrismaModel>
-    _max?: NestedEnumCompanyTypeFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+    _min?: NestedEnumUserRoleFilter<$PrismaModel>
+    _max?: NestedEnumUserRoleFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -6749,6 +3910,31 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -6778,21 +3964,21 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedEnumUserRoleFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
-    not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
-  }
-
-  export type NestedEnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
-    not?: NestedEnumUserRoleWithAggregatesFilter<$PrismaModel> | $Enums.UserRole
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumUserRoleFilter<$PrismaModel>
-    _max?: NestedEnumUserRoleFilter<$PrismaModel>
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
 

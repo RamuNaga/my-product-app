@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/company-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_COMPANY")
+}
+
+enum CompanyType {
+  MANUFACTURER
+  CLIENT
+  SUPPLIER
+}
+
+model Company {
+  id        Int         @id @default(autoincrement())
+  name      String      @unique
+  type      CompanyType @default(MANUFACTURER)
+  contact   String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}

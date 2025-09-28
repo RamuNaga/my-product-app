@@ -18,8 +18,8 @@ module.exports = [
         'error',
         {
           allow: [
-            '@my-product-app/logger',
-            '@my-product-app/backend-prisma/product-client',
+            '^@my-product-app/logger',
+            '^@my-product-app/backend-prisma/product-client',
           ],
 
           enforceBuildableLibDependency: true,
