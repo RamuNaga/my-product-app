@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateLocationInput } from '../dto/create-location.input';
-import { PrismaService } from '@my-product-app/prisma';
+import { CompanyLocationPrismaService } from '@my-product-app/backend-prisma/company-location-prisma';
 
 @Injectable()
 export class CompanyLocationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: CompanyLocationPrismaService) {}
 
   async create(data: CreateLocationInput) {
     return this.prisma.companyLocation.create({

@@ -3,7 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/backend/company-prisma/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["type:lib", "scope:backend", "area:company-prisma"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",

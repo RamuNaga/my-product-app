@@ -4,12 +4,9 @@ import * as path from 'path';
 
 import { GraphQLConfigModule } from './config/graphql.module';
 import { MicroserviceModule } from './config/microservice.module';
-import { ProductModule } from '@my-product-app/product';
 import { SharedModule } from '@my-product-app/backend-shared';
 import { ProductController } from './controllers/product.controller';
 import { PingResolver } from './resolvers/ping.resolver';
-import { RegistrationModule } from '@my-product-app/backend-registration';
-import { WorkorderModule } from '@my-product-app/workorder';
 
 @Module({
   imports: [
@@ -21,9 +18,6 @@ import { WorkorderModule } from '@my-product-app/workorder';
     }),
     SharedModule,
     GraphQLConfigModule,
-    RegistrationModule,
-    ProductModule,
-    WorkorderModule,
     MicroserviceModule,
   ],
   controllers: [ProductController],

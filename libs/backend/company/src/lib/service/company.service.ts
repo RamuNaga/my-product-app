@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@my-product-app/prisma';
 import { CreateCompanyInput } from '../dto/create-company.input';
 import { Company } from '../graphql/company.model';
 import { CompanyType as GQLCompanyType } from '../graphql/company.model';
+import { CompanyPrismaService } from '@my-product-app/backend-company-prisma';
 
 @Injectable()
 export class CompanyService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: CompanyPrismaService) {}
 
   async create(data: CreateCompanyInput) {
     return this.prisma.company.create({ data });

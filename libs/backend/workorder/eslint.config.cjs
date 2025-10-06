@@ -10,7 +10,7 @@ module.exports = [
         {
           allow: [
             '^@my-product-app/backend-shared',
-            '^@my-product-app/prisma',
+            '^@my-product-app/backend-prisma/workorder-prisma',
             '^@my-product-app/user',
             '@my-product-app/product',
             '@my-product-app/backend-company',

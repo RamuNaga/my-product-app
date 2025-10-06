@@ -1,6 +1,6 @@
 import { WorkOrderServiceModule } from './app/workorder-service.module';
 import { bootstrapMicroservice } from '@my-product-app/backend-shared';
-import { protoPaths, protoPackages } from '@my-product-app/backend/proto';
+import { protoPaths, protoPackages } from '@my-product-app/backend-proto';
 
 async function startWorkOrderService() {
   console.log('Starting WorkOrder Service (gRPC)');

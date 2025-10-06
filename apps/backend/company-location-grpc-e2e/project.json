@@ -1,0 +1,20 @@
+{
+  "name": "company-location-grpc-e2e",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "implicitDependencies": ["company-location-grpc"],
+  "targets": {
+    "e2e": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+      "options": {
+        "jestConfig": "apps/backend/company-location-grpc-e2e/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "dependsOn": [
+        "company-location-grpc:build",
+        "company-location-grpc:serve"
+      ]
+    }
+  }
+}

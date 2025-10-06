@@ -11,7 +11,10 @@ module.exports = [
           allow: [
             '^@my-product-app/logger',
             '^@my-product-app/backend-prisma/user-client',
-            '^@my-product-app/backend-prisma/Workorder-client',
+            '^@my-product-app/backend-prisma/workorder-clientv',
+            '^@my-product-app/backend-prisma/company-client',
+            '^@my-product-app/backend-proto',
+            '^@my-product-app/backend-proto/generated',
           ],
           enforceBuildableLibDependency: true,
           depConstraints: [
@@ -22,6 +25,7 @@ module.exports = [
                 'type:buildable',
                 'type:user-prisma',
                 'type:workorder-prisma',
+                'type:proto',
               ],
             },
             {

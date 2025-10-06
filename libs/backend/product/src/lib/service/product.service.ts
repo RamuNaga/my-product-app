@@ -3,13 +3,14 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { PrismaService } from '@my-product-app/prisma';
+
 import { CreateProductInput } from '../dto/create-product.input';
-import { Prisma } from '@prisma/client';
+import { ProductPrismaService } from '@my-product-app/backend-prisma/product-prisma';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class ProductService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: ProductPrismaService) {}
 
   async create(data: CreateProductInput) {
     try {
@@ -21,7 +22,7 @@ export class ProductService {
       // Prisma unique constraint violation
       console.log('Prisma unique constraint violation calling');
       if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error instanceof PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
         throw new ConflictException('Product code already exists');

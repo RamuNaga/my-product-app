@@ -5,8 +5,7 @@ import { UserPrismaModule } from '@my-product-app/backend-prisma/user-prisma';
 import { SharedModule } from '@my-product-app/backend-shared';
 
 @Module({
-  imports: [SharedModule,UserPrismaModule],
+  imports: [SharedModule, UserPrismaModule],
   providers: [UserService, UserResolver],
-  exports: [UserService, UserResolver],
 })
 export class UserModule {}

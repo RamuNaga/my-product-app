@@ -1,6 +1,8 @@
 syntax = "proto3";
 package user;
 
+
+
 enum UserRole {
   ADMIN = 0;
   MANAGER = 1;
@@ -9,17 +11,7 @@ enum UserRole {
   VIEWER = 4;
 }
 
-message User {
-  int32 id = 1;
-  string username = 2;
-  string email = 3;
-  string password = 4;
-  UserRole role = 5;
-  int32 companyId = 6;
-  string createdAt = 7;
-  string updatedAt = 8;
-}
-
+// Create User
 message CreateUserRequest {
   string username = 1;
   string email = 2;
@@ -28,11 +20,60 @@ message CreateUserRequest {
   int32 companyId = 5;
 }
 
-message UserResponse {
-  User user = 1;
+message CreateUserResponse {
+  int32 id = 1;
+  string username = 2;
+  string email = 3;
+  UserRole role = 4;
+  int32 companyId = 5;
+  string createdAt = 6;
+  string updatedAt = 7;
+}
+
+// Get user by ID
+message GetUserByIdRequest {
+  int32 id = 1;
+}
+
+message GetUserByIdResponse {
+  int32 id = 1;
+  string username = 2;
+  string email = 3;
+  UserRole role = 4;
+  int32 companyId = 5;
+  string createdAt = 6;
+  string updatedAt = 7;
+}
+
+// Login
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  int32 id = 1;
+  string username = 2;
+  string email = 3;
+  UserRole role = 4;
+  int32 companyId = 5;
+  string accessToken = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
+}
+
+// List all users
+message FindAllUsersRequest {
+  // optional filters can be added later
+}
+
+message FindAllUsersResponse {
+  repeated CreateUserResponse users = 1;
 }
 
 service UserService {
-  rpc CreateUser (CreateUserRequest) returns (UserResponse);
-  rpc GetUserById (google.protobuf.Int32Value) returns (UserResponse);
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUserById(GetUserByIdRequest) returns (GetUserByIdResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc FindAllUsers(FindAllUsersRequest) returns (FindAllUsersResponse);
 }

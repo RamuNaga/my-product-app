@@ -4,6 +4,7 @@
   "sourceRoot": "libs/backend/shared/src",
   "projectType": "library",
   "tags": ["type:lib", "scope:shared", "area:shared"],
+  "implicitDependencies": ["proto"],
 
   "targets": {
     "build": {

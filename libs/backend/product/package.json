@@ -13,7 +13,7 @@
     "multer": "^2.0.1",
     "@prisma/client": "^6.7.0",
     "tslib": "^2.3.0",
-    "@my-product-app/prisma": "workspace:*",
+    "@my-product-app/product-prisma": "workspace:*",
     "@my-product-app/backend-shared": "workspace:*",
     "class-transformer": "^0.5.1"
   },

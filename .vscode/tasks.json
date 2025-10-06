@@ -13,12 +13,7 @@
       "command": "nx serve backend-product-service",
       "problemMatcher": []
     },
-    {
-      "label": "Serve User Service",
-      "type": "shell",
-      "command": "nx serve backend-user-service",
-      "problemMatcher": []
-    },
+
     {
       "label": "Serve Workorder Service",
       "type": "shell",

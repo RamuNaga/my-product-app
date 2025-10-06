@@ -1,59 +1,96 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
+import { ClientGrpc } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
+
 import { RegisterCompanyUserInput } from '../dto/register-company-user.input';
-import { CreateUserInput, UserService } from '@my-product-app/user';
-import { CompanyService } from '@my-product-app/backend-company';
-import { CompanyLocationService } from '@my-product-app/backend-company-location';
+import { RegisterCompanyUserPayload } from '../graphql/registration-company-user.model';
+
+import {
+  USER_SERVICE,
+  COMPANY_SERVICE,
+  COMPANY_LOCATION_SERVICE,
+} from '@my-product-app/backend-shared';
+
+import {
+  UserServiceClient,
+  CreateUserRequest,
+  UserResponse,
+  CompanyServiceClient,
+  CreateCompanyRequest,
+  CompanyResponse,
+  CompanyLocationServiceClient,
+  CreateCompanyLocationRequest,
+  CompanyLocationResponse,
+} from '@my-product-app/backend-proto/generated';
+
+import { mapGraphQLUserRoleToProto } from '@my-product-app/backend-shared';
+import { mapGraphQLCompanyTypeToProto } from '@my-product-app/backend-shared';
 
 @Injectable()
-export class RegistrationService {
+export class RegistrationService implements OnModuleInit {
+  private userService!: UserServiceClient;
+  private companyService!: CompanyServiceClient;
+  private companyLocationService!: CompanyLocationServiceClient;
+
   constructor(
-    private readonly userService: UserService,
-    private readonly companyService: CompanyService,
-    private readonly companyLocationService: CompanyLocationService
+    @Inject(USER_SERVICE) private readonly userClient: ClientGrpc,
+    @Inject(COMPANY_SERVICE) private readonly companyClient: ClientGrpc,
+    @Inject(COMPANY_LOCATION_SERVICE)
+    private readonly companyLocationClient: ClientGrpc
   ) {}
 
-  async registerCompanyUser(dto: RegisterCompanyUserInput) {
-    let companyId: number;
+  onModuleInit() {
+    this.userService =
+      this.userClient.getService<UserServiceClient>('UserService');
+    this.companyService =
+      this.companyClient.getService<CompanyServiceClient>('CompanyService');
+    this.companyLocationService =
+      this.companyLocationClient.getService<CompanyLocationServiceClient>(
+        'CompanyLocationService'
+      );
+  }
 
+  async registerCompanyUser(dto: RegisterCompanyUserInput): Promise<boolean> {
+    let companyId: number;
+    let companyRes: CompanyResponse | undefined;
+    let locationRes: CompanyLocationResponse | undefined;
+
+    // Create company if not existing
     if (dto.existingCompanyId) {
       companyId = dto.existingCompanyId;
     } else {
-      if (!dto.company) {
-        throw new Error(
-          'Company data is required for new company registration'
-        );
-      }
-      if (!dto.location) {
-        throw new Error(
-          'Location data is required for new company registration'
-        );
-      }
+      if (!dto.company || !dto.location)
+        throw new Error('Company and location data required');
 
-      const company = await this.companyService.create(dto.company);
-      companyId = company.id;
+      companyRes = await firstValueFrom(
+        this.companyService.createCompany({
+          ...dto.company,
+          type: mapGraphQLCompanyTypeToProto(dto.company.type),
+        } as CreateCompanyRequest)
+      );
+      // Assert that companyRes and companyRes.company exist
+      if (!companyRes?.company?.id) throw new Error('Company creation failed');
+      companyId = companyRes.company.id;
 
-      await this.companyLocationService.create({
-        ...dto.location,
+      locationRes = await firstValueFrom(
+        this.companyLocationService.createCompanyLocation({
+          ...dto.location,
+          companyId,
+        } as CreateCompanyLocationRequest)
+      );
+    }
+
+    if (!dto.user.password) throw new Error('Password is required');
+
+    const userRes: UserResponse = await firstValueFrom(
+      this.userService.createUser({
+        ...dto.user,
         companyId,
-      });
-    }
+        role: mapGraphQLUserRoleToProto(dto.user.role),
+      } as CreateUserRequest)
+    );
 
-    if (!dto.user.password) {
-      throw new Error('Password is required for user registration');
-    }
-
-    const userInput: CreateUserInput = {
-      email: dto.user.email,
-      username: dto.user.username,
-      password: dto.user.password,
-      role: dto.user.role,
-      companyId,
-    };
-
-    const user = await this.userService.create(userInput);
-    if (!user) {
-      throw new Error('User creation failed');
-    }
+    if (!userRes.user?.id) throw new Error('User creation failed');
 
     return true;
   }

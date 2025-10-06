@@ -26,8 +26,8 @@ export class CompanyLocation {
   @Field({ nullable: true })
   contact?: string;
 
-  @Field({ nullable: true })
-  companyId?: number;
+  @Field()
+  companyId!: number;
 
   @Field()
   createdAt!: Date;

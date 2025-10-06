@@ -1,30 +1,12 @@
 import { Module } from '@nestjs/common';
-import { SharedModule } from '@my-product-app/backend-shared';
-import {
-  UserPrismaService,
-  UserPrismaModule,
-} from '@my-product-app/backend-prisma/user-prisma';
+
 import { RegistrationService } from './service/registration.service';
 import { RegistrationResolver } from './resolver/registration.resolver';
-import { UserModule } from '@my-product-app/user';
-import { CompanyModule } from '@my-product-app/backend-company';
-import { CompanyLocationModule } from '@my-product-app/backend-company-location';
+import { SharedModule } from '@my-product-app/backend-shared';
 
 @Module({
-  imports: [
-    SharedModule,
-    UserPrismaModule,
-    UserModule,
-    CompanyModule,
-    CompanyLocationModule,
-  ],
+  imports: [SharedModule],
   providers: [RegistrationService, RegistrationResolver],
-  exports: [
-    RegistrationService,
-    RegistrationResolver,
-    UserModule,
-    CompanyModule,
-    CompanyLocationModule,
-  ],
+  exports: [RegistrationService, RegistrationResolver],
 })
 export class RegistrationModule {}

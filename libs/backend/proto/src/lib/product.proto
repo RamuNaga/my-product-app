@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package product;
 
+import "google/protobuf/wrappers.proto";
+
 message Product {
   int32 id = 1;
   string productCode = 2;

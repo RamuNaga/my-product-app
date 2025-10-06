@@ -114,6 +114,12 @@
     "user-prisma": {
       "tags": ["type:lib", "scope:backend", "area:user-prisma"]
     },
+    "company-prisma": {
+      "tags": ["type:lib", "scope:backend", "area:company-prisma"]
+    },
+    "company-location-prisma": {
+      "tags": ["type:lib", "scope:backend", "area:company-location-prisma"]
+    },
     "backend-shared": {
       "tags": ["type:lib", "scope:backend", "area:shared"],
       "implicitDependencies": ["user-prisma", "workorder-prisma"]
@@ -148,15 +154,11 @@
     },
     "backend-product-service": {
       "tags": ["type:service", "scope:backend", "area:product"],
-      "implicitDependencies": ["prisma", "backend-shared", "product"]
-    },
-    "backend-user-service": {
-      "tags": ["type:service", "scope:backend", "area:user"],
-      "implicitDependencies": ["prisma", "backend-shared", "user"]
+      "implicitDependencies": ["backend-shared", "product"]
     },
     "backend-workorder-service": {
       "tags": ["type:service", "scope:backend", "area:workorder"],
-      "implicitDependencies": ["prisma", "backend-shared", "workorder"]
+      "implicitDependencies": ["backend-shared", "workorder"]
     },
     "frontend": {
       "tags": ["type:app", "scope:frontend"]

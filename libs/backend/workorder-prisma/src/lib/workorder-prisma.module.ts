@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { WorkOrderPrismaService } from './workorder-prisma.service';
+import { WorkorderPrismaService } from './workorder-prisma.service';
 
 @Module({
-  providers: [WorkOrderPrismaService],
-  exports: [WorkOrderPrismaService],
+  providers: [WorkorderPrismaService],
+  exports: [WorkorderPrismaService],
 })
 export class WorkOrderPrismaModule {}

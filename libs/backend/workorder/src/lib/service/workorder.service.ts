@@ -3,7 +3,7 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '@my-product-app/prisma';
+
 import { CreateWorkorderInput } from '../dto/create-workoder.input';
 import { UpdateWorkorderInput } from '../dto/update-workorder.input';
 import { ApproveWorkorderInput } from '../dto/approve-workorder.input';
@@ -12,10 +12,11 @@ import {
   Priority,
   UserPayload,
 } from '@my-product-app/backend-shared';
+import { WorkorderPrismaService } from '@my-product-app/backend-prisma/workorder-prisma';
 
 @Injectable()
 export class WorkOrderService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: WorkorderPrismaService) {}
 
   // Helper method to generate WorkOrderCode
   private async generateWorkOrderCode(): Promise<string> {

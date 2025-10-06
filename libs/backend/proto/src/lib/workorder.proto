@@ -7,34 +7,35 @@ import "google/protobuf/wrappers.proto";
 
 // ===================== Enums =====================
 
+
 enum WorkOrderStatus {
-  REQUESTED = 0;
-  PENDING = 1;
-  APPROVED = 2;
-  REJECTED = 3;
-  COMPLETED = 4;
-  CANCELLED = 5;
+  WORK_ORDER_REQUESTED = 0;
+  WORK_ORDER_PENDING = 1;
+  WORK_ORDER_APPROVED = 2;
+  WORK_ORDER_REJECTED = 3;
+  WORK_ORDER_COMPLETED = 4;
+  WORK_ORDER_CANCELLED = 5;
 }
 
 enum Priority {
-  LOW = 0;
-  MEDIUM = 1;
-  HIGH = 2;
+  PRIORITY_LOW = 0;
+  PRIORITY_MEDIUM = 1;
+  PRIORITY_HIGH = 2;
 }
 
 enum PurchaseOrderStatus {
-  PENDING = 0;
-  ORDERED = 1;
-  DELIVERED = 2;
-  CANCELLED = 3;
+  PURCHASE_ORDER_PENDING = 0;
+  PURCHASE_ORDER_ORDERED = 1;
+  PURCHASE_ORDER_DELIVERED = 2;
+  PURCHASE_ORDER_CANCELLED = 3;
 }
 
 enum IssueType {
-  MACHINERY = 0;
-  PACKING = 1;
-  LABOUR = 2;
-  QUALITY = 3;
-  OTHER = 4;
+  ISSUE_TYPE_MACHINERY = 0;
+  ISSUE_TYPE_PACKING = 1;
+  ISSUE_TYPE_LABOUR = 2;
+  ISSUE_TYPE_QUALITY = 3;
+  ISSUE_TYPE_OTHER = 4;
 }
 
 // ===================== Messages =====================

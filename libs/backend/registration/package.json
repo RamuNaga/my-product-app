@@ -14,7 +14,6 @@
     "@my-product-app/backend-company-location": "0.0.1",
     "@my-product-app/user": "0.0.1",
     "@nestjs/common": "^11.1.0",
-    "@my-product-app/backend-shared": "0.0.1",
-    "@my-product-app/prisma": "0.0.1"
+    "@my-product-app/backend-shared": "0.0.1"
   }
 }

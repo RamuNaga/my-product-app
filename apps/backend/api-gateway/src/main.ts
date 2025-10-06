@@ -1,7 +1,8 @@
-import { ClientProxy } from '@nestjs/microservices';
+import { NestFactory } from '@nestjs/core';
 import { ApiGatewayModule } from './app/api-gateway.module';
+import { bootstrapMicroservice } from '@my-product-app/backend-shared';
+import { ClientGrpc } from '@nestjs/microservices';
 import {
-  bootstrapMicroservice,
   PRODUCT_SERVICE,
   USER_SERVICE,
   WORKORDER_SERVICE,
@@ -10,7 +11,7 @@ import {
 async function startApiGateway() {
   console.log('Starting API Gateway...');
 
-  // Start API Gateway as a microservice-enabled application
+  // Start API Gateway as HTTP + GraphQL server
   const app = await bootstrapMicroservice(ApiGatewayModule, {
     hostEnv: 'MICROSERVICE_HOST',
     portEnv: 'API_GATEWAY_PORT',
@@ -18,22 +19,24 @@ async function startApiGateway() {
     serviceName: 'API Gateway',
   });
 
-  // Get Clients for Product, User, and WorkOrder Services
-  const productClient = app.get<ClientProxy>(PRODUCT_SERVICE);
-  const userClient = app.get<ClientProxy>(USER_SERVICE);
-  const workorderClient = app.get<ClientProxy>(WORKORDER_SERVICE);
+  // ---------------------------
+  // Optional: Get gRPC clients
+  // ---------------------------
+  const productClient = app.get<ClientGrpc>(PRODUCT_SERVICE);
+  const userClient = app.get<ClientGrpc>(USER_SERVICE);
+  const workorderClient = app.get<ClientGrpc>(WORKORDER_SERVICE);
 
-  // Ping all services to check connectivity
-  pingService(productClient, 'Product Service');
-  pingService(userClient, 'User Service');
-  pingService(workorderClient, 'WorkOrder Service');
-}
+  // Example: initialize BFF services from clients if needed
+  // const productService = productClient.getService<ProductService>('ProductService');
+  // const userService = userClient.getService<UserService>('UserService');
+  // const workorderService = workorderClient.getService<WorkOrderService>('WorkOrderService');
 
-function pingService(client: ClientProxy, serviceName: string) {
-  client.send({ cmd: 'ping' }, {}).subscribe({
-    next: (res) => console.log(`✅ Ping response from ${serviceName}:`, res),
-    error: (err) => console.error(`❌ Ping error from ${serviceName}:`, err),
-  });
+  // ---------------------------
+  // Start HTTP server explicitly (GraphQL / REST)
+  // ---------------------------
+  const port = Number(process.env['API_GATEWAY_PORT']) || 3000;
+  await app.listen(port);
+  console.log(` API Gateway is running at http://localhost:${port}/graphql`);
 }
 
 startApiGateway();
