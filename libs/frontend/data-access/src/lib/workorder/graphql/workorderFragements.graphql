@@ -10,29 +10,24 @@ fragment WorkorderBaseFields on Workorder {
   description
 }
 
-# Full fragment including all details for stage 2 / queries
+# Full fragment including all details for queries
 fragment WorkorderFields on Workorder {
   ...WorkorderBaseFields
   workOrderCode
   status
   priority
-  product {
-    id
-    name
-    productCode
-    price
-  }
-  createdBy {
-    id
-    role
-    username
-    email
-  }
+  productId
+  createdById
+  approvedById
+  companyId
+  attachments
+  assignedTo
+  comments
   createdAt
   updatedAt
 }
 
-# Base fragment for minimal display (used in tables/lists)
+# Minimal display for tables/lists
 fragment WorkorderListFields on Workorder {
   id
   workOrderCode
@@ -42,30 +37,20 @@ fragment WorkorderListFields on Workorder {
   deliveryDate
   status
   priority
-  product {
-    id
-    name
-    productCode
-    price
-  }
+  productId
 }
 
 # Full details for single workorder view
 fragment WorkorderDetailsFields on Workorder {
   ...WorkorderListFields
   description
-  product {
-    id
-    name
-    productCode
-    price
-  }
-  createdBy {
-    id
-    role
-    username
-    email
-  }
+  productId
+  createdById
+  approvedById
+  companyId
+  attachments
+  assignedTo
+  comments
   createdAt
   updatedAt
 }

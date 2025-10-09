@@ -85,7 +85,7 @@ export class UserGrpcService {
       username: user.username,
       email: user.email,
       role: mapGraphQLUserRoleToProto(user.role), // Prisma → Proto
-      companyId: user.companyId,
+      companyId: user.companyId ?? 0,
       accessToken,
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
@@ -121,7 +121,7 @@ export class UserGrpcService {
       username: user.username,
       email: user.email,
       role: mapGraphQLUserRoleToProto(user.role), // Prisma → Proto
-      companyId: user.companyId,
+      companyId: user.companyId ?? 0,
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
     };

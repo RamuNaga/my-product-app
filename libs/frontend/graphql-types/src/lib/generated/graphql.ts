@@ -31,7 +31,7 @@ export type CompanyLocation = {
   __typename?: 'CompanyLocation';
   address: Scalars['String']['output'];
   city: Scalars['String']['output'];
-  companyId?: Maybe<Scalars['Float']['output']>;
+  companyId: Scalars['Float']['output'];
   contact?: Maybe<Scalars['String']['output']>;
   country: Scalars['String']['output'];
   county: Scalars['String']['output'];
@@ -112,9 +112,11 @@ export type Mutation = {
   createUser: User;
   createWorkOrder: Workorder;
   deleteProduct: Product;
+  deleteUser: User;
   login: LoginResponse;
   registerCompanyUser: Scalars['Boolean']['output'];
   updateProduct: Product;
+  updateUser: User;
   updateWorkorder: Workorder;
 };
 
@@ -149,6 +151,11 @@ export type MutationDeleteProductArgs = {
 };
 
 
+export type MutationDeleteUserArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationLoginArgs = {
   loginInput: LoginInput;
 };
@@ -161,6 +168,12 @@ export type MutationRegisterCompanyUserArgs = {
 
 export type MutationUpdateProductArgs = {
   data: UpdateProductInput;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateUserArgs = {
+  data: UpdateUserInput;
   id: Scalars['ID']['input'];
 };
 
@@ -202,8 +215,9 @@ export type Query = {
   __typename?: 'Query';
   companyLocations: Array<CompanyLocation>;
   findAllProduct: Array<Product>;
+  findAllUser: Array<User>;
   findOneProduct: Product;
-  getAllUsers: Array<User>;
+  findOneUser: User;
   isEmailAvailable: Scalars['Boolean']['output'];
   ping: Scalars['String']['output'];
   products: Array<Product>;
@@ -219,6 +233,11 @@ export type QueryCompanyLocationsArgs = {
 
 
 export type QueryFindOneProductArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryFindOneUserArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -264,6 +283,14 @@ export type UpdateProductInput = {
   productWeight?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateUserInput = {
+  companyId?: InputMaybe<Scalars['Float']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<UserRole>;
+  username?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateWorkorderInput = {
   clientLocation?: InputMaybe<Scalars['String']['input']>;
   deliveryDate?: InputMaybe<Scalars['DateTime']['input']>;
@@ -276,7 +303,7 @@ export type UpdateWorkorderInput = {
 
 export type User = {
   __typename?: 'User';
-  companyId?: Maybe<Scalars['Float']['output']>;
+  companyId?: Maybe<Scalars['Int']['output']>;
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
@@ -305,19 +332,19 @@ export enum WorkOrderStatus {
 
 export type Workorder = {
   __typename?: 'Workorder';
-  approvedBy?: Maybe<User>;
+  approvedById?: Maybe<Scalars['Int']['output']>;
   assignedTo?: Maybe<Scalars['String']['output']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   clientLocation: Scalars['String']['output'];
   comments?: Maybe<Scalars['String']['output']>;
-  company?: Maybe<Company>;
+  companyId?: Maybe<Scalars['Int']['output']>;
   createdAt: Scalars['DateTime']['output'];
-  createdBy: User;
+  createdById: Scalars['Int']['output'];
   deliveryDate: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   priority?: Maybe<Priority>;
-  product?: Maybe<Product>;
+  productId: Scalars['Int']['output'];
   quantity: Scalars['Int']['output'];
   status: WorkOrderStatus;
   updatedAt: Scalars['DateTime']['output'];
@@ -336,7 +363,7 @@ export type CreateCompanyLocationMutationVariables = Exact<{
 }>;
 
 
-export type CreateCompanyLocationMutation = { __typename?: 'Mutation', createCompanyLocation: { __typename?: 'CompanyLocation', id: number, location: string, address: string, city: string, country: string, postalCode: string, county: string, contact?: string | null, companyId?: number | null } };
+export type CreateCompanyLocationMutation = { __typename?: 'Mutation', createCompanyLocation: { __typename?: 'CompanyLocation', id: number, location: string, address: string, city: string, country: string, postalCode: string, county: string, contact?: string | null, companyId: number } };
 
 export type GetCompanyLocationsQueryVariables = Exact<{
   companyId: Scalars['Int']['input'];
@@ -394,22 +421,22 @@ export type GetWorkOrdersQueryVariables = Exact<{
 }>;
 
 
-export type GetWorkOrdersQuery = { __typename?: 'Query', workorders: { __typename?: 'WorkordersResponse', total: number, workorders: Array<{ __typename?: 'Workorder', id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, product?: { __typename?: 'Product', id: number, name: string, productCode: string, price: number } | null }> } };
+export type GetWorkOrdersQuery = { __typename?: 'Query', workorders: { __typename?: 'WorkordersResponse', total: number, workorders: Array<{ __typename?: 'Workorder', id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, productId: number }> } };
 
 export type UpdateWorkOrderMutationVariables = Exact<{
   input: UpdateWorkorderInput;
 }>;
 
 
-export type UpdateWorkOrderMutation = { __typename?: 'Mutation', updateWorkorder: { __typename?: 'Workorder', workOrderCode: string, status: WorkOrderStatus, priority?: Priority | null, createdAt: any, updatedAt: any, id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null, product?: { __typename?: 'Product', id: number, name: string, productCode: string, price: number } | null, createdBy: { __typename?: 'User', id: number, role: UserRole, username: string, email: string } } };
+export type UpdateWorkOrderMutation = { __typename?: 'Mutation', updateWorkorder: { __typename?: 'Workorder', workOrderCode: string, status: WorkOrderStatus, priority?: Priority | null, productId: number, createdById: number, approvedById?: number | null, companyId?: number | null, attachments?: Array<string | null> | null, assignedTo?: string | null, comments?: string | null, createdAt: any, updatedAt: any, id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null } };
 
 export type WorkorderBaseFieldsFragment = { __typename?: 'Workorder', id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null };
 
-export type WorkorderFieldsFragment = { __typename?: 'Workorder', workOrderCode: string, status: WorkOrderStatus, priority?: Priority | null, createdAt: any, updatedAt: any, id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null, product?: { __typename?: 'Product', id: number, name: string, productCode: string, price: number } | null, createdBy: { __typename?: 'User', id: number, role: UserRole, username: string, email: string } };
+export type WorkorderFieldsFragment = { __typename?: 'Workorder', workOrderCode: string, status: WorkOrderStatus, priority?: Priority | null, productId: number, createdById: number, approvedById?: number | null, companyId?: number | null, attachments?: Array<string | null> | null, assignedTo?: string | null, comments?: string | null, createdAt: any, updatedAt: any, id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null };
 
-export type WorkorderListFieldsFragment = { __typename?: 'Workorder', id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, product?: { __typename?: 'Product', id: number, name: string, productCode: string, price: number } | null };
+export type WorkorderListFieldsFragment = { __typename?: 'Workorder', id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, productId: number };
 
-export type WorkorderDetailsFieldsFragment = { __typename?: 'Workorder', description?: string | null, createdAt: any, updatedAt: any, id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, product?: { __typename?: 'Product', id: number, name: string, productCode: string, price: number } | null, createdBy: { __typename?: 'User', id: number, role: UserRole, username: string, email: string } };
+export type WorkorderDetailsFieldsFragment = { __typename?: 'Workorder', description?: string | null, productId: number, createdById: number, approvedById?: number | null, companyId?: number | null, attachments?: Array<string | null> | null, assignedTo?: string | null, comments?: string | null, createdAt: any, updatedAt: any, id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null };
 
 export const WorkorderBaseFieldsFragmentDoc = gql`
     fragment WorkorderBaseFields on Workorder {
@@ -427,18 +454,13 @@ export const WorkorderFieldsFragmentDoc = gql`
   workOrderCode
   status
   priority
-  product {
-    id
-    name
-    productCode
-    price
-  }
-  createdBy {
-    id
-    role
-    username
-    email
-  }
+  productId
+  createdById
+  approvedById
+  companyId
+  attachments
+  assignedTo
+  comments
   createdAt
   updatedAt
 }
@@ -453,30 +475,20 @@ export const WorkorderListFieldsFragmentDoc = gql`
   deliveryDate
   status
   priority
-  product {
-    id
-    name
-    productCode
-    price
-  }
+  productId
 }
     `;
 export const WorkorderDetailsFieldsFragmentDoc = gql`
     fragment WorkorderDetailsFields on Workorder {
   ...WorkorderListFields
   description
-  product {
-    id
-    name
-    productCode
-    price
-  }
-  createdBy {
-    id
-    role
-    username
-    email
-  }
+  productId
+  createdById
+  approvedById
+  companyId
+  attachments
+  assignedTo
+  comments
   createdAt
   updatedAt
 }

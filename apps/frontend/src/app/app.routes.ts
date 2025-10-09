@@ -34,20 +34,20 @@ export const appRoutes: Routes = [
             '@my-product-app/frontend-ui/components/dashboard/dashboard.component'
           ).then((m) => m.DashboardComponent),
       },
-      {
-        path: APP_ROUTES.PRODUCTS,
-        loadChildren: () =>
-          import(
-            '@my-product-app/frontend-ui/components/product/product.routes'
-          ).then((m) => m.productRoutes),
-      },
-      {
-        path: APP_ROUTES.WORK_ORDERS,
-        loadChildren: () =>
-          import(
-            '@my-product-app/frontend-ui/components/workorder/workorder.routes'
-          ).then((m) => m.workOrderRoutes),
-      },
+      // {
+      //   path: APP_ROUTES.PRODUCTS,
+      //   loadChildren: () =>
+      //     import(
+      //       '@my-product-app/frontend-ui/components/product/product.routes'
+      //     ).then((m) => m.productRoutes),
+      // },
+      // {
+      //   path: APP_ROUTES.WORK_ORDERS,
+      //   loadChildren: () =>
+      //     import(
+      //       '@my-product-app/frontend-ui/components/workorder/workorder.routes'
+      //     ).then((m) => m.workOrderRoutes),
+      // },
       // Lazy-load other routes here...
     ],
   },

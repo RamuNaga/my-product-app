@@ -1,8 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Product } from '@my-product-app/product';
-import { User } from '@my-product-app/user';
 import { WorkOrderStatus, Priority } from '@my-product-app/backend-shared';
-import { Company } from '@my-product-app/backend-company';
 
 @ObjectType()
 export class Workorder {
@@ -10,10 +7,10 @@ export class Workorder {
   id!: number;
 
   @Field()
-  workOrderCode!: string; // Added missing field
+  workOrderCode!: string;
 
-  @Field(() => Product, { nullable: true })
-  product?: Product;
+  @Field(() => Int)
+  productId!: number;
 
   @Field()
   clientLocation!: string;
@@ -45,14 +42,14 @@ export class Workorder {
   @Field({ nullable: true })
   comments?: string;
 
-  @Field(() => User)
-  createdBy!: User;
+  @Field(() => Int)
+  createdById!: number;
 
-  @Field(() => User, { nullable: true })
-  approvedBy?: User;
+  @Field(() => Int, { nullable: true })
+  approvedById?: number;
 
-  @Field(() => Company, { nullable: true })
-  company?: Company; // Added company relation
+  @Field(() => Int, { nullable: true })
+  companyId?: number;
 
   @Field()
   createdAt!: Date;

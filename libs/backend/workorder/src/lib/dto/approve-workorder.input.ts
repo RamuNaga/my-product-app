@@ -1,5 +1,5 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
-import { Priority, WorkOrderStatus } from '@prisma/client';
+import { WorkOrderStatus, Priority } from '@my-product-app/backend-shared';
 
 @InputType()
 export class ApproveWorkorderInput {

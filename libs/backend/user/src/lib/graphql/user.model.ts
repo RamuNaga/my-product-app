@@ -19,8 +19,8 @@ export class User {
   @Field(() => UserRole)
   role!: UserRole;
 
-  @Field(() => Int)
-  companyId!: number;
+  @Field(() => Int, { nullable: true }) // allow nulls from Prisma
+  companyId?: number | null;
 
   @Field()
   createdAt!: Date;

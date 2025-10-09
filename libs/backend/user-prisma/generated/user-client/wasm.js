@@ -35,12 +35,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.16.2
- * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
+ * Prisma Client JS version: 6.16.3
+ * Query Engine version: bb420e667c1820a8c05a38023385f6cc7ef8e83a
  */
 Prisma.prismaVersion = {
-  client: "6.16.2",
-  engine: "1c57fdcd7e44b29b9313256c76699e91c3ac3c43"
+  client: "6.16.3",
+  engine: "bb420e667c1820a8c05a38023385f6cc7ef8e83a"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -172,8 +172,8 @@ const config = {
     "schemaEnvPath": "../../../../../.env"
   },
   "relativePath": "../../prisma",
-  "clientVersion": "6.16.2",
-  "engineVersion": "1c57fdcd7e44b29b9313256c76699e91c3ac3c43",
+  "clientVersion": "6.16.3",
+  "engineVersion": "bb420e667c1820a8c05a38023385f6cc7ef8e83a",
   "datasourceNames": [
     "db"
   ],
@@ -187,8 +187,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/user-client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL_USER\")\n}\n\nenum UserRole {\n  ADMIN\n  MANAGER\n  OPERATOR\n  STAFF\n  VIEWER\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  username  String   @unique\n  email     String   @unique\n  password  String\n  role      UserRole @default(STAFF)\n  companyId Int\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Vendor {\n  id        Int      @id @default(autoincrement())\n  name      String\n  companyId Int?\n  address   String?\n  contact   String?\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
-  "inlineSchemaHash": "131164da54e4ed5b27157cf877350d48cbb09d4d59dc1423c7623448d373affe",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/user-client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL_USER\")\n}\n\nenum UserRole {\n  ADMIN\n  MANAGER\n  OPERATOR\n  STAFF\n  VIEWER\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  username  String   @unique\n  email     String   @unique\n  password  String\n  role      UserRole @default(STAFF)\n  companyId Int?\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Vendor {\n  id        Int      @id @default(autoincrement())\n  name      String\n  companyId Int?\n  address   String?\n  contact   String?\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
+  "inlineSchemaHash": "61358bf04944e85fb04d03fd0899818125a0048eacb8b79c5c6ea222c8e634ac",
   "copyEngine": true
 }
 config.dirname = '/'

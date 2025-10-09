@@ -20,18 +20,13 @@ export const WORKORDER_FIELDS = gql`
     workOrderCode
     status
     priority
-    product {
-      id
-      name
-      productCode
-      price
-    }
-    createdBy {
-      id
-      role
-      username
-      email
-    }
+    productId
+    createdById
+    approvedById
+    companyId
+    attachments
+    assignedTo
+    comments
     createdAt
     updatedAt
   }
@@ -49,12 +44,7 @@ export const WORKORDER_LIST_FIELDS = gql`
     deliveryDate
     status
     priority
-    product {
-      id
-      name
-      productCode
-      price
-    }
+    productId
   }
 `;
 
@@ -63,12 +53,13 @@ export const WORKORDER_DETAILS_FIELDS = gql`
   fragment WorkorderDetailsFields on Workorder {
     ...WorkorderListFields
     description
-    createdBy {
-      id
-      role
-      username
-      email
-    }
+    productId
+    createdById
+    approvedById
+    companyId
+    attachments
+    assignedTo
+    comments
     createdAt
     updatedAt
   }

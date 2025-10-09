@@ -6,7 +6,11 @@ import { RegistrationModule } from '@my-product-app/backend-registration'; // bu
 import { RegistrationGrpcController } from './registration/registration-grpc.controller';
 import { GraphQLConfigModule } from './config/graphql.module';
 import { PingResolver } from './resolvers/ping.resolver';
+import { CompanyLocationModule } from '@my-product-app/backend-company-location';
+import { CompanyModule } from '@my-product-app/backend-company';
+import { UserModule } from '@my-product-app/user';
 import { ProductModule } from '@my-product-app/product';
+import { WorkorderModule } from '@my-product-app/workorder';
 
 @Module({
   imports: [
@@ -17,7 +21,11 @@ import { ProductModule } from '@my-product-app/product';
     SharedModule,
     GraphQLConfigModule,
     RegistrationModule,
+    CompanyLocationModule,
+    CompanyModule,
+    UserModule,
     ProductModule,
+    WorkorderModule,
   ],
   controllers: [RegistrationGrpcController],
   providers: [PingResolver],

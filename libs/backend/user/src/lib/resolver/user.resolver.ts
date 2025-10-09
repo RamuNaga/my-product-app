@@ -8,6 +8,7 @@ import { User } from '../graphql/user.model';
 
 import { createBaseResolver } from '@my-product-app/backend-shared';
 import { UserPrismaService } from '@my-product-app/backend-prisma/user-prisma';
+import { UserWithoutPassword } from '../interfaces/user.interface';
 
 // 🔹 Create the BaseUserResolver using the generic factory
 const BaseUserResolver = createBaseResolver<
@@ -37,6 +38,14 @@ export class UserResolver extends BaseUserResolver {
   @Query(() => Boolean)
   async isEmailAvailable(@Args('email') email: string): Promise<boolean> {
     return this.userService.isEmailAvailable(email);
+  }
+
+  // Return User (GraphQL type)
+  @Mutation(() => User, { name: `createUser` })
+  async createUser(
+    @Args('createUserInput') createUserInput: CreateUserInput
+  ): Promise<UserWithoutPassword> {
+    return this.userService.create(createUserInput);
   }
 
   @Mutation(() => LoginResponse)
