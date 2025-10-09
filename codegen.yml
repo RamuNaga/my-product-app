@@ -1,4 +1,4 @@
-schema: http://localhost:3000/graphql
+schema: http://localhost:3002/graphql
 documents: 'libs/frontend/data-access/src/lib/**/graphql/*.graphql'
 generates:
   libs/frontend/graphql-types/src/lib/generated/graphql.ts:

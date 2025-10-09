@@ -6,15 +6,49 @@
   "tags": ["type:bff scope:backend"],
   "targets": {
     "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{workspaceRoot}/dist/apps/backend/bff"],
+      "options": {
+        "webpackConfig": "apps/backend/bff/webpack.config.js",
+        "outputPath": "dist/apps/backend/bff",
+        "watch": false
+      }
+    },
+
+    "copy-protos": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "webpack-cli build",
-        "args": ["--node-env=production"],
-        "cwd": "apps/backend/bff"
+        "command": "npx copyfiles -u 5 \"libs/backend/proto/src/lib/*.proto\" \"dist/apps/backend/proto/\""
+      }
+    },
+
+    "build-with-protos": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx run bff:build && nx run bff:copy-protos"
+      }
+    },
+
+    "serve": {
+      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      // "dependsOn": [
+      //   "user-grpc:build-with-protos",
+      //   "company-grpc:build-with-protos",
+      //   "company-location-grpc:build-with-protos",
+      //   "bff:build-with-protos"
+      // ],
+      "options": {
+        "buildTarget": "bff:build-with-protos",
+        "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "args": ["--node-env=development"]
+          "buildTarget": "bff:build-with-protos"
+        },
+        "production": {
+          "buildTarget": "bff:build-with-protos"
         }
       }
     },
@@ -43,24 +77,7 @@
       "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
       "executor": "nx:noop"
     },
-    "serve": {
-      "continuous": true,
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
-      "dependsOn": ["build"],
-      "options": {
-        "buildTarget": "bff:build",
-        "runBuildTargetDependencies": false
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "bff:build:development"
-        },
-        "production": {
-          "buildTarget": "bff:build:production"
-        }
-      }
-    },
+
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],

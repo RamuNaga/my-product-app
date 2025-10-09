@@ -1,21 +1,23 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
+import { bootstrapMicroservice } from '@my-product-app/backend-shared';
+import { BffModule } from './app/bff.module';
 
-import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
+async function startBff() {
+  console.log('Bff Service...');
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 3000;
-  await app.listen(port);
-  Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
-  );
+  // Start API Gateway as HTTP + GraphQL server
+  await bootstrapMicroservice(BffModule, {
+    hostEnv: 'MICROSERVICE_HOST',
+    portEnv: 'BFF_PORT',
+    fallbackPort: 3002,
+    serviceName: 'Bff Service',
+  });
+
+  // ---------------------------
+  // Start HTTP server explicitly (GraphQL / REST)
+  // ---------------------------
+  // const port = Number(process.env['BFF_PORT']) || 3002;
+  // await app.listen(port);
+  // console.log(` BFF is running at http://localhost:${port}/graphql`);
 }
 
-bootstrap();
+startBff();

@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package company;
 
-
-
 import "google/protobuf/wrappers.proto";
 
 enum CompanyType {
@@ -31,7 +29,16 @@ message CompanyResponse {
   Company company = 1;
 }
 
+message SearchCompanyByNameRequest {
+  string searchTerm = 1;
+}
+
+message SearchCompanyByNameResponse {
+  repeated Company companies = 1;
+}
+
 service CompanyService {
   rpc CreateCompany (CreateCompanyRequest) returns (CompanyResponse);
   rpc GetCompanyById (google.protobuf.Int32Value) returns (CompanyResponse);
+  rpc SearchByName (SearchCompanyByNameRequest) returns (SearchCompanyByNameResponse);
 }

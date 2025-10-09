@@ -2,22 +2,39 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Serve API Gateway",
+      "label": "Serve User gRPC Service",
       "type": "shell",
-      "command": "nx serve api-gateway",
+      "command": "nx run user-grpc:serve:development",
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Company gRPC Service",
+      "type": "shell",
+      "command": "nx run company-grpc:serve:development",
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Company Location gRPC Service",
+      "type": "shell",
+      "command": "nx run company-location-grpc:serve:development",
       "problemMatcher": []
     },
     {
       "label": "Serve Product Service",
       "type": "shell",
-      "command": "nx serve backend-product-service",
+      "command": "nx run backend-product-service:serve:development",
       "problemMatcher": []
     },
-
     {
       "label": "Serve Workorder Service",
       "type": "shell",
-      "command": "nx serve workorder-service",
+      "command": "nx run workorder-service:serve:development",
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve BFF",
+      "type": "shell",
+      "command": "nx run bff:serve:development",
       "problemMatcher": []
     },
     {
@@ -29,10 +46,12 @@
     {
       "label": "Serve All Apps",
       "dependsOn": [
-        "Serve API Gateway",
+        "Serve User gRPC Service",
+        "Serve Company gRPC Service",
+        "Serve Company Location gRPC Service",
         "Serve Product Service",
-        "Serve User Service",
-        "Serve Workorder Service",
+        //"Serve Workorder Service",
+        "Serve BFF",
         "Serve Frontend"
       ],
       "dependsOrder": "parallel",

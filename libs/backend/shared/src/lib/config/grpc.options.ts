@@ -35,7 +35,7 @@ export const getWorkorderServiceOptions = (): ClientProviderOptions => ({
   options: {
     package: 'workorder',
     protoPath: join(__dirname, '../proto/workorder.proto'),
-    url: `${MICRO_HOST}:${process.env['WORKORDER_SERVICE_MS_PORT'] || 4005}`,
+    url: `${MICRO_HOST}:${process.env['WORKORDER_SERVICE_MS_PORT'] || 4006}`,
   },
 });
 
@@ -45,7 +45,7 @@ export const getCompanyServiceOptions = (): ClientProviderOptions => ({
   options: {
     package: 'company',
     protoPath: join(__dirname, '../proto/company.proto'),
-    url: `${MICRO_HOST}:${process.env['COMPANY_SERVICE_MS_PORT'] || 4007}`,
+    url: `${MICRO_HOST}:${process.env['COMPANY_SERVICE_MS_PORT'] || 4004}`,
   },
 });
 
@@ -56,7 +56,7 @@ export const getCompanyLocationServiceOptions = (): ClientProviderOptions => ({
     package: 'companylocation',
     protoPath: join(__dirname, '../proto/company-location.proto'),
     url: `${MICRO_HOST}:${
-      process.env['COMPANY_LOCATION_SERVICE_MS_PORT'] || 4009
+      process.env['COMPANY_LOCATION_SERVICE_MS_PORT'] || 4005
     }`,
   },
 });

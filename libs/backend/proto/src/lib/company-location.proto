@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package companylocation;
 
-
-
 import "google/protobuf/wrappers.proto";
 
 message CompanyLocation {
@@ -35,7 +33,16 @@ message CompanyLocationResponse {
   CompanyLocation location = 1;
 }
 
+message GetAllCompanyLocationsRequest {
+  int32 companyId = 1;
+}
+
+message GetAllCompanyLocationsResponse {
+  repeated CompanyLocation locations = 1;
+}
+
 service CompanyLocationService {
   rpc CreateCompanyLocation (CreateCompanyLocationRequest) returns (CompanyLocationResponse);
   rpc GetCompanyLocationById (google.protobuf.Int32Value) returns (CompanyLocationResponse);
+  rpc GetAllCompanyLocations (GetAllCompanyLocationsRequest) returns (GetAllCompanyLocationsResponse);
 }

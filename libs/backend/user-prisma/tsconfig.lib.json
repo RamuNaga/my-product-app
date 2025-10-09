@@ -5,6 +5,7 @@
     "outDir": "../../../dist/out-tsc",
     "declaration": true,
     "declarationMap": true,
+    "rootDir": ".",
     "composite": true,
     "types": ["node"],
     "target": "ES2021",

@@ -3,7 +3,6 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
 import { RegisterCompanyUserInput } from '../dto/register-company-user.input';
-import { RegisterCompanyUserPayload } from '../graphql/registration-company-user.model';
 
 import {
   USER_SERVICE,
@@ -14,7 +13,7 @@ import {
 import {
   UserServiceClient,
   CreateUserRequest,
-  UserResponse,
+  CreateUserResponse,
   CompanyServiceClient,
   CreateCompanyRequest,
   CompanyResponse,
@@ -78,11 +77,13 @@ export class RegistrationService implements OnModuleInit {
           companyId,
         } as CreateCompanyLocationRequest)
       );
+      if (!locationRes?.location?.id)
+        throw new Error('Company Location creation failed');
     }
 
     if (!dto.user.password) throw new Error('Password is required');
 
-    const userRes: UserResponse = await firstValueFrom(
+    const userRes: CreateUserResponse = await firstValueFrom(
       this.userService.createUser({
         ...dto.user,
         companyId,
@@ -90,7 +91,7 @@ export class RegistrationService implements OnModuleInit {
       } as CreateUserRequest)
     );
 
-    if (!userRes.user?.id) throw new Error('User creation failed');
+    if (!userRes.id) throw new Error('User creation failed');
 
     return true;
   }

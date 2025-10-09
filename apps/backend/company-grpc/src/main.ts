@@ -1,21 +1,19 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
+import { bootstrapMicroservice } from '@my-product-app/backend-shared';
+import { protoPaths, protoPackages } from '@my-product-app/backend-proto';
+import { CompanyGrpcModule } from './app/company-grpc.module';
 
-import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
-
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 3000;
-  await app.listen(port);
-  Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
-  );
+async function startCompanyService() {
+  console.log('Starting company Service (gRPC)');
+  await bootstrapMicroservice(CompanyGrpcModule, {
+    hostEnv: 'MICROSERVICE_HOST',
+    portEnv: 'COMPANY_SERVICE_MS_PORT',
+    fallbackPort: 4004,
+    serviceName: 'Company Service',
+    grpc: {
+      package: protoPackages.company,
+      protoPath: protoPaths.company,
+    },
+  });
 }
 
-bootstrap();
+startCompanyService();

@@ -42,6 +42,14 @@ export interface CompanyLocationResponse {
   location: CompanyLocation | undefined;
 }
 
+export interface GetAllCompanyLocationsRequest {
+  companyId: number;
+}
+
+export interface GetAllCompanyLocationsResponse {
+  locations: CompanyLocation[];
+}
+
 export const COMPANYLOCATION_PACKAGE_NAME = "companylocation";
 
 function createBaseCompanyLocation(): CompanyLocation {
@@ -354,6 +362,80 @@ export const CompanyLocationResponse: MessageFns<CompanyLocationResponse> = {
   },
 };
 
+function createBaseGetAllCompanyLocationsRequest(): GetAllCompanyLocationsRequest {
+  return { companyId: 0 };
+}
+
+export const GetAllCompanyLocationsRequest: MessageFns<GetAllCompanyLocationsRequest> = {
+  encode(message: GetAllCompanyLocationsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.companyId !== 0) {
+      writer.uint32(8).int32(message.companyId);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetAllCompanyLocationsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetAllCompanyLocationsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.companyId = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseGetAllCompanyLocationsResponse(): GetAllCompanyLocationsResponse {
+  return { locations: [] };
+}
+
+export const GetAllCompanyLocationsResponse: MessageFns<GetAllCompanyLocationsResponse> = {
+  encode(message: GetAllCompanyLocationsResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    for (const v of message.locations) {
+      CompanyLocation.encode(v!, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetAllCompanyLocationsResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetAllCompanyLocationsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.locations.push(CompanyLocation.decode(reader, reader.uint32()));
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
 export interface CompanyLocationServiceClient {
   createCompanyLocation(
     request: CreateCompanyLocationRequest,
@@ -361,6 +443,11 @@ export interface CompanyLocationServiceClient {
   ): Observable<CompanyLocationResponse>;
 
   getCompanyLocationById(request: Int32Value, metadata?: Metadata): Observable<CompanyLocationResponse>;
+
+  getAllCompanyLocations(
+    request: GetAllCompanyLocationsRequest,
+    metadata?: Metadata,
+  ): Observable<GetAllCompanyLocationsResponse>;
 }
 
 export interface CompanyLocationServiceController {
@@ -373,11 +460,19 @@ export interface CompanyLocationServiceController {
     request: Int32Value,
     metadata?: Metadata,
   ): Promise<CompanyLocationResponse> | Observable<CompanyLocationResponse> | CompanyLocationResponse;
+
+  getAllCompanyLocations(
+    request: GetAllCompanyLocationsRequest,
+    metadata?: Metadata,
+  ):
+    | Promise<GetAllCompanyLocationsResponse>
+    | Observable<GetAllCompanyLocationsResponse>
+    | GetAllCompanyLocationsResponse;
 }
 
 export function CompanyLocationServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createCompanyLocation", "getCompanyLocationById"];
+    const grpcMethods: string[] = ["createCompanyLocation", "getCompanyLocationById", "getAllCompanyLocations"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("CompanyLocationService", method)(constructor.prototype[method], method, descriptor);
@@ -416,11 +511,24 @@ export const CompanyLocationServiceService = {
       Buffer.from(CompanyLocationResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): CompanyLocationResponse => CompanyLocationResponse.decode(value),
   },
+  getAllCompanyLocations: {
+    path: "/companylocation.CompanyLocationService/GetAllCompanyLocations",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: GetAllCompanyLocationsRequest): Buffer =>
+      Buffer.from(GetAllCompanyLocationsRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetAllCompanyLocationsRequest => GetAllCompanyLocationsRequest.decode(value),
+    responseSerialize: (value: GetAllCompanyLocationsResponse): Buffer =>
+      Buffer.from(GetAllCompanyLocationsResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetAllCompanyLocationsResponse =>
+      GetAllCompanyLocationsResponse.decode(value),
+  },
 } as const;
 
 export interface CompanyLocationServiceServer extends UntypedServiceImplementation {
   createCompanyLocation: handleUnaryCall<CreateCompanyLocationRequest, CompanyLocationResponse>;
   getCompanyLocationById: handleUnaryCall<number | undefined, CompanyLocationResponse>;
+  getAllCompanyLocations: handleUnaryCall<GetAllCompanyLocationsRequest, GetAllCompanyLocationsResponse>;
 }
 
 export interface MessageFns<T> {

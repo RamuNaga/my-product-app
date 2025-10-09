@@ -3,66 +3,61 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/backend/user-grpc/src",
   "projectType": "application",
-  "tags": ["type:grpc domain:user scope:backend"],
+  "tags": ["type:grpc", "domain:user", "scope:backend"],
   "targets": {
     "build": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{workspaceRoot}/dist/apps/backend/user-grpc"],
       "options": {
-        "command": "webpack-cli build",
-        "args": ["--node-env=production"],
-        "cwd": "apps/backend/user-grpc"
+        "webpackConfig": "apps/backend/user-grpc/webpack.config.js",
+        "outputPath": "dist/apps/backend/user-grpc",
+        "watch": false
       },
       "configurations": {
         "development": {
-          "args": ["--node-env=development"]
+          "webpackConfig": "apps/backend/user-grpc/webpack.config.js",
+          "outputPath": "dist/apps/backend/user-grpc"
+        },
+        "production": {
+          "webpackConfig": "apps/backend/user-grpc/webpack.config.js",
+          "outputPath": "dist/apps/backend/user-grpc"
         }
       }
     },
-    "prune-lockfile": {
-      "dependsOn": ["build"],
-      "cache": true,
-      "executor": "@nx/js:prune-lockfile",
-      "outputs": [
-        "{workspaceRoot}/dist/apps/backend/user-grpc/package.json",
-        "{workspaceRoot}/dist/apps/backend/user-grpc/pnpm-lock.yaml"
-      ],
+
+    "copy-protos": {
+      "executor": "nx:run-commands",
       "options": {
-        "buildTarget": "build"
+        "command": "npx copyfiles -u 5 \"libs/backend/proto/src/lib/user.proto\" \"dist/apps/backend/user-grpc/\""
       }
     },
-    "copy-workspace-modules": {
-      "dependsOn": ["build"],
-      "cache": true,
-      "outputs": [
-        "{workspaceRoot}/dist/apps/backend/user-grpc/workspace_modules"
-      ],
-      "executor": "@nx/js:copy-workspace-modules",
+
+    "build-with-protos": {
+      "executor": "nx:run-commands",
       "options": {
-        "buildTarget": "build"
+        "command": "nx run user-grpc:build && nx run user-grpc:copy-protos"
       }
     },
-    "prune": {
-      "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
-      "executor": "nx:noop"
-    },
+
     "serve": {
       "continuous": true,
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["build"],
+      "dependsOn": ["build-with-protos"],
       "options": {
-        "buildTarget": "user-grpc:build",
+        "buildTarget": "user-grpc:build-with-protos",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "user-grpc:build:development"
+          "buildTarget": "user-grpc:build-with-protos"
         },
         "production": {
-          "buildTarget": "user-grpc:build:production"
+          "buildTarget": "user-grpc:build-with-protos"
         }
       }
     },
+
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
@@ -70,6 +65,36 @@
         "jestConfig": "apps/backend/user-grpc/jest.config.ts",
         "passWithNoTests": true
       }
+    },
+
+    "prune-lockfile": {
+      "dependsOn": ["build-with-protos"],
+      "cache": true,
+      "executor": "@nx/js:prune-lockfile",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/user-grpc/package.json",
+        "{workspaceRoot}/dist/apps/backend/user-grpc/pnpm-lock.yaml"
+      ],
+      "options": {
+        "buildTarget": "build-with-protos"
+      }
+    },
+
+    "copy-workspace-modules": {
+      "dependsOn": ["build-with-protos"],
+      "cache": true,
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/user-grpc/workspace_modules"
+      ],
+      "executor": "@nx/js:copy-workspace-modules",
+      "options": {
+        "buildTarget": "build-with-protos"
+      }
+    },
+
+    "prune": {
+      "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
+      "executor": "nx:noop"
     }
   }
 }

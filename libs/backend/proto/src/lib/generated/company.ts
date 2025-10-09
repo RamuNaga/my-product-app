@@ -39,6 +39,14 @@ export interface CompanyResponse {
   company: Company | undefined;
 }
 
+export interface SearchCompanyByNameRequest {
+  searchTerm: string;
+}
+
+export interface SearchCompanyByNameResponse {
+  companies: Company[];
+}
+
 export const COMPANY_PACKAGE_NAME = "company";
 
 function createBaseCompany(): Company {
@@ -229,10 +237,86 @@ export const CompanyResponse: MessageFns<CompanyResponse> = {
   },
 };
 
+function createBaseSearchCompanyByNameRequest(): SearchCompanyByNameRequest {
+  return { searchTerm: "" };
+}
+
+export const SearchCompanyByNameRequest: MessageFns<SearchCompanyByNameRequest> = {
+  encode(message: SearchCompanyByNameRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.searchTerm !== "") {
+      writer.uint32(10).string(message.searchTerm);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SearchCompanyByNameRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSearchCompanyByNameRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.searchTerm = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseSearchCompanyByNameResponse(): SearchCompanyByNameResponse {
+  return { companies: [] };
+}
+
+export const SearchCompanyByNameResponse: MessageFns<SearchCompanyByNameResponse> = {
+  encode(message: SearchCompanyByNameResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    for (const v of message.companies) {
+      Company.encode(v!, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): SearchCompanyByNameResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSearchCompanyByNameResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.companies.push(Company.decode(reader, reader.uint32()));
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
 export interface CompanyServiceClient {
   createCompany(request: CreateCompanyRequest, metadata?: Metadata): Observable<CompanyResponse>;
 
   getCompanyById(request: Int32Value, metadata?: Metadata): Observable<CompanyResponse>;
+
+  searchByName(request: SearchCompanyByNameRequest, metadata?: Metadata): Observable<SearchCompanyByNameResponse>;
 }
 
 export interface CompanyServiceController {
@@ -245,11 +329,16 @@ export interface CompanyServiceController {
     request: Int32Value,
     metadata?: Metadata,
   ): Promise<CompanyResponse> | Observable<CompanyResponse> | CompanyResponse;
+
+  searchByName(
+    request: SearchCompanyByNameRequest,
+    metadata?: Metadata,
+  ): Promise<SearchCompanyByNameResponse> | Observable<SearchCompanyByNameResponse> | SearchCompanyByNameResponse;
 }
 
 export function CompanyServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createCompany", "getCompanyById"];
+    const grpcMethods: string[] = ["createCompany", "getCompanyById", "searchByName"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("CompanyService", method)(constructor.prototype[method], method, descriptor);
@@ -285,11 +374,23 @@ export const CompanyServiceService = {
     responseSerialize: (value: CompanyResponse): Buffer => Buffer.from(CompanyResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): CompanyResponse => CompanyResponse.decode(value),
   },
+  searchByName: {
+    path: "/company.CompanyService/SearchByName",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: SearchCompanyByNameRequest): Buffer =>
+      Buffer.from(SearchCompanyByNameRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): SearchCompanyByNameRequest => SearchCompanyByNameRequest.decode(value),
+    responseSerialize: (value: SearchCompanyByNameResponse): Buffer =>
+      Buffer.from(SearchCompanyByNameResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): SearchCompanyByNameResponse => SearchCompanyByNameResponse.decode(value),
+  },
 } as const;
 
 export interface CompanyServiceServer extends UntypedServiceImplementation {
   createCompany: handleUnaryCall<CreateCompanyRequest, CompanyResponse>;
   getCompanyById: handleUnaryCall<number | undefined, CompanyResponse>;
+  searchByName: handleUnaryCall<SearchCompanyByNameRequest, SearchCompanyByNameResponse>;
 }
 
 export interface MessageFns<T> {

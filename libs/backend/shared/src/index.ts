@@ -1,6 +1,7 @@
 export * from './lib/utils/bootstrap-microservice';
 //export * from './lib/config/microservice.options';
 export * from './lib/config/grpc.options';
+export * from './lib/config/grpc-microservice.module';
 export * from './lib/shared.module';
 export * from './lib/graphql/base.input';
 export * from './lib/graphql/base.model';

@@ -19,6 +19,8 @@ export {
   CompanyServiceClient,
   CreateCompanyRequest,
   CompanyResponse,
+  SearchCompanyByNameRequest,
+  SearchCompanyByNameResponse,
   CompanyType as ProtoCompanyType,
 } from './company';
 
@@ -27,6 +29,8 @@ export {
   CompanyLocationServiceClient,
   CreateCompanyLocationRequest,
   CompanyLocationResponse,
+  GetAllCompanyLocationsRequest,
+  GetAllCompanyLocationsResponse,
 } from './company-location';
 
 // Product service

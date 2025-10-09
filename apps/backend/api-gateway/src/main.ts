@@ -1,12 +1,5 @@
-import { NestFactory } from '@nestjs/core';
 import { ApiGatewayModule } from './app/api-gateway.module';
 import { bootstrapMicroservice } from '@my-product-app/backend-shared';
-import { ClientGrpc } from '@nestjs/microservices';
-import {
-  PRODUCT_SERVICE,
-  USER_SERVICE,
-  WORKORDER_SERVICE,
-} from '@my-product-app/backend-shared';
 
 async function startApiGateway() {
   console.log('Starting API Gateway...');
@@ -18,18 +11,6 @@ async function startApiGateway() {
     fallbackPort: 3000,
     serviceName: 'API Gateway',
   });
-
-  // ---------------------------
-  // Optional: Get gRPC clients
-  // ---------------------------
-  const productClient = app.get<ClientGrpc>(PRODUCT_SERVICE);
-  const userClient = app.get<ClientGrpc>(USER_SERVICE);
-  const workorderClient = app.get<ClientGrpc>(WORKORDER_SERVICE);
-
-  // Example: initialize BFF services from clients if needed
-  // const productService = productClient.getService<ProductService>('ProductService');
-  // const userService = userClient.getService<UserService>('UserService');
-  // const workorderService = workorderClient.getService<WorkOrderService>('WorkOrderService');
 
   // ---------------------------
   // Start HTTP server explicitly (GraphQL / REST)
