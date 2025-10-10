@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import * as path from 'path';
 import { SharedModule } from '@my-product-app/backend-shared'; // for JWT or utilities later
 import { RegistrationModule } from '@my-product-app/backend-registration'; // business logic
-import { RegistrationGrpcController } from './registration/registration-grpc.controller';
 import { GraphQLConfigModule } from './config/graphql.module';
 import { PingResolver } from './resolvers/ping.resolver';
 import { CompanyLocationModule } from '@my-product-app/backend-company-location';
@@ -27,7 +26,7 @@ import { WorkorderModule } from '@my-product-app/workorder';
     ProductModule,
     WorkorderModule,
   ],
-  controllers: [RegistrationGrpcController],
+  controllers: [],
   providers: [PingResolver],
 })
 export class BffModule {}
