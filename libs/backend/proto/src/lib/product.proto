@@ -31,7 +31,14 @@ message ProductResponse {
   Product product = 1;
 }
 
+message EmptyRequest {}
+
+message ProductListResponse {
+  repeated Product products = 1;
+}
+
 service ProductService {
   rpc CreateProduct (CreateProductRequest) returns (ProductResponse);
   rpc GetProductById (google.protobuf.Int32Value) returns (ProductResponse);
+  rpc GetAllProducts (EmptyRequest) returns (ProductListResponse);
 }

@@ -8,7 +8,10 @@ import { PingResolver } from './resolvers/ping.resolver';
 import { CompanyLocationModule } from '@my-product-app/backend-company-location';
 import { CompanyModule } from '@my-product-app/backend-company';
 import { UserModule } from '@my-product-app/user';
-import { ProductModule } from '@my-product-app/product';
+import {
+  ProductGrpcClientModule,
+  ProductModule,
+} from '@my-product-app/product';
 import { WorkorderModule } from '@my-product-app/workorder';
 
 @Module({
@@ -22,8 +25,9 @@ import { WorkorderModule } from '@my-product-app/workorder';
     RegistrationModule,
     CompanyLocationModule,
     CompanyModule,
-    UserModule,
     ProductModule,
+    UserModule,
+    ProductGrpcClientModule,
     WorkorderModule,
   ],
   controllers: [],

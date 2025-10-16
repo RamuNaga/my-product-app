@@ -2,8 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 
 import {
-  FindAllProductDocument,
-  FindAllProductQuery,
+  FindAllProductsDocument,
+  FindAllProductsQuery,
 } from '@my-product-app/frontend-graphql-types';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,11 +14,17 @@ import { map } from 'rxjs/operators';
 export class ProductService {
   readonly apollo = inject(Apollo);
 
-  findAllProducts(): Observable<FindAllProductQuery['products']> {
+  findAllProducts(): Observable<FindAllProductsQuery['products']> {
+    console.log('ProductService: findAllProducts called');
     return this.apollo
-      .watchQuery<FindAllProductQuery>({
-        query: FindAllProductDocument,
+      .watchQuery<FindAllProductsQuery>({
+        query: FindAllProductsDocument,
       })
-      .valueChanges.pipe(map((result) => result.data.products));
+      .valueChanges.pipe(
+        map((result) => {
+          console.log('Fetched products:', result.data.products);
+          return result.data.products;
+        })
+      );
   }
 }

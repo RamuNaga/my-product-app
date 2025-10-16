@@ -11,6 +11,7 @@ module.exports = [
           allow: [
             '^@my-product-app/backend-shared',
             '^@my-product-app/backend-prisma/product-prisma',
+            '^@my-product-app/backend-proto/generated',
           ],
           enforceBuildableLibDependency: true,
           depConstraints: [

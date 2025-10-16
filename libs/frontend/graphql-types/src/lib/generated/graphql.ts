@@ -400,10 +400,10 @@ export type CreateUserMutationVariables = Exact<{
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: number, email: string, username: string, role: UserRole } };
 
-export type FindAllProductQueryVariables = Exact<{ [key: string]: never; }>;
+export type FindAllProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FindAllProductQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', id: number, productCode: string, name: string, description: string, image?: string | null, productWeight: string, price: number, createdAt: any }> };
+export type FindAllProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', id: number, productCode: string, name: string, description: string, image?: string | null, productWeight: string, price: number, createdAt: any }> };
 
 export type CreateWorkOrderMutationVariables = Exact<{
   input: CreateWorkorderInput;
@@ -621,8 +621,8 @@ export const CreateUserDocument = gql`
       super(apollo);
     }
   }
-export const FindAllProductDocument = gql`
-    query findAllProduct {
+export const FindAllProductsDocument = gql`
+    query findAllProducts {
   products {
     id
     productCode
@@ -639,8 +639,8 @@ export const FindAllProductDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class FindAllProductGQL extends Apollo.Query<FindAllProductQuery, FindAllProductQueryVariables> {
-    document = FindAllProductDocument;
+  export class FindAllProductsGQL extends Apollo.Query<FindAllProductsQuery, FindAllProductsQueryVariables> {
+    document = FindAllProductsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

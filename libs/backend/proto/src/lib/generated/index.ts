@@ -38,6 +38,9 @@ export {
   ProductServiceClient,
   CreateProductRequest,
   ProductResponse,
+  PRODUCT_SERVICE_NAME,
+  EmptyRequest,
+  ProductListResponse,
 } from './product';
 
 // Wrappers (keep them all, no duplication issues here)

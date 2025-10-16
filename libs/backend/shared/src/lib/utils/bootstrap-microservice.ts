@@ -8,9 +8,9 @@ import * as bodyParser from 'body-parser';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 interface GrpcOptions {
-  package: string; // proto package name (e.g. "user", "company")
-  protoPath: string; // path to proto file
-  url?: string; // optional override for host:port
+  package: string;
+  protoPath: string;
+  url?: string;
 }
 
 interface BootstrapOptions {
@@ -18,7 +18,7 @@ interface BootstrapOptions {
   portEnv: string;
   fallbackPort: number;
   serviceName: string;
-  grpc?: GrpcOptions; // if provided, gRPC will be enabled
+  grpc?: GrpcOptions;
 }
 
 async function tryGetLogger(
@@ -39,21 +39,16 @@ export async function bootstrapMicroservice(
   try {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-    // Body parser config (good for large payloads)
     app.use(bodyParser.json({ limit: '10mb' }));
     app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
-
-    // Serve static assets
     app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads' });
 
-    // Enable CORS
     app.enableCors({
       origin: process.env['FRONTEND_URL'] || 'http://localhost:4200',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
       credentials: true,
     });
 
-    // Logger setup
     const logger = await tryGetLogger(app);
     if (logger) {
       app.useLogger(logger);
@@ -66,12 +61,15 @@ export async function bootstrapMicroservice(
     const microserviceEnvKey = `${options.serviceName
       .toUpperCase()
       .replace(/\s/g, '_')}_MS_PORT`;
+
     const microservicePort =
-      Number(process.env[microserviceEnvKey]) || port + 1000;
+      Number(process.env[microserviceEnvKey]) || port + 1;
 
     console.log(`Starting ${options.serviceName} on ${host}:${port}`);
+    console.log(
+      `microserviceEnvKey: ${microserviceEnvKey}, microservicePort: ${microservicePort}`
+    );
 
-    // Switchable gRPC or TCP microservice
     if (options.grpc) {
       app.connectMicroservice<MicroserviceOptions>({
         transport: Transport.GRPC,
@@ -81,7 +79,6 @@ export async function bootstrapMicroservice(
           url: options.grpc.url || `${host}:${microservicePort}`,
         },
       });
-
       console.log(
         `${options.serviceName} gRPC microservice running on ${
           options.grpc.url || `${host}:${microservicePort}`
@@ -92,19 +89,22 @@ export async function bootstrapMicroservice(
         transport: Transport.TCP,
         options: { host, port: microservicePort },
       });
-
       console.log(
         `${options.serviceName} TCP microservice running on ${host}:${microservicePort}`
       );
     }
 
     await app.startAllMicroservices();
-
-    // Initialize DI
     await app.init();
 
-    const jwtAuthGuard = app.get(JwtAuthGuard);
-    app.useGlobalGuards(jwtAuthGuard);
+    try {
+      const jwtAuthGuard = app.get(JwtAuthGuard);
+      if (jwtAuthGuard) app.useGlobalGuards(jwtAuthGuard);
+    } catch {
+      console.warn(
+        'JwtAuthGuard not found, skipping global guard registration'
+      );
+    }
 
     await app.listen(port);
     console.log(`${options.serviceName} is running on http://${host}:${port}`);

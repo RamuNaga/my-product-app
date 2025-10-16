@@ -4,20 +4,19 @@ import {
   UploadedFile,
   UseInterceptors,
   Body,
-  Inject,
   Get,
   HttpException,
   HttpStatus,
   UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ClientProxy } from '@nestjs/microservices';
 import { diskStorage } from 'multer';
 import { extname, join, sep } from 'path';
 import * as fs from 'fs';
-import { Observable } from 'rxjs';
 import { CurrentUser, JwtAuthGuard } from '@my-product-app/backend-shared';
 import { Public } from '@my-product-app/backend-shared/auth/public.decorator';
+import { ProductGrpcClientService } from '@my-product-app/product';
+import { CreateProductRequest } from '@my-product-app/backend-proto/generated';
 
 const uploadPath = join(__dirname, '../../../../uploads/products');
 if (!fs.existsSync(uploadPath)) {
@@ -27,9 +26,7 @@ if (!fs.existsSync(uploadPath)) {
 @UseGuards(JwtAuthGuard)
 @Controller('products')
 export class ProductController {
-  constructor(
-    @Inject('PRODUCT_SERVICE') private readonly productClient: ClientProxy
-  ) {}
+  constructor(private readonly productGrpcClient: ProductGrpcClientService) {}
 
   @Post('upload')
   @UseInterceptors(
@@ -66,14 +63,20 @@ export class ProductController {
     const relativePath = '/' + file.path.split(sep).slice(-3).join('/');
 
     try {
-      const result = await this.productClient
-        .send(
-          { cmd: 'create_product' },
-          { ...body, imagePath: relativePath, companyId: user.companyId }
-        )
-        .toPromise();
+      const grpcData: CreateProductRequest = {
+        productCode: body.productCode,
+        name: body.name,
+        description: body.description,
+        image: relativePath,
+        productWeight: body.productWeight,
+        price: body.price,
+        companyId: user.companyId,
+      };
 
-      return result;
+      //  Await the gRPC promise
+      const result = await this.productGrpcClient.createProduct(grpcData);
+
+      return { status: 'success', data: result.product };
     } catch (err) {
       const message =
         err instanceof Error
@@ -81,7 +84,7 @@ export class ProductController {
           : (err as any)?.message ||
             (err as any)?.response?.message ||
             'Internal server error';
-      console.log('ProductController  message', message);
+      console.log('ProductController message', message);
 
       try {
         fs.unlinkSync(file.path);
@@ -99,9 +102,12 @@ export class ProductController {
       );
     }
   }
-  @Public()
-  @Get()
-  findAll(): Observable<any> {
-    return this.productClient.send({ cmd: 'get_all_products' }, {});
-  }
+
+  // @Public()
+  // @Get()
+  // async findAll() {
+  //   console.log('Fetching all products, findAll in api-gateway is called');
+  //   const result = await this.productGrpcClient.getAllProducts();
+  //   return result.products; // products array from ProductListResponse
+  // }
 }

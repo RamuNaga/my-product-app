@@ -1,6 +1,7 @@
 {
   "apiUrl": "http://localhost:3002",
-  "productServiceUrl": "http://localhost:3001",
+
+  "productServiceUrl": "http://localhost:3000",
   "featureFlags": {
     "enableLogin": true
   }

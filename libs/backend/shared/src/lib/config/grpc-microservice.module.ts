@@ -3,7 +3,6 @@ import { ClientsModule } from '@nestjs/microservices';
 import {
   getCompanyLocationServiceOptions,
   getCompanyServiceOptions,
-  getProductServiceOptions,
   getUserServiceOptions,
 } from './grpc.options';
 
@@ -13,7 +12,6 @@ import {
       getUserServiceOptions(),
       getCompanyServiceOptions(),
       getCompanyLocationServiceOptions(),
-      getProductServiceOptions(),
     ]),
   ],
   exports: [ClientsModule],

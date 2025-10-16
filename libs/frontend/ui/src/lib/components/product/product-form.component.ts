@@ -57,7 +57,7 @@ export class ProductFormComponent {
   });
 
   readonly productImageUploadUrl = computed(
-    () => `${this.runtimeConfigStore.apiUrl()}/products/upload`
+    () => `${this.runtimeConfigStore.productServiceUrl()}/products/upload`
   );
 
   constructor() {
