@@ -10,11 +10,9 @@ module.exports = [
         {
           allow: [
             '^@my-product-app/logger',
-            '^@my-product-app/backend-prisma/user-client',
-            '^@my-product-app/backend-prisma/workorder-client',
-            '^@my-product-app/backend-prisma/company-client',
             '^@my-product-app/backend-proto',
             '^@my-product-app/backend-proto/generated',
+            '^@my-product-app/backend-shared-types',
           ],
           enforceBuildableLibDependency: true,
           depConstraints: [
@@ -23,19 +21,10 @@ module.exports = [
               onlyDependOnLibsWithTags: [
                 'type:shared',
                 'type:buildable',
-                'type:user-prisma',
-                'type:workorder-prisma',
                 'type:proto',
               ],
             },
-            {
-              sourceTag: 'scope:user',
-              onlyDependOnLibsWithTags: ['type:shared'],
-            },
-            {
-              sourceTag: 'scope:product',
-              onlyDependOnLibsWithTags: ['type:shared'],
-            },
+
             {
               sourceTag: 'scope:logger',
               onlyDependOnLibsWithTags: [],

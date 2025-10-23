@@ -1,6 +1,6 @@
 import { mapEnum } from '../enums/enum-mapper';
 import { ProtoCompanyType } from '@my-product-app/backend-proto/generated';
-import { CompanyType as GraphQLCompanyType } from '../enums/enum';
+import { CompanyType as GraphQLCompanyType } from '@my-product-app/backend-shared-types';
 
 // Proto → GraphQL
 export const mapProtoCompanyTypeToGraphQL = (

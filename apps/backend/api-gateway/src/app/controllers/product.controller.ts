@@ -4,7 +4,6 @@ import {
   UploadedFile,
   UseInterceptors,
   Body,
-  Get,
   HttpException,
   HttpStatus,
   UseGuards,
@@ -14,7 +13,6 @@ import { diskStorage } from 'multer';
 import { extname, join, sep } from 'path';
 import * as fs from 'fs';
 import { CurrentUser, JwtAuthGuard } from '@my-product-app/backend-shared';
-import { Public } from '@my-product-app/backend-shared/auth/public.decorator';
 import { ProductGrpcClientService } from '@my-product-app/product';
 import { CreateProductRequest } from '@my-product-app/backend-proto/generated';
 

@@ -1,0 +1,29 @@
+import { ObjectType, Field, Int, HideField } from '@nestjs/graphql';
+import { UserRole } from '@my-product-app/backend-shared-types';
+
+@ObjectType()
+export class User {
+  @Field(() => Int)
+  id!: number;
+
+  @Field()
+  username!: string;
+
+  @Field()
+  email!: string;
+
+  @HideField()
+  password?: string;
+
+  @Field(() => UserRole)
+  role!: UserRole;
+
+  @Field(() => Int, { nullable: true }) // allow nulls from Prisma
+  companyId?: number | null;
+
+  @Field()
+  createdAt!: Date;
+
+  @Field()
+  updatedAt!: Date;
+}

@@ -36,6 +36,9 @@
       "@my-product-app/backend-company-prisma": [
         "libs/backend/company-prisma/src/index.ts"
       ],
+      "@my-product-app/backend-graphql-types": [
+        "libs/backend/graphql-types/src/index.ts"
+      ],
       "@my-product-app/backend-prisma/company-client": [
         "libs/backend/company-prisma/generated/company-client"
       ],
@@ -74,6 +77,9 @@
         "libs/backend/registration/src/index.ts"
       ],
       "@my-product-app/backend-shared": ["libs/backend/shared/src/index.ts"],
+      "@my-product-app/backend-shared-types": [
+        "libs/backend/shared-types/src/index.ts"
+      ],
       "@my-product-app/backend-shared/*": ["libs/backend/shared/src/lib/*"],
       "@my-product-app/frontend-core": ["libs/frontend/core/src/index.ts"],
       "@my-product-app/frontend-core/*": ["libs/frontend/core/src/lib/*"],
@@ -94,7 +100,6 @@
       "@my-product-app/frontend-ui": ["libs/frontend/ui/src/index.ts"],
       "@my-product-app/frontend-ui/*": ["libs/frontend/ui/src/lib/*"],
       "@my-product-app/logger": ["libs/backend/logger/src/index.ts"],
-
       "@my-product-app/product": ["libs/backend/product/src/index.ts"],
       "@my-product-app/user": ["libs/backend/user/src/index.ts"],
       "@my-product-app/workorder": ["libs/backend/workorder/src/index.ts"]

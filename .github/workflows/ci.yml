@@ -15,7 +15,7 @@ jobs:
   main:
     runs-on: ubuntu-latest
     env:
-      NX_CLOUD_AUTH_TOKEN: ${{ secrets.NX_CLOUD_AUTH_TOKEN }} # 👈 Add this here
+      NX_CLOUD_AUTH_TOKEN: ${{ secrets.NX_CLOUD_AUTH_TOKEN }} #  Add this here
 
     steps:
       # 1. Checkout full history for Nx affected

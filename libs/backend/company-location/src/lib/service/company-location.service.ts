@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateLocationInput } from '../dto/create-location.input';
+import { CreateLocationInput } from '@my-product-app/backend-graphql-types';
 import { CompanyLocationPrismaService } from '@my-product-app/backend-prisma/company-location-prisma';
 
 @Injectable()

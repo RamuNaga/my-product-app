@@ -3,14 +3,14 @@ import {
   ConflictException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CreateUserInput } from '../dto/create-user.input';
-import { User } from '../graphql/user.model';
+import { CreateUserInput } from '@my-product-app/backend-graphql-types';
+import { User } from '@my-product-app/backend-graphql-types';
 import { UserPrismaService } from '@my-product-app/backend-prisma/user-prisma';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User as PrismaUser } from '@my-product-app/backend-prisma/user-client';
-import { UserRole as PrismaUserRole } from '@my-product-app/backend-shared';
-import { UserWithoutPassword } from '../interfaces/user.interface';
+import { UserRole as PrismaUserRole } from '@my-product-app/backend-shared-types';
+import { UserWithoutPassword } from '@my-product-app/backend-graphql-types';
 
 @Injectable()
 export class UserService {

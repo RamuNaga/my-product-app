@@ -7,8 +7,9 @@ import {
   ProductResponse,
   EmptyRequest,
   ProductListResponse,
+  PRODUCT_SERVICE_NAME,
 } from '@my-product-app/backend-proto/generated';
-import { CreateProductInput } from '../dto/create-product.input';
+import { CreateProductInput } from '@my-product-app/backend-graphql-types';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
@@ -19,7 +20,7 @@ export class ProductGrpcClientService implements OnModuleInit {
 
   onModuleInit() {
     this.productService =
-      this.client.getService<ProductServiceClient>('ProductService');
+      this.client.getService<ProductServiceClient>(PRODUCT_SERVICE_NAME);
   }
 
   createProduct(data: CreateProductInput): Promise<ProductResponse> {
@@ -34,6 +35,7 @@ export class ProductGrpcClientService implements OnModuleInit {
   }
 
   getAllProducts(): Promise<ProductListResponse> {
+    console.log('getAllProducts in ProductGrpcClientService is calling');
     return firstValueFrom(
       this.productService.getAllProducts({} as EmptyRequest)
     );

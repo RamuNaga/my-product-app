@@ -1,0 +1,27 @@
+{
+  "name": "shared-types",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/backend/shared-types/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/shared-types",
+        "tsConfig": "libs/backend/shared-types/tsconfig.lib.json",
+        "packageJson": "libs/backend/shared-types/package.json",
+        "main": "libs/backend/shared-types/src/index.ts",
+        "assets": ["libs/backend/shared-types/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/backend/shared-types/jest.config.ts"
+      }
+    }
+  }
+}

@@ -12,6 +12,7 @@ export {
   FindAllUsersResponse,
   GetUserByIdRequest,
   FindAllUsersRequest,
+  USER_SERVICE_NAME,
 } from './user';
 
 // Company service
@@ -22,6 +23,7 @@ export {
   SearchCompanyByNameRequest,
   SearchCompanyByNameResponse,
   CompanyType as ProtoCompanyType,
+  COMPANY_SERVICE_NAME,
 } from './company';
 
 // Company Location service
@@ -31,6 +33,7 @@ export {
   CompanyLocationResponse,
   GetAllCompanyLocationsRequest,
   GetAllCompanyLocationsResponse,
+  COMPANY_LOCATION_SERVICE_NAME,
 } from './company-location';
 
 // Product service

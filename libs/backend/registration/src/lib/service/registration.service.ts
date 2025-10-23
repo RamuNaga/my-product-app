@@ -2,7 +2,7 @@ import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
-import { RegisterCompanyUserInput } from '../dto/register-company-user.input';
+import { RegisterCompanyUserInput } from '@my-product-app/backend-graphql-types';
 
 import {
   USER_SERVICE,

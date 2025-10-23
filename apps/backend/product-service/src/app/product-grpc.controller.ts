@@ -9,6 +9,10 @@ export class ProductGrpcController {
 
   @GrpcMethod('ProductService', 'CreateProduct')
   async createProduct(data: CreateProductRequest) {
+    console.log(
+      '@GrpcMethod createProduct  in  ProductGrpcController in Product-service microservice is calling/not calling',
+      data
+    );
     return this.productService.create(data);
   }
   // No use of this method now, since we are using ProductResolver in product module
@@ -16,7 +20,10 @@ export class ProductGrpcController {
   // But keeping it here for reference or future use if needed
   @GrpcMethod('ProductService', 'FindAllProducts')
   async getAllProducts() {
-    console.log('@GrpcMethod getAllProducts  in  ProductGrpcController');
-    return this.productService.findAll();
+    console.log(
+      '@GrpcMethod getAllProducts  in  ProductGrpcController in Product-service microservice is calling/not calling'
+    );
+    const products = await this.productService.getAllProducts();
+    return { products };
   }
 }

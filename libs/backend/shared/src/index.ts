@@ -18,7 +18,6 @@ export * from './lib/auth/current-user.decorator';
 export * from './lib/guards/roles.guard';
 export * from './lib/decorators/roles.decorator';
 export * from './lib/interfaces/user-payload.interface';
-export * from './lib/enums/enum';
 export * from './lib/enums/enum-mapper';
 export * from './lib/mapper/mapper.module';
 export * from './lib/mapper/company-type.mapper';

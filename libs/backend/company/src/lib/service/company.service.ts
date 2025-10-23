@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCompanyInput } from '../dto/create-company.input';
-import { Company } from '../graphql/company.model';
-import { CompanyType as GQLCompanyType } from '../graphql/company.model';
+import { CreateCompanyInput } from '@my-product-app/backend-graphql-types';
+import { Company } from '@my-product-app/backend-graphql-types';
+import { CompanyType as GQLCompanyType } from '@my-product-app/backend-shared-types';
 import { CompanyPrismaService } from '@my-product-app/backend-company-prisma';
 
 @Injectable()

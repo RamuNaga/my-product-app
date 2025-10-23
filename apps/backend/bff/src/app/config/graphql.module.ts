@@ -8,7 +8,7 @@ import { graphqlConfig } from '@my-product-app/backend-shared';
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      ...graphqlConfig, // Use shared GraphQL config
+      ...graphqlConfig,
     }),
   ],
   exports: [GraphQLModule],

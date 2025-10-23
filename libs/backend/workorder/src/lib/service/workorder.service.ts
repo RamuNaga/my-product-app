@@ -4,14 +4,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { CreateWorkorderInput } from '../dto/create-workoder.input';
-import { UpdateWorkorderInput } from '../dto/update-workorder.input';
-import { ApproveWorkorderInput } from '../dto/approve-workorder.input';
+import { CreateWorkorderInput } from '@my-product-app/backend-graphql-types';
+import { UpdateWorkorderInput } from '@my-product-app/backend-graphql-types';
+import { ApproveWorkorderInput } from '@my-product-app/backend-graphql-types';
 import {
   WorkOrderStatus,
   Priority,
-  UserPayload,
-} from '@my-product-app/backend-shared';
+} from '@my-product-app/backend-shared-types';
+import { UserPayload } from '@my-product-app/backend-shared';
 import { WorkorderPrismaService } from '@my-product-app/backend-prisma/workorder-prisma';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class WorkOrderService {
     return `W${datePart}${sequence}`;
   }
 
-  // ✅ Create WorkOrder (no Prisma relation to product)
+  //  Create WorkOrder (no Prisma relation to product)
   async create(data: CreateWorkorderInput, user: UserPayload) {
     // Optionally, you can validate productId existence
     // by calling product microservice, not Prisma here.
@@ -68,14 +68,14 @@ export class WorkOrderService {
     return this.prisma.workOrder.create({ data: cleanData });
   }
 
-  // ✅ Find all WorkOrders (no include)
+  // Find all WorkOrders (no include)
   async findAll() {
     return this.prisma.workOrder.findMany({
       orderBy: { createdAt: 'desc' },
     });
   }
 
-  // ✅ Find one WorkOrder
+  //  Find one WorkOrder
   async findOne(id: number) {
     const workorder = await this.prisma.workOrder.findUnique({ where: { id } });
     if (!workorder) {
@@ -84,7 +84,7 @@ export class WorkOrderService {
     return workorder;
   }
 
-  // ✅ Update WorkOrder
+  //  Update WorkOrder
   async update(id: number, data: UpdateWorkorderInput) {
     const workorder = await this.prisma.workOrder.findUnique({ where: { id } });
     if (!workorder) {
@@ -100,7 +100,7 @@ export class WorkOrderService {
     });
   }
 
-  // ✅ Cancel WorkOrder
+  //  Cancel WorkOrder
   async cancel(id: number) {
     const workorder = await this.prisma.workOrder.findUnique({ where: { id } });
 
@@ -117,7 +117,7 @@ export class WorkOrderService {
     });
   }
 
-  // ✅ Filtered list (no include)
+  //  Filtered list (no include)
   async findFiltered(filters: {
     workOrderCode?: string;
     clientLocation?: string;

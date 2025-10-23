@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 
-import { CreateProductInput } from '../dto/create-product.input';
+import { CreateProductInput } from '@my-product-app/backend-graphql-types';
 import { ProductPrismaService } from '@my-product-app/backend-prisma/product-prisma';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
@@ -38,6 +38,16 @@ export class ProductService {
     return this.prisma.product.findMany({
       orderBy: { createdAt: 'desc' },
     });
+  }
+
+  async getAllProducts() {
+    const products = await this.prisma.product.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+    return products.map((p) => ({
+      ...p,
+      image: p.image ?? '',
+    }));
   }
 
   findOne(id: number) {
