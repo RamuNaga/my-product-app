@@ -24,7 +24,10 @@ export class ProductGrpcClientService implements OnModuleInit {
   }
 
   createProduct(data: CreateProductInput): Promise<ProductResponse> {
-    console.log('Creating product with data is calling:', data);
+    console.log(
+      'ProductGrpcClientService Creating product with data is calling:',
+      data
+    );
     return lastValueFrom(
       this.productService.createProduct(data as CreateProductRequest)
     );

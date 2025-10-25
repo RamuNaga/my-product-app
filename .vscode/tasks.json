@@ -40,7 +40,7 @@
     {
       "label": "Serve Api gateway",
       "type": "shell",
-      "command": "nx run api-gataway:serve:development",
+      "command": "nx run api-gateway:serve:development",
       "problemMatcher": []
     },
     {
