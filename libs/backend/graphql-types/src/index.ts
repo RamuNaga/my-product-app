@@ -19,3 +19,5 @@ export * from './lib/workorder/dto/approve-workorder.input';
 export * from './lib/workorder/dto/create-workoder.input';
 export * from './lib/workorder/dto/update-workorder.input';
 export * from './lib/workorder/dto/workorder.output';
+export * from './lib/workorder/graphql/workorder-list.model';
+export * from './lib/workorder/graphql/workorder.model';

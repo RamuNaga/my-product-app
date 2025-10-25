@@ -7,8 +7,8 @@ export interface IUser {
   email: string;
   role: UserRole;
   companyId?: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // User type used externally (from GraphQL model) but WITHOUT password field

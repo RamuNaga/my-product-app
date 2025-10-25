@@ -1,5 +1,5 @@
 import {
-  Workorder as GqlWorkorder,
+  WorkOrder as GqlWorkorder,
   WorkOrderStatus,
   Priority,
 } from '@my-product-app/frontend-graphql-types';

@@ -4,12 +4,11 @@ import {
   CreateUserInput,
   LoginInput,
   User,
+  LoginResponse as LoginResponseGql,
 } from '@my-product-app/backend-graphql-types';
-import {
-  CreateUserResponse,
-  LoginResponse,
-} from '@my-product-app/backend-proto/generated';
-import { BaseGrpcResolver } from '../../resolvers/base-user.resolver';
+import { CreateUserResponse } from '@my-product-app/backend-proto/generated';
+import { BaseGrpcResolver } from '../../resolvers/base.resolver';
+import { mapProtoUserRoleToGraphQL } from '@my-product-app/backend-shared-mappers';
 
 @Resolver(() => User)
 export class UserResolver extends BaseGrpcResolver(UserGrpcClientService) {
@@ -19,15 +18,30 @@ export class UserResolver extends BaseGrpcResolver(UserGrpcClientService) {
 
   @Mutation(() => User)
   async createUser(
-    @Args('input') input: CreateUserInput
+    @Args('createUserInput') input: CreateUserInput
   ): Promise<CreateUserResponse> {
     return this.handleGrpcCall(this.grpcService.createUser(input));
   }
 
-  @Mutation(() => LoginResponse)
+  @Mutation(() => LoginResponseGql)
   async login(
     @Args('loginInput') loginInput: LoginInput
-  ): Promise<LoginResponse> {
-    return this.handleGrpcCall(this.grpcService.login(loginInput));
+  ): Promise<LoginResponseGql> {
+    const grpcResponse = await this.handleGrpcCall(
+      this.grpcService.login(loginInput)
+    );
+
+    return {
+      accessToken: grpcResponse.accessToken,
+      user: {
+        id: grpcResponse.id,
+        email: grpcResponse.email,
+        username: grpcResponse.username,
+        role: mapProtoUserRoleToGraphQL(grpcResponse.role),
+        companyId: grpcResponse.companyId,
+        createdAt: grpcResponse.createdAt,
+        updatedAt: grpcResponse.updatedAt,
+      },
+    };
   }
 }

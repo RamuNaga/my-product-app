@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { RegistrationService } from '@my-product-app/backend-registration';
-import { RegisterCompanyUserInput } from '@my-product-app/backend-registration';
+import { RegisterCompanyUserInput } from '@my-product-app/backend-graphql-types';
 
 @Controller('auth')
 export class RegistrationGrpcController {

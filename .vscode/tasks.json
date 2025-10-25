@@ -38,6 +38,12 @@
       "problemMatcher": []
     },
     {
+      "label": "Serve Api gateway",
+      "type": "shell",
+      "command": "nx run api-gataway:serve:development",
+      "problemMatcher": []
+    },
+    {
       "label": "Serve Frontend",
       "type": "shell",
       "command": "nx serve frontend",
@@ -50,7 +56,8 @@
         "Serve Company gRPC Service",
         "Serve Company Location gRPC Service",
         "Serve Product Service",
-        //"Serve Workorder Service",
+        "Serve Workorder Service",
+        "Serve Api gateway",
         "Serve BFF",
         "Serve Frontend"
       ],

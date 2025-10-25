@@ -9,6 +9,7 @@ export class ProductResolver {
 
   @Query(() => [Product], { name: 'products' })
   async products(): Promise<Product[]> {
+    console.log('Fetching products from gRPC service...');
     try {
       const res = await this.productGrpcClient.getAllProducts();
 

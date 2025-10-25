@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { signalStore, withMethods, withState } from '@ngrx/signals';
-import { firstValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 import {
   WorkorderService,
@@ -128,7 +128,7 @@ export const workorderListStoreFactory = (): WorkorderListStoreType => {
             if (filters.status()) variables.status = filters.status();
 
             // Service returns Observable<WorkorderListResponse>
-            const response: WorkorderListResponse = await firstValueFrom(
+            const response: WorkorderListResponse = await lastValueFrom(
               workorderService.getWorkOrders(variables)
             );
 

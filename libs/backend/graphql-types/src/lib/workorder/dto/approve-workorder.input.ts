@@ -22,5 +22,8 @@ export class ApproveWorkorderInput {
   comments?: string;
 
   @Field(() => WorkOrderStatus)
-  status!: WorkOrderStatus; // APPROVED or REJECTED
+  status!: WorkOrderStatus;
+
+  // Remove workOrderCode so it's not part of update
+  workOrderCode?: never;
 }

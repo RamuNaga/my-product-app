@@ -16,7 +16,7 @@ import {
 } from '@my-product-app/backend-proto/generated';
 
 import { CreateUserInput } from '@my-product-app/backend-graphql-types';
-import { mapGraphQLUserRoleToProto } from '@my-product-app/backend-shared';
+import { mapGraphQLUserRoleToProto } from '@my-product-app/backend-shared-mappers';
 
 import { catchError, map } from 'rxjs/operators';
 import { throwError } from 'rxjs';

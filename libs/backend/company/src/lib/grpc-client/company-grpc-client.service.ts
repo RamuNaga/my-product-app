@@ -12,7 +12,7 @@ import {
 } from '@my-product-app/backend-proto/generated';
 
 import { CreateCompanyInput } from '@my-product-app/backend-graphql-types';
-import { mapGraphQLCompanyTypeToProto } from '@my-product-app/backend-shared'; // if you have type mapping utils
+import { mapGraphQLCompanyTypeToProto } from '@my-product-app/backend-shared-mappers'; // if you have type mapping utils
 
 @Injectable()
 export class CompanyGrpcClientService implements OnModuleInit {

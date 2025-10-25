@@ -5,7 +5,7 @@ import {
 } from '@my-product-app/backend-shared-types';
 
 @ObjectType()
-export class Workorder {
+export class WorkOrder {
   @Field(() => Int)
   id!: number;
 

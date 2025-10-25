@@ -1,0 +1,5 @@
+mutation ApproveWorkOrder($input: ApproveWorkorderInput!) {
+  approveWorkorder(input: $input) {
+    ...WorkorderFields
+  }
+}

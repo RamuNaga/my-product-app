@@ -9,7 +9,7 @@ import {
 import {
   mapProtoCompanyTypeToGraphQL,
   mapGraphQLCompanyTypeToProto,
-} from '@my-product-app/backend-shared';
+} from '@my-product-app/backend-shared-mappers';
 
 @Injectable()
 export class CompanyGrpcService {
@@ -33,7 +33,9 @@ export class CompanyGrpcService {
       company: {
         id: company.id,
         name: company.name,
-        type: mapGraphQLCompanyTypeToProto(company.type), // map back to Proto enum
+        type: mapGraphQLCompanyTypeToProto(
+          company.type as unknown as import('@my-product-app/backend-shared-types').CompanyType
+        ), // map back to Proto enum
         contact: company.contact ?? '',
         createdAt: company.createdAt.toISOString(),
         updatedAt: company.updatedAt.toISOString(),
@@ -54,7 +56,9 @@ export class CompanyGrpcService {
       company: {
         id: company.id,
         name: company.name,
-        type: mapGraphQLCompanyTypeToProto(company.type),
+        type: mapGraphQLCompanyTypeToProto(
+          company.type as unknown as import('@my-product-app/backend-shared-types').CompanyType
+        ),
         contact: company.contact ?? '',
         createdAt: company.createdAt.toISOString(),
         updatedAt: company.updatedAt.toISOString(),
@@ -79,7 +83,9 @@ export class CompanyGrpcService {
       companies: companies.map((company) => ({
         id: company.id,
         name: company.name,
-        type: mapGraphQLCompanyTypeToProto(company.type),
+        type: mapGraphQLCompanyTypeToProto(
+          company.type as unknown as import('@my-product-app/backend-shared-types').CompanyType
+        ),
         contact: company.contact ?? '',
         createdAt: company.createdAt.toISOString(),
         updatedAt: company.updatedAt.toISOString(),

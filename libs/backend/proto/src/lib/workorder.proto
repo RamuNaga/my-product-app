@@ -7,7 +7,6 @@ import "google/protobuf/wrappers.proto";
 
 // ===================== Enums =====================
 
-
 enum WorkOrderStatus {
   WORK_ORDER_REQUESTED = 0;
   WORK_ORDER_PENDING = 1;
@@ -38,7 +37,7 @@ enum IssueType {
   ISSUE_TYPE_OTHER = 4;
 }
 
-// ===================== Messages =====================
+// ===================== WorkOrder =====================
 
 message WorkOrder {
   int32 id = 1;
@@ -61,6 +60,8 @@ message WorkOrder {
   google.protobuf.Timestamp updatedAt = 18;
 }
 
+// --------------------- CreateWorkOrder ---------------------
+
 message CreateWorkOrderRequest {
   string workOrderCode = 1;
   int32 productId = 2;
@@ -70,17 +71,67 @@ message CreateWorkOrderRequest {
   google.protobuf.Timestamp deliveryDate = 6;
   string description = 7;
   int32 createdById = 8;
-  Priority priority = 9;
-  repeated string attachments = 10;
-  string assignedTo = 11;
-  string comments = 12;
+  WorkOrderStatus status = 9; // default: REQUESTED
 }
 
 message WorkOrderResponse {
   WorkOrder workOrder = 1;
 }
 
-// --------------------- PurchaseOrder ---------------------
+// --------------------- ApproveWorkOrder ---------------------
+
+message ApproveWorkOrderRequest {
+  int32 workOrderId = 1;
+  int32 approvedById = 2; // mandatory approver
+  Priority priority = 3;
+  repeated string attachments = 4;
+  string assignedTo = 5;
+  string comments = 6;
+  WorkOrderStatus status = 7; // typically WORK_ORDER_APPROVED
+  
+}
+
+message ApproveWorkOrderResponse {
+  WorkOrder workOrder = 1;
+}
+
+// --------------------- UpdateWorkOrder ---------------------
+
+message UpdateWorkOrderRequest {
+  int32 workOrderId = 1;
+  int32 productId = 2;
+  string clientLocation = 3;
+  string vendorOrClient = 4;
+  int32 quantity = 5;
+  google.protobuf.Timestamp deliveryDate = 6;
+  string description = 7;
+  WorkOrderStatus status = 8;
+  int32 createdById = 9;
+  google.protobuf.Int32Value approvedById = 10;
+  google.protobuf.Int32Value companyId = 11;
+  Priority priority = 12;
+  repeated string attachments = 13;
+  string assignedTo = 14;
+  string comments = 15;
+}
+
+// --------------------- GetWorkOrders (List with filters) ---------------------
+
+message GetWorkOrdersRequest {
+  google.protobuf.StringValue workOrderCode = 1;   // optional
+  google.protobuf.StringValue clientLocation = 2;  // optional
+  google.protobuf.StringValue vendorOrClient = 3;  // optional
+  WorkOrderStatus status = 4;                      // optional, defaults to REQUESTED
+  google.protobuf.Int32Value page = 5;             // optional, defaults to 1
+  google.protobuf.Int32Value pageSize = 6;         // optional, defaults to 10
+}
+
+message GetWorkOrdersResponse {
+  repeated WorkOrder workOrders = 1;
+  int32 totalCount = 2;
+}
+
+// ===================== PurchaseOrder =====================
 
 message PurchaseOrder {
   int32 id = 1;
@@ -113,7 +164,7 @@ message PurchaseOrderResponse {
   PurchaseOrder purchaseOrder = 1;
 }
 
-// --------------------- ProductionPlan ---------------------
+// ===================== ProductionPlan =====================
 
 message ProductionPlan {
   int32 id = 1;
@@ -127,6 +178,8 @@ message ProductionPlan {
   int32 targetPerMin = 9;
   google.protobuf.Int32Value actualProduced = 10;
   string issues = 11;
+  google.protobuf.Timestamp createdAt = 12;
+  google.protobuf.Timestamp updatedAt = 13;
 }
 
 message CreateProductionPlanRequest {
@@ -146,7 +199,7 @@ message ProductionPlanResponse {
   ProductionPlan productionPlan = 1;
 }
 
-// --------------------- ProductionIssue ---------------------
+// ===================== ProductionIssue =====================
 
 message ProductionIssue {
   int32 id = 1;
@@ -155,6 +208,8 @@ message ProductionIssue {
   string description = 4;
   google.protobuf.Timestamp occurredAt = 5;
   google.protobuf.Timestamp resolvedAt = 6;
+  google.protobuf.Timestamp createdAt = 7;
+  google.protobuf.Timestamp updatedAt = 8;
 }
 
 message CreateProductionIssueRequest {
@@ -169,12 +224,15 @@ message ProductionIssueResponse {
   ProductionIssue productionIssue = 1;
 }
 
-// ===================== Service =====================
+// ===================== Service Definition =====================
 
 service WorkOrderService {
   // WorkOrder RPCs
   rpc CreateWorkOrder(CreateWorkOrderRequest) returns (WorkOrderResponse);
   rpc GetWorkOrderById(google.protobuf.Int32Value) returns (WorkOrderResponse);
+  rpc GetWorkOrders(GetWorkOrdersRequest) returns (GetWorkOrdersResponse);
+  rpc UpdateWorkOrder(UpdateWorkOrderRequest) returns (WorkOrderResponse);
+  rpc ApproveWorkOrder(ApproveWorkOrderRequest) returns (ApproveWorkOrderResponse);
 
   // PurchaseOrder RPCs
   rpc CreatePurchaseOrder(CreatePurchaseOrderRequest) returns (PurchaseOrderResponse);

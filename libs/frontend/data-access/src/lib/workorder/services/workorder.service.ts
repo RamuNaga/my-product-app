@@ -3,7 +3,7 @@ import {
   CreateWorkOrderGQL,
   CreateWorkorderInput,
   CreateWorkOrderMutation,
-  Workorder as GqlWorkorder,
+  WorkOrder as GqlWorkorder,
 } from '@my-product-app/frontend-graphql-types';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

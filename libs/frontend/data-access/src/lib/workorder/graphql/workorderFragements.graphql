@@ -1,7 +1,7 @@
 # fragments/workorder.graphql
 
 # Base fragment for stage 1 creation
-fragment WorkorderBaseFields on Workorder {
+fragment WorkorderBaseFields on WorkOrder {
   id
   clientLocation
   vendorOrClient
@@ -11,7 +11,7 @@ fragment WorkorderBaseFields on Workorder {
 }
 
 # Full fragment including all details for queries
-fragment WorkorderFields on Workorder {
+fragment WorkorderFields on WorkOrder {
   ...WorkorderBaseFields
   workOrderCode
   status
@@ -28,7 +28,7 @@ fragment WorkorderFields on Workorder {
 }
 
 # Minimal display for tables/lists
-fragment WorkorderListFields on Workorder {
+fragment WorkorderListFields on WorkOrder {
   id
   workOrderCode
   clientLocation
@@ -41,7 +41,7 @@ fragment WorkorderListFields on Workorder {
 }
 
 # Full details for single workorder view
-fragment WorkorderDetailsFields on Workorder {
+fragment WorkorderDetailsFields on WorkOrder {
   ...WorkorderListFields
   description
   productId

@@ -1,116 +1,116 @@
-import {
-  Injectable,
-  ConflictException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { CreateUserInput } from '@my-product-app/backend-graphql-types';
-import { User } from '@my-product-app/backend-graphql-types';
-import { UserPrismaService } from '@my-product-app/backend-prisma/user-prisma';
-import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
-import { User as PrismaUser } from '@my-product-app/backend-prisma/user-client';
-import { UserRole as PrismaUserRole } from '@my-product-app/backend-shared-types';
-import { UserWithoutPassword } from '@my-product-app/backend-graphql-types';
+// import {
+//   Injectable,
+//   ConflictException,
+//   UnauthorizedException,
+// } from '@nestjs/common';
+// import { CreateUserInput } from '@my-product-app/backend-graphql-types';
+// import { User } from '@my-product-app/backend-graphql-types';
+// import { UserPrismaService } from '@my-product-app/backend-prisma/user-prisma';
+// import * as bcrypt from 'bcrypt';
+// import { JwtService } from '@nestjs/jwt';
+// import { User as PrismaUser } from '@my-product-app/backend-prisma/user-client';
+// import { UserRole as PrismaUserRole } from '@my-product-app/backend-shared-types';
+// import { UserWithoutPassword } from '@my-product-app/backend-graphql-types';
 
-@Injectable()
-export class UserService {
-  constructor(
-    private prisma: UserPrismaService,
-    private readonly jwtService: JwtService
-  ) {}
+// @Injectable()
+// export class UserService {
+//   constructor(
+//     private prisma: UserPrismaService,
+//     private readonly jwtService: JwtService
+//   ) {}
 
-  async create(createUserInput: CreateUserInput): Promise<UserWithoutPassword> {
-    const { email, password, username, role, companyId } = createUserInput;
+//   async create(createUserInput: CreateUserInput): Promise<UserWithoutPassword> {
+//     const { email, password, username, role, companyId } = createUserInput;
 
-    const emailExists = await this.prisma.user.findUnique({
-      where: { email },
-    });
+//     const emailExists = await this.prisma.user.findUnique({
+//       where: { email },
+//     });
 
-    if (emailExists) {
-      throw new ConflictException('Email is already in use.');
-    }
+//     if (emailExists) {
+//       throw new ConflictException('Email is already in use.');
+//     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+//     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const data: any = {
-      email,
-      username,
-      password: hashedPassword,
-      role: role as PrismaUserRole,
-    };
+//     const data: any = {
+//       email,
+//       username,
+//       password: hashedPassword,
+//       role: role as PrismaUserRole,
+//     };
 
-    if (companyId !== undefined) {
-      data.companyId = companyId;
-    }
+//     if (companyId !== undefined) {
+//       data.companyId = companyId;
+//     }
 
-    const user = await this.prisma.user.create({
-      data,
-    });
+//     const user = await this.prisma.user.create({
+//       data,
+//     });
 
-    return this.mapUser(user);
-  }
+//     return this.mapUser(user);
+//   }
 
-  async login(
-    email: string,
-    password: string
-  ): Promise<{ user: Omit<User, 'password'>; accessToken: string }> {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+//   async login(
+//     email: string,
+//     password: string
+//   ): Promise<{ user: Omit<User, 'password'>; accessToken: string }> {
+//     const user = await this.prisma.user.findUnique({ where: { email } });
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid email or password');
-    }
+//     if (!user) {
+//       throw new UnauthorizedException('Invalid email or password');
+//     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid email or password');
-    }
+//     const isPasswordValid = await bcrypt.compare(password, user.password);
+//     if (!isPasswordValid) {
+//       throw new UnauthorizedException('Invalid email or password');
+//     }
 
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-      companyId: user.companyId,
-    };
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
+//     const payload = {
+//       sub: user.id,
+//       email: user.email,
+//       role: user.role,
+//       companyId: user.companyId,
+//     };
+//     const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
 
-    const { password: _, ...userWithoutPassword } = user;
+//     const { password: _, ...userWithoutPassword } = user;
 
-    return {
-      user: this.mapUser(userWithoutPassword as PrismaUser),
-      accessToken,
-    };
-  }
+//     return {
+//       user: this.mapUser(userWithoutPassword as PrismaUser),
+//       accessToken,
+//     };
+//   }
 
-  async findAll(): Promise<UserWithoutPassword[]> {
-    const users = await this.prisma.user.findMany({
-      select: {
-        id: true,
-        email: true,
-        username: true,
-        role: true,
-        companyId: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+//   async findAll(): Promise<UserWithoutPassword[]> {
+//     const users = await this.prisma.user.findMany({
+//       select: {
+//         id: true,
+//         email: true,
+//         username: true,
+//         role: true,
+//         companyId: true,
+//         createdAt: true,
+//         updatedAt: true,
+//       },
+//     });
 
-    return users.map((user) => this.mapUser(user));
-  }
+//     return users.map((user) => this.mapUser(user));
+//   }
 
-  async isEmailAvailable(email: string): Promise<boolean> {
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-    });
-    return !user;
-  }
+//   async isEmailAvailable(email: string): Promise<boolean> {
+//     const user = await this.prisma.user.findUnique({
+//       where: { email },
+//     });
+//     return !user;
+//   }
 
-  private mapUser(
-    user: Omit<PrismaUser, 'password'> | PrismaUser
-  ): UserWithoutPassword {
-    return {
-      ...user,
-      role: user.role as PrismaUserRole,
-      companyId: user.companyId ?? 0,
-    };
-  }
-}
+//   private mapUser(
+//     user: Omit<PrismaUser, 'password'> | PrismaUser
+//   ): UserWithoutPassword {
+//     return {
+//       ...user,
+//       role: user.role as PrismaUserRole,
+//       companyId: user.companyId ?? 0,
+//     };
+//   }
+// }

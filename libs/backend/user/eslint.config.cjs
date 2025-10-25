@@ -15,6 +15,7 @@ module.exports = [
             '^@my-product-app/backend-shared-types',
             '^@my-product-app/backend-graphql-types',
             '^@my-product-app/backend-proto/generated',
+            '^@my-product-app/backend-shared-mappers',
           ],
           enforceBuildableLibDependency: true,
           depConstraints: [

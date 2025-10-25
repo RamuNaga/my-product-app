@@ -9,7 +9,13 @@ import { CompanyLocationGrpcClientModule } from '@my-product-app/backend-company
 import { CompanyGrpcClientModule } from '@my-product-app/backend-company';
 import { UserGrpcClientModule } from '@my-product-app/user';
 import { ProductGrpcClientModule } from '@my-product-app/product';
-import { WorkorderModule } from '@my-product-app/workorder';
+import { WorkOrderGrpcClientModule } from '@my-product-app/workorder';
+import { CompanyLocationResolver } from './company-location/resolver/company-location.resolver';
+import { UserResolver } from './user/resolver/user.resolver';
+import { CompanyResolver } from './company/resolver/company.resolver';
+import { ProductResolver } from './product/resolver/product.resolver';
+import { WorkorderResolver } from './workorder/resolver/workorder.resolver';
+import { RegistrationResolver } from './registration/resolver/registration.resolver';
 
 @Module({
   imports: [
@@ -22,11 +28,19 @@ import { WorkorderModule } from '@my-product-app/workorder';
     RegistrationModule,
     ProductGrpcClientModule,
     UserGrpcClientModule,
-    WorkorderModule,
     CompanyGrpcClientModule,
+    WorkOrderGrpcClientModule,
     CompanyLocationGrpcClientModule,
   ],
   controllers: [],
-  providers: [PingResolver],
+  providers: [
+    PingResolver,
+    CompanyLocationResolver,
+    UserResolver,
+    CompanyResolver,
+    ProductResolver,
+    WorkorderResolver,
+    RegistrationResolver,
+  ],
 })
 export class BffModule {}

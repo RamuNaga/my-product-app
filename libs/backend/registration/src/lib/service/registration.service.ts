@@ -1,6 +1,6 @@
 import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 import { RegisterCompanyUserInput } from '@my-product-app/backend-graphql-types';
 
@@ -22,8 +22,8 @@ import {
   CompanyLocationResponse,
 } from '@my-product-app/backend-proto/generated';
 
-import { mapGraphQLUserRoleToProto } from '@my-product-app/backend-shared';
-import { mapGraphQLCompanyTypeToProto } from '@my-product-app/backend-shared';
+import { mapGraphQLUserRoleToProto } from '@my-product-app/backend-shared-mappers';
+import { mapGraphQLCompanyTypeToProto } from '@my-product-app/backend-shared-mappers';
 
 @Injectable()
 export class RegistrationService implements OnModuleInit {
@@ -61,7 +61,7 @@ export class RegistrationService implements OnModuleInit {
       if (!dto.company || !dto.location)
         throw new Error('Company and location data required');
 
-      companyRes = await firstValueFrom(
+      companyRes = await lastValueFrom(
         this.companyService.createCompany({
           ...dto.company,
           type: mapGraphQLCompanyTypeToProto(dto.company.type),
@@ -71,7 +71,7 @@ export class RegistrationService implements OnModuleInit {
       if (!companyRes?.company?.id) throw new Error('Company creation failed');
       companyId = companyRes.company.id;
 
-      locationRes = await firstValueFrom(
+      locationRes = await lastValueFrom(
         this.companyLocationService.createCompanyLocation({
           ...dto.location,
           companyId,
@@ -83,7 +83,7 @@ export class RegistrationService implements OnModuleInit {
 
     if (!dto.user.password) throw new Error('Password is required');
 
-    const userRes: CreateUserResponse = await firstValueFrom(
+    const userRes: CreateUserResponse = await lastValueFrom(
       this.userService.createUser({
         ...dto.user,
         companyId,

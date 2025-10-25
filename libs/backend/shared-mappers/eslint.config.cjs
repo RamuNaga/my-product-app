@@ -10,31 +10,25 @@ module.exports = [
         {
           allow: [
             '^@my-product-app/backend-shared',
-            '^@my-product-app/product',
-            '^@my-product-app/user',
-            '^@my-product-app/registration',
-            '^@my-product-app/backend-prisma/user-prisma',
-            '^@my-product-app/backend-company',
-            '^@my-product-app/backend-company-location',
-            '^@my-product-app/backend-registration',
-            '^@my-product-app/workorder',
             '^@my-product-app/backend-proto',
-            '^@my-product-app/backend-graphql-types',
+            '^@my-product-app/backend-proto/generated',
             '^@my-product-app/backend-shared-types',
+            '@my-product-app/backend-graphql-types',
           ],
           enforceBuildableLibDependency: true,
           depConstraints: [
             {
-              sourceTag: 'bff',
+              sourceTag: 'type:shared',
               onlyDependOnLibsWithTags: [
-                'shared',
-                'product',
-                'user',
-                'registration',
-                'company',
-                'company-location',
-                'workorder',
+                'type:shared',
+                'type:buildable',
+                'type:proto',
               ],
+            },
+
+            {
+              sourceTag: 'scope:logger',
+              onlyDependOnLibsWithTags: [],
             },
           ],
         },

@@ -22,8 +22,8 @@ export class User {
   companyId?: number | null;
 
   @Field()
-  createdAt!: Date;
+  createdAt!: string;
 
   @Field()
-  updatedAt!: Date;
+  updatedAt!: string;
 }

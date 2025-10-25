@@ -1,10 +1,10 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Workorder } from './workorder.model';
+import { WorkOrder } from './workorder.model';
 
 @ObjectType()
 export class WorkordersResponse {
-  @Field(() => [Workorder])
-  workorders!: Workorder[];
+  @Field(() => [WorkOrder])
+  workorders!: WorkOrder[];
 
   @Field(() => Int)
   total!: number;

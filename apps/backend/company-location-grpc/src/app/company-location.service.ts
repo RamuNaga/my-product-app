@@ -40,7 +40,7 @@ export class CompanyLocationGrpcService {
     const location = await this.prisma.companyLocation.findUnique({
       where: { id },
     });
-
+    console.log('Fetched location:', location);
     if (!location) {
       throw new Error(`CompanyLocation with id ${id} not found`);
     }

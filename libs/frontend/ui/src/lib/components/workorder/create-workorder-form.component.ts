@@ -18,7 +18,7 @@ import {
   WorkOrderFormService,
   WorkorderService,
 } from '@my-product-app/frontend-data-access';
-import { tap, firstValueFrom } from 'rxjs';
+import { tap, lastValueFrom } from 'rxjs';
 import { DatePickerFieldComponent } from '../form-controls/date-picker-field.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -153,7 +153,7 @@ export class CreateWorkOrderFormComponent {
     this.submitting.set(true);
 
     try {
-      const res = await firstValueFrom(
+      const res = await lastValueFrom(
         this.workorderService.createWorkOrder(payload)
       );
       this.handleResponse(res);

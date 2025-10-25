@@ -23,9 +23,7 @@ import { UserRole as PrismaUserRole } from '@my-product-app/backend-prisma/user-
 import {
   mapProtoUserRoleToGraphQL,
   mapGraphQLUserRoleToProto,
-} from '@my-product-app/backend-shared';
-
-import { User as PrismaUser } from '@my-product-app/user';
+} from '@my-product-app/backend-shared-mappers';
 
 @Injectable()
 export class UserGrpcService {
@@ -84,7 +82,9 @@ export class UserGrpcService {
       id: user.id,
       username: user.username,
       email: user.email,
-      role: mapGraphQLUserRoleToProto(user.role), // Prisma → Proto
+      role: mapGraphQLUserRoleToProto(
+        user.role as unknown as import('@my-product-app/backend-shared-types').UserRole
+      ),
       companyId: user.companyId ?? 0,
       accessToken,
       createdAt: user.createdAt.toISOString(),
@@ -115,12 +115,14 @@ export class UserGrpcService {
   // ----------------------------
   // Helper to map Prisma user → gRPC CreateUserResponse
   // ----------------------------
-  private mapToCreateUserResponse(user: PrismaUser): CreateUserResponse {
+  private mapToCreateUserResponse(user: any): CreateUserResponse {
     return {
       id: user.id,
       username: user.username,
       email: user.email,
-      role: mapGraphQLUserRoleToProto(user.role), // Prisma → Proto
+      role: mapGraphQLUserRoleToProto(
+        user.role as unknown as import('@my-product-app/backend-shared-types').UserRole
+      ),
       companyId: user.companyId ?? 0,
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),

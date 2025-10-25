@@ -22,7 +22,7 @@ import {
   ProductStore,
 } from '@my-product-app/frontend-shared';
 import { HttpService, RuntimeConfigStore } from '@my-product-app/frontend-core';
-import { firstValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-product-form',
@@ -84,7 +84,7 @@ export class ProductFormComponent {
     const formData = this.buildFormData();
 
     try {
-      const res = await firstValueFrom(
+      const res = await lastValueFrom(
         this.httpService.post<ProductCreateResponse>(
           this.productImageUploadUrl(),
           formData

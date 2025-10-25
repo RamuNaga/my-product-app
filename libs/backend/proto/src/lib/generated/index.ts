@@ -52,6 +52,14 @@ export * from './google/protobuf/wrappers';
 // Workorder service
 export {
   WorkOrderServiceClient,
+  WORK_ORDER_SERVICE_NAME,
   CreateWorkOrderRequest,
   WorkOrderResponse,
+  GetWorkOrdersRequest,
+  GetWorkOrdersResponse,
+  UpdateWorkOrderRequest,
+  ApproveWorkOrderRequest,
+  ApproveWorkOrderResponse,
+  WorkOrderStatus as ProtoWorkOrderStatus,
+  WorkOrder as ProtoWorkOrder,
 } from './workorder';

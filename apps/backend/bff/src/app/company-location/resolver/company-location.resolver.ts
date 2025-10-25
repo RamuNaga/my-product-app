@@ -1,12 +1,12 @@
 import { Resolver, Mutation, Args, Query, Int } from '@nestjs/graphql';
-import { firstValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 import { CompanyLocationGrpcClientService } from '@my-product-app/backend-company-location';
 import {
   CreateLocationInput,
   CompanyLocation,
 } from '@my-product-app/backend-graphql-types';
-import { BaseGrpcResolver } from '../../resolvers/base-user.resolver'; // generic base resolver
+import { BaseGrpcResolver } from '../../resolvers/base.resolver'; // generic base resolver
 
 import {
   CompanyLocationResponse,
@@ -23,7 +23,7 @@ export class CompanyLocationResolver extends BaseGrpcResolver(
     super(grpcService);
   }
 
-  /** 🔹 Create a new company location */
+  /** WorkOrder Create a new company location */
   @Mutation(() => CompanyLocation, { name: 'createCompanyLocation' })
   async createCompanyLocation(
     @Args('createLocationInput') createLocationInput: CreateLocationInput
@@ -37,16 +37,19 @@ export class CompanyLocationResolver extends BaseGrpcResolver(
     return this.handleGrpcCall(this.grpcService.createCompanyLocation(request));
   }
 
-  /** 🔹 Get all locations for a company */
+  /** WorkOrder Get all locations for a company */
   @Query(() => [CompanyLocation], { name: 'companyLocations' })
   async getCompanyLocations(
     @Args('companyId', { type: () => Int }) companyId: number
-  ): Promise<GetAllCompanyLocationsResponse> {
-    const result: GetAllCompanyLocationsResponse = await firstValueFrom(
+  ): Promise<CompanyLocation[]> {
+    const result: GetAllCompanyLocationsResponse = await lastValueFrom(
       this.grpcService.getAllCompanyLocations({ companyId })
     );
 
-    // gRPC likely returns an array field, e.g., `locations`
-    return result;
+    return (result.locations ?? []).map((loc) => ({
+      ...loc,
+      createdAt: new Date(loc.createdAt),
+      updatedAt: new Date(loc.updatedAt),
+    }));
   }
 }

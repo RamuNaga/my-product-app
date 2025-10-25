@@ -16,6 +16,8 @@ module.exports = [
             '^@my-product-app/backend-proto/generated',
             '^@my-product-app/backend-prisma/user-prisma',
             '^@my-product-app/backend-prisma/user-client',
+            '^@my-product-app/backend-shared-mappers',
+            '^@my-product-app/backend-graphql-types',
           ],
           enforceBuildableLibDependency: true,
           depConstraints: [

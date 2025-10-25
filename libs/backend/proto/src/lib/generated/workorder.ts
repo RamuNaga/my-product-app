@@ -10,7 +10,7 @@ import type { handleServerStreamingCall, handleUnaryCall, Metadata, UntypedServi
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 import { Timestamp } from "./google/protobuf/timestamp";
-import { Int32Value } from "./google/protobuf/wrappers";
+import { Int32Value, StringValue } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "workorder";
 
@@ -78,14 +78,74 @@ export interface CreateWorkOrderRequest {
   deliveryDate: Timestamp | undefined;
   description: string;
   createdById: number;
+  /** default: REQUESTED */
+  status: WorkOrderStatus;
+}
+
+export interface WorkOrderResponse {
+  workOrder: WorkOrder | undefined;
+}
+
+export interface ApproveWorkOrderRequest {
+  workOrderId: number;
+  /** mandatory approver */
+  approvedById: number;
+  priority: Priority;
+  attachments: string[];
+  assignedTo: string;
+  comments: string;
+  /** typically WORK_ORDER_APPROVED */
+  status: WorkOrderStatus;
+}
+
+export interface ApproveWorkOrderResponse {
+  workOrder: WorkOrder | undefined;
+}
+
+export interface UpdateWorkOrderRequest {
+  workOrderId: number;
+  productId: number;
+  clientLocation: string;
+  vendorOrClient: string;
+  quantity: number;
+  deliveryDate: Timestamp | undefined;
+  description: string;
+  status: WorkOrderStatus;
+  createdById: number;
+  approvedById: number | undefined;
+  companyId: number | undefined;
   priority: Priority;
   attachments: string[];
   assignedTo: string;
   comments: string;
 }
 
-export interface WorkOrderResponse {
-  workOrder: WorkOrder | undefined;
+export interface GetWorkOrdersRequest {
+  /** optional */
+  workOrderCode:
+    | string
+    | undefined;
+  /** optional */
+  clientLocation:
+    | string
+    | undefined;
+  /** optional */
+  vendorOrClient:
+    | string
+    | undefined;
+  /** optional, defaults to REQUESTED */
+  status: WorkOrderStatus;
+  /** optional, defaults to 1 */
+  page:
+    | number
+    | undefined;
+  /** optional, defaults to 10 */
+  pageSize: number | undefined;
+}
+
+export interface GetWorkOrdersResponse {
+  workOrders: WorkOrder[];
+  totalCount: number;
 }
 
 export interface PurchaseOrder {
@@ -131,6 +191,8 @@ export interface ProductionPlan {
   targetPerMin: number;
   actualProduced: number | undefined;
   issues: string;
+  createdAt: Timestamp | undefined;
+  updatedAt: Timestamp | undefined;
 }
 
 export interface CreateProductionPlanRequest {
@@ -157,6 +219,8 @@ export interface ProductionIssue {
   description: string;
   occurredAt: Timestamp | undefined;
   resolvedAt: Timestamp | undefined;
+  createdAt: Timestamp | undefined;
+  updatedAt: Timestamp | undefined;
 }
 
 export interface CreateProductionIssueRequest {
@@ -426,10 +490,7 @@ function createBaseCreateWorkOrderRequest(): CreateWorkOrderRequest {
     deliveryDate: undefined,
     description: "",
     createdById: 0,
-    priority: 0,
-    attachments: [],
-    assignedTo: "",
-    comments: "",
+    status: 0,
   };
 }
 
@@ -459,17 +520,8 @@ export const CreateWorkOrderRequest: MessageFns<CreateWorkOrderRequest> = {
     if (message.createdById !== 0) {
       writer.uint32(64).int32(message.createdById);
     }
-    if (message.priority !== 0) {
-      writer.uint32(72).int32(message.priority);
-    }
-    for (const v of message.attachments) {
-      writer.uint32(82).string(v!);
-    }
-    if (message.assignedTo !== "") {
-      writer.uint32(90).string(message.assignedTo);
-    }
-    if (message.comments !== "") {
-      writer.uint32(98).string(message.comments);
+    if (message.status !== 0) {
+      writer.uint32(72).int32(message.status);
     }
     return writer;
   },
@@ -550,31 +602,7 @@ export const CreateWorkOrderRequest: MessageFns<CreateWorkOrderRequest> = {
             break;
           }
 
-          message.priority = reader.int32() as any;
-          continue;
-        }
-        case 10: {
-          if (tag !== 82) {
-            break;
-          }
-
-          message.attachments.push(reader.string());
-          continue;
-        }
-        case 11: {
-          if (tag !== 90) {
-            break;
-          }
-
-          message.assignedTo = reader.string();
-          continue;
-        }
-        case 12: {
-          if (tag !== 98) {
-            break;
-          }
-
-          message.comments = reader.string();
+          message.status = reader.int32() as any;
           continue;
         }
       }
@@ -612,6 +640,500 @@ export const WorkOrderResponse: MessageFns<WorkOrderResponse> = {
           }
 
           message.workOrder = WorkOrder.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseApproveWorkOrderRequest(): ApproveWorkOrderRequest {
+  return { workOrderId: 0, approvedById: 0, priority: 0, attachments: [], assignedTo: "", comments: "", status: 0 };
+}
+
+export const ApproveWorkOrderRequest: MessageFns<ApproveWorkOrderRequest> = {
+  encode(message: ApproveWorkOrderRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.workOrderId !== 0) {
+      writer.uint32(8).int32(message.workOrderId);
+    }
+    if (message.approvedById !== 0) {
+      writer.uint32(16).int32(message.approvedById);
+    }
+    if (message.priority !== 0) {
+      writer.uint32(24).int32(message.priority);
+    }
+    for (const v of message.attachments) {
+      writer.uint32(34).string(v!);
+    }
+    if (message.assignedTo !== "") {
+      writer.uint32(42).string(message.assignedTo);
+    }
+    if (message.comments !== "") {
+      writer.uint32(50).string(message.comments);
+    }
+    if (message.status !== 0) {
+      writer.uint32(56).int32(message.status);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ApproveWorkOrderRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseApproveWorkOrderRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.workOrderId = reader.int32();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.approvedById = reader.int32();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.priority = reader.int32() as any;
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.attachments.push(reader.string());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.assignedTo = reader.string();
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.comments = reader.string();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.status = reader.int32() as any;
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseApproveWorkOrderResponse(): ApproveWorkOrderResponse {
+  return { workOrder: undefined };
+}
+
+export const ApproveWorkOrderResponse: MessageFns<ApproveWorkOrderResponse> = {
+  encode(message: ApproveWorkOrderResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.workOrder !== undefined) {
+      WorkOrder.encode(message.workOrder, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ApproveWorkOrderResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseApproveWorkOrderResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.workOrder = WorkOrder.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseUpdateWorkOrderRequest(): UpdateWorkOrderRequest {
+  return {
+    workOrderId: 0,
+    productId: 0,
+    clientLocation: "",
+    vendorOrClient: "",
+    quantity: 0,
+    deliveryDate: undefined,
+    description: "",
+    status: 0,
+    createdById: 0,
+    approvedById: undefined,
+    companyId: undefined,
+    priority: 0,
+    attachments: [],
+    assignedTo: "",
+    comments: "",
+  };
+}
+
+export const UpdateWorkOrderRequest: MessageFns<UpdateWorkOrderRequest> = {
+  encode(message: UpdateWorkOrderRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.workOrderId !== 0) {
+      writer.uint32(8).int32(message.workOrderId);
+    }
+    if (message.productId !== 0) {
+      writer.uint32(16).int32(message.productId);
+    }
+    if (message.clientLocation !== "") {
+      writer.uint32(26).string(message.clientLocation);
+    }
+    if (message.vendorOrClient !== "") {
+      writer.uint32(34).string(message.vendorOrClient);
+    }
+    if (message.quantity !== 0) {
+      writer.uint32(40).int32(message.quantity);
+    }
+    if (message.deliveryDate !== undefined) {
+      Timestamp.encode(message.deliveryDate, writer.uint32(50).fork()).join();
+    }
+    if (message.description !== "") {
+      writer.uint32(58).string(message.description);
+    }
+    if (message.status !== 0) {
+      writer.uint32(64).int32(message.status);
+    }
+    if (message.createdById !== 0) {
+      writer.uint32(72).int32(message.createdById);
+    }
+    if (message.approvedById !== undefined) {
+      Int32Value.encode({ value: message.approvedById! }, writer.uint32(82).fork()).join();
+    }
+    if (message.companyId !== undefined) {
+      Int32Value.encode({ value: message.companyId! }, writer.uint32(90).fork()).join();
+    }
+    if (message.priority !== 0) {
+      writer.uint32(96).int32(message.priority);
+    }
+    for (const v of message.attachments) {
+      writer.uint32(106).string(v!);
+    }
+    if (message.assignedTo !== "") {
+      writer.uint32(114).string(message.assignedTo);
+    }
+    if (message.comments !== "") {
+      writer.uint32(122).string(message.comments);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): UpdateWorkOrderRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateWorkOrderRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.workOrderId = reader.int32();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.productId = reader.int32();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clientLocation = reader.string();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.vendorOrClient = reader.string();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.quantity = reader.int32();
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.deliveryDate = Timestamp.decode(reader, reader.uint32());
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.status = reader.int32() as any;
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.createdById = reader.int32();
+          continue;
+        }
+        case 10: {
+          if (tag !== 82) {
+            break;
+          }
+
+          message.approvedById = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
+        }
+        case 11: {
+          if (tag !== 90) {
+            break;
+          }
+
+          message.companyId = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.priority = reader.int32() as any;
+          continue;
+        }
+        case 13: {
+          if (tag !== 106) {
+            break;
+          }
+
+          message.attachments.push(reader.string());
+          continue;
+        }
+        case 14: {
+          if (tag !== 114) {
+            break;
+          }
+
+          message.assignedTo = reader.string();
+          continue;
+        }
+        case 15: {
+          if (tag !== 122) {
+            break;
+          }
+
+          message.comments = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseGetWorkOrdersRequest(): GetWorkOrdersRequest {
+  return {
+    workOrderCode: undefined,
+    clientLocation: undefined,
+    vendorOrClient: undefined,
+    status: 0,
+    page: undefined,
+    pageSize: undefined,
+  };
+}
+
+export const GetWorkOrdersRequest: MessageFns<GetWorkOrdersRequest> = {
+  encode(message: GetWorkOrdersRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.workOrderCode !== undefined) {
+      StringValue.encode({ value: message.workOrderCode! }, writer.uint32(10).fork()).join();
+    }
+    if (message.clientLocation !== undefined) {
+      StringValue.encode({ value: message.clientLocation! }, writer.uint32(18).fork()).join();
+    }
+    if (message.vendorOrClient !== undefined) {
+      StringValue.encode({ value: message.vendorOrClient! }, writer.uint32(26).fork()).join();
+    }
+    if (message.status !== 0) {
+      writer.uint32(32).int32(message.status);
+    }
+    if (message.page !== undefined) {
+      Int32Value.encode({ value: message.page! }, writer.uint32(42).fork()).join();
+    }
+    if (message.pageSize !== undefined) {
+      Int32Value.encode({ value: message.pageSize! }, writer.uint32(50).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetWorkOrdersRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetWorkOrdersRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.workOrderCode = StringValue.decode(reader, reader.uint32()).value;
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clientLocation = StringValue.decode(reader, reader.uint32()).value;
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.vendorOrClient = StringValue.decode(reader, reader.uint32()).value;
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.status = reader.int32() as any;
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.page = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.pageSize = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+};
+
+function createBaseGetWorkOrdersResponse(): GetWorkOrdersResponse {
+  return { workOrders: [], totalCount: 0 };
+}
+
+export const GetWorkOrdersResponse: MessageFns<GetWorkOrdersResponse> = {
+  encode(message: GetWorkOrdersResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    for (const v of message.workOrders) {
+      WorkOrder.encode(v!, writer.uint32(10).fork()).join();
+    }
+    if (message.totalCount !== 0) {
+      writer.uint32(16).int32(message.totalCount);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetWorkOrdersResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetWorkOrdersResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.workOrders.push(WorkOrder.decode(reader, reader.uint32()));
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.totalCount = reader.int32();
           continue;
         }
       }
@@ -980,6 +1502,8 @@ function createBaseProductionPlan(): ProductionPlan {
     targetPerMin: 0,
     actualProduced: undefined,
     issues: "",
+    createdAt: undefined,
+    updatedAt: undefined,
   };
 }
 
@@ -1017,6 +1541,12 @@ export const ProductionPlan: MessageFns<ProductionPlan> = {
     }
     if (message.issues !== "") {
       writer.uint32(90).string(message.issues);
+    }
+    if (message.createdAt !== undefined) {
+      Timestamp.encode(message.createdAt, writer.uint32(98).fork()).join();
+    }
+    if (message.updatedAt !== undefined) {
+      Timestamp.encode(message.updatedAt, writer.uint32(106).fork()).join();
     }
     return writer;
   },
@@ -1114,6 +1644,22 @@ export const ProductionPlan: MessageFns<ProductionPlan> = {
           }
 
           message.issues = reader.string();
+          continue;
+        }
+        case 12: {
+          if (tag !== 98) {
+            break;
+          }
+
+          message.createdAt = Timestamp.decode(reader, reader.uint32());
+          continue;
+        }
+        case 13: {
+          if (tag !== 106) {
+            break;
+          }
+
+          message.updatedAt = Timestamp.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -1311,7 +1857,16 @@ export const ProductionPlanResponse: MessageFns<ProductionPlanResponse> = {
 };
 
 function createBaseProductionIssue(): ProductionIssue {
-  return { id: 0, planId: 0, issueType: 0, description: "", occurredAt: undefined, resolvedAt: undefined };
+  return {
+    id: 0,
+    planId: 0,
+    issueType: 0,
+    description: "",
+    occurredAt: undefined,
+    resolvedAt: undefined,
+    createdAt: undefined,
+    updatedAt: undefined,
+  };
 }
 
 export const ProductionIssue: MessageFns<ProductionIssue> = {
@@ -1333,6 +1888,12 @@ export const ProductionIssue: MessageFns<ProductionIssue> = {
     }
     if (message.resolvedAt !== undefined) {
       Timestamp.encode(message.resolvedAt, writer.uint32(50).fork()).join();
+    }
+    if (message.createdAt !== undefined) {
+      Timestamp.encode(message.createdAt, writer.uint32(58).fork()).join();
+    }
+    if (message.updatedAt !== undefined) {
+      Timestamp.encode(message.updatedAt, writer.uint32(66).fork()).join();
     }
     return writer;
   },
@@ -1390,6 +1951,22 @@ export const ProductionIssue: MessageFns<ProductionIssue> = {
           }
 
           message.resolvedAt = Timestamp.decode(reader, reader.uint32());
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.createdAt = Timestamp.decode(reader, reader.uint32());
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.updatedAt = Timestamp.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -1527,6 +2104,12 @@ export interface WorkOrderServiceClient {
 
   getWorkOrderById(request: Int32Value, metadata?: Metadata): Observable<WorkOrderResponse>;
 
+  getWorkOrders(request: GetWorkOrdersRequest, metadata?: Metadata): Observable<GetWorkOrdersResponse>;
+
+  updateWorkOrder(request: UpdateWorkOrderRequest, metadata?: Metadata): Observable<WorkOrderResponse>;
+
+  approveWorkOrder(request: ApproveWorkOrderRequest, metadata?: Metadata): Observable<ApproveWorkOrderResponse>;
+
   /** PurchaseOrder RPCs */
 
   createPurchaseOrder(request: CreatePurchaseOrderRequest, metadata?: Metadata): Observable<PurchaseOrderResponse>;
@@ -1563,6 +2146,21 @@ export interface WorkOrderServiceController {
     request: Int32Value,
     metadata?: Metadata,
   ): Promise<WorkOrderResponse> | Observable<WorkOrderResponse> | WorkOrderResponse;
+
+  getWorkOrders(
+    request: GetWorkOrdersRequest,
+    metadata?: Metadata,
+  ): Promise<GetWorkOrdersResponse> | Observable<GetWorkOrdersResponse> | GetWorkOrdersResponse;
+
+  updateWorkOrder(
+    request: UpdateWorkOrderRequest,
+    metadata?: Metadata,
+  ): Promise<WorkOrderResponse> | Observable<WorkOrderResponse> | WorkOrderResponse;
+
+  approveWorkOrder(
+    request: ApproveWorkOrderRequest,
+    metadata?: Metadata,
+  ): Promise<ApproveWorkOrderResponse> | Observable<ApproveWorkOrderResponse> | ApproveWorkOrderResponse;
 
   /** PurchaseOrder RPCs */
 
@@ -1608,6 +2206,9 @@ export function WorkOrderServiceControllerMethods() {
     const grpcMethods: string[] = [
       "createWorkOrder",
       "getWorkOrderById",
+      "getWorkOrders",
+      "updateWorkOrder",
+      "approveWorkOrder",
       "createPurchaseOrder",
       "getPurchaseOrderById",
       "listPurchaseOrdersByWorkOrderId",
@@ -1652,6 +2253,37 @@ export const WorkOrderServiceService = {
     requestDeserialize: (value: Buffer): number | undefined => Int32Value.decode(value).value,
     responseSerialize: (value: WorkOrderResponse): Buffer => Buffer.from(WorkOrderResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): WorkOrderResponse => WorkOrderResponse.decode(value),
+  },
+  getWorkOrders: {
+    path: "/workorder.WorkOrderService/GetWorkOrders",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: GetWorkOrdersRequest): Buffer => Buffer.from(GetWorkOrdersRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetWorkOrdersRequest => GetWorkOrdersRequest.decode(value),
+    responseSerialize: (value: GetWorkOrdersResponse): Buffer =>
+      Buffer.from(GetWorkOrdersResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetWorkOrdersResponse => GetWorkOrdersResponse.decode(value),
+  },
+  updateWorkOrder: {
+    path: "/workorder.WorkOrderService/UpdateWorkOrder",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: UpdateWorkOrderRequest): Buffer =>
+      Buffer.from(UpdateWorkOrderRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): UpdateWorkOrderRequest => UpdateWorkOrderRequest.decode(value),
+    responseSerialize: (value: WorkOrderResponse): Buffer => Buffer.from(WorkOrderResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): WorkOrderResponse => WorkOrderResponse.decode(value),
+  },
+  approveWorkOrder: {
+    path: "/workorder.WorkOrderService/ApproveWorkOrder",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: ApproveWorkOrderRequest): Buffer =>
+      Buffer.from(ApproveWorkOrderRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ApproveWorkOrderRequest => ApproveWorkOrderRequest.decode(value),
+    responseSerialize: (value: ApproveWorkOrderResponse): Buffer =>
+      Buffer.from(ApproveWorkOrderResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ApproveWorkOrderResponse => ApproveWorkOrderResponse.decode(value),
   },
   /** PurchaseOrder RPCs */
   createPurchaseOrder: {
@@ -1739,6 +2371,9 @@ export interface WorkOrderServiceServer extends UntypedServiceImplementation {
   /** WorkOrder RPCs */
   createWorkOrder: handleUnaryCall<CreateWorkOrderRequest, WorkOrderResponse>;
   getWorkOrderById: handleUnaryCall<number | undefined, WorkOrderResponse>;
+  getWorkOrders: handleUnaryCall<GetWorkOrdersRequest, GetWorkOrdersResponse>;
+  updateWorkOrder: handleUnaryCall<UpdateWorkOrderRequest, WorkOrderResponse>;
+  approveWorkOrder: handleUnaryCall<ApproveWorkOrderRequest, ApproveWorkOrderResponse>;
   /** PurchaseOrder RPCs */
   createPurchaseOrder: handleUnaryCall<CreatePurchaseOrderRequest, PurchaseOrderResponse>;
   getPurchaseOrderById: handleUnaryCall<number | undefined, PurchaseOrderResponse>;

@@ -1,11 +1,11 @@
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
-import { firstValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 import {
   CreateCompanyInput,
   Company,
 } from '@my-product-app/backend-graphql-types';
-import { BaseGrpcResolver } from '../../resolvers/base-user.resolver';
+import { BaseGrpcResolver } from '../../resolvers/base.resolver';
 import { CompanyGrpcClientService } from '@my-product-app/backend-company';
 
 import {
@@ -37,7 +37,7 @@ export class CompanyResolver extends BaseGrpcResolver(
   async searchCompanies(
     @Args('searchTerm') searchTerm: string
   ): Promise<SearchCompanyByNameResponse> {
-    const result = await firstValueFrom(
+    const result = await lastValueFrom(
       this.grpcService.searchByName({ searchTerm })
     );
 
