@@ -6,39 +6,95 @@
   "tags": ["type:service", "scope:backend", "area:workorder"],
   "targets": {
     "build": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{workspaceRoot}/dist/apps/backend/workorder-service"],
       "options": {
-        "command": "webpack-cli build",
-        "args": ["node-env=production"]
+        "webpackConfig": "apps/backend/workorder-service/webpack.config.js",
+        "outputPath": "dist/apps/backend/workorder-service",
+        "watch": false
       },
       "configurations": {
         "development": {
-          "args": ["node-env=development"]
-        }
-      }
-    },
-    "serve": {
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
-      "dependsOn": ["build"],
-      "options": {
-        "buildTarget": "workorder-service:build",
-        "runBuildTargetDependencies": false,
-        "inspect": false
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "workorder-service:build:development"
+          "webpackConfig": "apps/backend/workorder-service/webpack.config.js",
+          "outputPath": "dist/apps/backend/workorder-service"
         },
         "production": {
-          "buildTarget": "workorder-service:build:production"
+          "webpackConfig": "apps/backend/workorder-service/webpack.config.js",
+          "outputPath": "dist/apps/backend/workorder-service"
         }
       }
     },
-    "test": {
+
+    "copy-protos": {
+      "executor": "nx:run-commands",
       "options": {
+        "command": "npx copyfiles -u 5 \"libs/backend/proto/src/lib/workorder.proto\" \"dist/apps/backend/workorder-service/\""
+      }
+    },
+
+    "build-with-protos": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx run workorder-service:build && nx run workorder-service:copy-protos"
+      }
+    },
+
+    "serve": {
+      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build-with-protos"],
+      "options": {
+        "buildTarget": "workorder-service:build-with-protos",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "workorder-service:build-with-protos"
+        },
+        "production": {
+          "buildTarget": "workorder-service:build-with-protos"
+        }
+      }
+    },
+
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/backend/workorder-service/jest.config.ts",
         "passWithNoTests": true
       }
+    },
+
+    "prune-lockfile": {
+      "dependsOn": ["build-with-protos"],
+      "cache": true,
+      "executor": "@nx/js:prune-lockfile",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/workorder-service/package.json",
+        "{workspaceRoot}/dist/apps/backend/workorder-service/pnpm-lock.yaml"
+      ],
+      "options": {
+        "buildTarget": "build-with-protos"
+      }
+    },
+
+    "copy-workspace-modules": {
+      "dependsOn": ["build-with-protos"],
+      "cache": true,
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/workorder-service/workspace_modules"
+      ],
+      "executor": "@nx/js:copy-workspace-modules",
+      "options": {
+        "buildTarget": "build-with-protos"
+      }
+    },
+
+    "prune": {
+      "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
+      "executor": "nx:noop"
     }
   }
 }
