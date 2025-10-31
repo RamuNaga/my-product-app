@@ -21,6 +21,7 @@ export function mapGqlWorkordersToListModel(
     priority: (w.priority as Priority) ?? null,
     productId: w.productId ?? null,
     createdAt: toIso(w.createdAt),
+    description: w.description ?? '',
   }));
 }
 

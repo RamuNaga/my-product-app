@@ -383,7 +383,7 @@ export type GetWorkOrdersQueryVariables = Exact<{
 }>;
 
 
-export type GetWorkOrdersQuery = { __typename?: 'Query', workorders: { __typename?: 'WorkordersResponse', total: number, workorders: Array<{ __typename?: 'WorkOrder', id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, productId: number }> } };
+export type GetWorkOrdersQuery = { __typename?: 'Query', workorders: { __typename?: 'WorkordersResponse', total: number, workorders: Array<{ __typename?: 'WorkOrder', id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, productId: number, createdAt: any, description?: string | null }> } };
 
 export type UpdateWorkOrderMutationVariables = Exact<{
   input: UpdateWorkorderInput;
@@ -396,7 +396,7 @@ export type WorkorderBaseFieldsFragment = { __typename?: 'WorkOrder', id: number
 
 export type WorkorderFieldsFragment = { __typename?: 'WorkOrder', workOrderCode: string, status: WorkOrderStatus, priority?: Priority | null, productId: number, createdById: number, approvedById?: number | null, companyId?: number | null, attachments?: Array<string | null> | null, assignedTo?: string | null, comments?: string | null, createdAt: any, updatedAt: any, id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null };
 
-export type WorkorderListFieldsFragment = { __typename?: 'WorkOrder', id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, productId: number };
+export type WorkorderListFieldsFragment = { __typename?: 'WorkOrder', id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, productId: number, createdAt: any, description?: string | null };
 
 export type WorkorderDetailsFieldsFragment = { __typename?: 'WorkOrder', description?: string | null, productId: number, createdById: number, approvedById?: number | null, companyId?: number | null, attachments?: Array<string | null> | null, assignedTo?: string | null, comments?: string | null, createdAt: any, updatedAt: any, id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null };
 
@@ -438,6 +438,8 @@ export const WorkorderListFieldsFragmentDoc = gql`
   status
   priority
   productId
+  createdAt
+  description
 }
     `;
 export const WorkorderDetailsFieldsFragmentDoc = gql`

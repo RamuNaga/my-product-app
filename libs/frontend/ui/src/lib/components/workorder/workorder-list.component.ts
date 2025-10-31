@@ -75,9 +75,8 @@ export class WorkOrderListComponent {
     'sno',
     'workOrderCode',
     'status',
+    'description',
     'clientLocation',
-    //'productName',
-    //'productCode',
     'deliveryDate',
     'createdAt',
   ];
@@ -138,6 +137,7 @@ export class WorkOrderListComponent {
         // productCode: wo?.product?.productCode,
         deliveryDate: formatDateDDMMYYYY(wo.deliveryDate),
         createdAt: formatDateDDMMYYYY(wo.createdAt),
+        description: wo.description,
       }))
     );
     this.store.setLoading(false);
