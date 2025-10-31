@@ -10,7 +10,7 @@ import type { handleServerStreamingCall, handleUnaryCall, Metadata, UntypedServi
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 import { Timestamp } from "./google/protobuf/timestamp";
-import { Int32Value, StringValue } from "./google/protobuf/wrappers";
+import { Int32Value } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "workorder";
 
@@ -121,26 +121,15 @@ export interface UpdateWorkOrderRequest {
 }
 
 export interface GetWorkOrdersRequest {
-  /** optional */
-  workOrderCode:
-    | string
-    | undefined;
-  /** optional */
-  clientLocation:
-    | string
-    | undefined;
-  /** optional */
-  vendorOrClient:
+  workOrderCode?: string | undefined;
+  clientLocation?: string | undefined;
+  vendorOrClient?:
     | string
     | undefined;
   /** optional, defaults to REQUESTED */
-  status: WorkOrderStatus;
-  /** optional, defaults to 1 */
-  page:
-    | number
-    | undefined;
-  /** optional, defaults to 10 */
-  pageSize: number | undefined;
+  status?: WorkOrderStatus | undefined;
+  page?: number | undefined;
+  pageSize?: number | undefined;
 }
 
 export interface GetWorkOrdersResponse {
@@ -1000,35 +989,28 @@ export const UpdateWorkOrderRequest: MessageFns<UpdateWorkOrderRequest> = {
 };
 
 function createBaseGetWorkOrdersRequest(): GetWorkOrdersRequest {
-  return {
-    workOrderCode: undefined,
-    clientLocation: undefined,
-    vendorOrClient: undefined,
-    status: 0,
-    page: undefined,
-    pageSize: undefined,
-  };
+  return {};
 }
 
 export const GetWorkOrdersRequest: MessageFns<GetWorkOrdersRequest> = {
   encode(message: GetWorkOrdersRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.workOrderCode !== undefined) {
-      StringValue.encode({ value: message.workOrderCode! }, writer.uint32(10).fork()).join();
+      writer.uint32(10).string(message.workOrderCode);
     }
     if (message.clientLocation !== undefined) {
-      StringValue.encode({ value: message.clientLocation! }, writer.uint32(18).fork()).join();
+      writer.uint32(18).string(message.clientLocation);
     }
     if (message.vendorOrClient !== undefined) {
-      StringValue.encode({ value: message.vendorOrClient! }, writer.uint32(26).fork()).join();
+      writer.uint32(26).string(message.vendorOrClient);
     }
-    if (message.status !== 0) {
+    if (message.status !== undefined) {
       writer.uint32(32).int32(message.status);
     }
     if (message.page !== undefined) {
-      Int32Value.encode({ value: message.page! }, writer.uint32(42).fork()).join();
+      writer.uint32(40).int32(message.page);
     }
     if (message.pageSize !== undefined) {
-      Int32Value.encode({ value: message.pageSize! }, writer.uint32(50).fork()).join();
+      writer.uint32(48).int32(message.pageSize);
     }
     return writer;
   },
@@ -1045,7 +1027,7 @@ export const GetWorkOrdersRequest: MessageFns<GetWorkOrdersRequest> = {
             break;
           }
 
-          message.workOrderCode = StringValue.decode(reader, reader.uint32()).value;
+          message.workOrderCode = reader.string();
           continue;
         }
         case 2: {
@@ -1053,7 +1035,7 @@ export const GetWorkOrdersRequest: MessageFns<GetWorkOrdersRequest> = {
             break;
           }
 
-          message.clientLocation = StringValue.decode(reader, reader.uint32()).value;
+          message.clientLocation = reader.string();
           continue;
         }
         case 3: {
@@ -1061,7 +1043,7 @@ export const GetWorkOrdersRequest: MessageFns<GetWorkOrdersRequest> = {
             break;
           }
 
-          message.vendorOrClient = StringValue.decode(reader, reader.uint32()).value;
+          message.vendorOrClient = reader.string();
           continue;
         }
         case 4: {
@@ -1073,19 +1055,19 @@ export const GetWorkOrdersRequest: MessageFns<GetWorkOrdersRequest> = {
           continue;
         }
         case 5: {
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.page = Int32Value.decode(reader, reader.uint32()).value;
+          message.page = reader.int32();
           continue;
         }
         case 6: {
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.pageSize = Int32Value.decode(reader, reader.uint32()).value;
+          message.pageSize = reader.int32();
           continue;
         }
       }

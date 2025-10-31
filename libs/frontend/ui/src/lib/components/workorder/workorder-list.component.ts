@@ -1,4 +1,11 @@
-import { Component, inject, signal, effect, ViewChild } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  effect,
+  ViewChild,
+  untracked,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -55,23 +62,24 @@ export class WorkOrderListComponent {
     statusControl: new FormControl(''),
   });
 
-  // ✅ Signals for filters
+  //  Signals for filters
   workorderCode = signal('');
   clientLocation = signal('');
   status = signal('');
 
   greencoreLocations = signal<Option[]>([]);
   rowData = signal<any[]>([]);
-  isLoading = signal(false);
+  //isLoading = signal(false);
 
   displayedColumns: string[] = [
     'sno',
     'workOrderCode',
     'status',
     'clientLocation',
-    'productName',
-    'productCode',
+    //'productName',
+    //'productCode',
     'deliveryDate',
+    'createdAt',
   ];
 
   statusOptions = [
@@ -96,7 +104,7 @@ export class WorkOrderListComponent {
       );
     });
 
-    // ✅ Sync form controls to signals
+    //  Sync form controls to signals
     this.filterForm
       .get('workorderCodeControl')!
       .valueChanges.subscribe((v) => this.workorderCode.set(v || ''));
@@ -107,33 +115,32 @@ export class WorkOrderListComponent {
       .get('statusControl')!
       .valueChanges.subscribe((v) => this.status.set(v || ''));
 
-    // ✅ Effect to trigger API call when any filter changes
+    //  Effect to trigger API call when any filter changes
     effect(() => {
       this.store.setFilter('workOrderCode', this.workorderCode());
       this.store.setFilter('clientLocation', this.clientLocation());
       this.store.setFilter('status', this.status());
 
-      this.loadWorkorders();
+      untracked(() => this.loadWorkorders()); //  prevent dependency tracking
     });
   }
 
   async loadWorkorders() {
-    this.isLoading.set(true);
+    this.store.setLoading(true);
     await this.store.fetchWorkorders();
-
     this.rowData.set(
       this.store.workorders().map((wo, i) => ({
         sno: i + 1,
         workOrderCode: wo.workOrderCode,
         status: wo.status,
         clientLocation: wo.clientLocation,
-        productName: wo?.product?.name,
-        productCode: wo?.product?.productCode,
+        // productName: wo?.product?.name,
+        // productCode: wo?.product?.productCode,
         deliveryDate: formatDateDDMMYYYY(wo.deliveryDate),
+        createdAt: formatDateDDMMYYYY(wo.createdAt),
       }))
     );
-
-    this.isLoading.set(false);
+    this.store.setLoading(false);
   }
 
   onFilterChange() {

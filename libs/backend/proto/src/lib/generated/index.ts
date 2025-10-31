@@ -61,5 +61,6 @@ export {
   ApproveWorkOrderRequest,
   ApproveWorkOrderResponse,
   WorkOrderStatus as ProtoWorkOrderStatus,
+  Priority as ProtoPriority,
   WorkOrder as ProtoWorkOrder,
 } from './workorder';

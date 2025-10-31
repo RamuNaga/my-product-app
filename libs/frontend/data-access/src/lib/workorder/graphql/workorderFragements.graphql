@@ -38,6 +38,7 @@ fragment WorkorderListFields on WorkOrder {
   status
   priority
   productId
+  createdAt
 }
 
 # Full details for single workorder view

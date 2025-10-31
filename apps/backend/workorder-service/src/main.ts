@@ -7,7 +7,7 @@ async function startWorkOrderService() {
   await bootstrapMicroservice(WorkOrderServiceModule, {
     hostEnv: 'MICROSERVICE_HOST',
     portEnv: 'WORKORDER_SERVICE_MS_PORT',
-    fallbackPort: 4005,
+    fallbackPort: 4006,
     serviceName: 'WorkOrder Service',
     grpc: {
       package: protoPackages.workorder,

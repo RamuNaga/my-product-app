@@ -78,7 +78,7 @@ export class WorkorderResolver extends BaseGrpcResolver(
     return mapProtoWorkOrderToGraphQL(response.workOrder);
   }
 
-  /**  List work orders with filters & pagination */
+  /** List work orders with filters & pagination */
   @Query(() => WorkordersResponse, { name: 'workorders' })
   async getWorkOrders(
     @Args('workOrderCode', { type: () => String, nullable: true })
@@ -94,11 +94,14 @@ export class WorkorderResolver extends BaseGrpcResolver(
     @Args('pageSize', { type: () => Int, nullable: true, defaultValue: 10 })
     pageSize?: number
   ): Promise<WorkordersResponse> {
+    // construct filters using plain values (no wrappers)
     const filters: GetWorkOrdersRequest = {
-      workOrderCode: workOrderCode ?? '',
-      clientLocation: clientLocation ?? '',
-      vendorOrClient: vendorOrClient ?? '',
-      status: mapGraphQLWorkOrderStatusToProto(status),
+      workOrderCode: workOrderCode || undefined,
+      clientLocation: clientLocation || undefined,
+      vendorOrClient: vendorOrClient || undefined,
+      status: mapGraphQLWorkOrderStatusToProto(
+        status ?? WorkOrderStatus.REQUESTED
+      ),
       page: page ?? 1,
       pageSize: pageSize ?? 10,
     };

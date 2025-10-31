@@ -117,13 +117,14 @@ message UpdateWorkOrderRequest {
 
 // --------------------- GetWorkOrders (List with filters) ---------------------
 
+
 message GetWorkOrdersRequest {
-  google.protobuf.StringValue workOrderCode = 1;   // optional
-  google.protobuf.StringValue clientLocation = 2;  // optional
-  google.protobuf.StringValue vendorOrClient = 3;  // optional
-  WorkOrderStatus status = 4;                      // optional, defaults to REQUESTED
-  google.protobuf.Int32Value page = 5;             // optional, defaults to 1
-  google.protobuf.Int32Value pageSize = 6;         // optional, defaults to 10
+  optional string workOrderCode = 1;
+  optional string clientLocation = 2;
+  optional string vendorOrClient = 3;
+  optional WorkOrderStatus status = 4; // optional, defaults to REQUESTED
+  optional int32 page = 5;
+  optional int32 pageSize = 6;
 }
 
 message GetWorkOrdersResponse {

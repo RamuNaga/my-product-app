@@ -12,14 +12,13 @@ import {
   ApproveWorkOrderResponse,
 } from '@my-product-app/backend-proto/generated';
 import { Observable } from 'rxjs';
+import { WORKORDER_SERVICE } from '@my-product-app/backend-shared';
 
 @Injectable()
 export class WorkOrderGrpcClientService implements OnModuleInit {
   private workOrderService!: WorkOrderServiceClient;
 
-  constructor(
-    @Inject('WORKORDER_SERVICE') private readonly client: ClientGrpc
-  ) {}
+  constructor(@Inject(WORKORDER_SERVICE) private readonly client: ClientGrpc) {}
 
   onModuleInit() {
     this.workOrderService = this.client.getService<WorkOrderServiceClient>(
@@ -28,11 +27,6 @@ export class WorkOrderGrpcClientService implements OnModuleInit {
   }
 
   // ----------- CREATE WORK ORDER -----------
-  // async createWorkOrder(
-  //   request: CreateWorkOrderRequest
-  // ): Promise<WorkOrderResponse> {
-  //   return await lastValueFrom(this.workOrderService.createWorkOrder(request));
-  // }
 
   createWorkOrder(
     request: CreateWorkOrderRequest

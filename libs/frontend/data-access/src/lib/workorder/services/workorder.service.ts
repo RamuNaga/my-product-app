@@ -36,9 +36,10 @@ export class WorkorderService {
   getWorkOrders(
     variables: WorkorderQueryVariables
   ): Observable<WorkorderListResponse> {
-    return this.getWorkOrdersGQL.watch({ ...variables }).valueChanges.pipe(
+    return this.getWorkOrdersGQL.fetch({ ...variables }).pipe(
       map((result) => {
         const gqlWorkorders = result.data?.workorders?.workorders ?? [];
+
         const total = result.data?.workorders?.total ?? 0;
         return {
           workorders: mapGqlWorkordersToListModel(

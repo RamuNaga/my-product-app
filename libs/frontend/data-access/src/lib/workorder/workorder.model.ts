@@ -30,15 +30,7 @@ export interface WorkorderListModel {
   deliveryDate: string; // normalized to ISO string in mapper
   status: WorkOrderStatus;
   priority?: Priority | null;
-
-  // keep product minimal for list UI
-  product?: {
-    id: number;
-    name: string;
-    productCode: string;
-    price?: number | null;
-  } | null;
-
+  productId: number;
   createdAt: string; // normalized ISO string
 }
 

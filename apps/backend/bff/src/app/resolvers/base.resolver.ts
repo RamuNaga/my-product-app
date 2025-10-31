@@ -1,5 +1,5 @@
 import { Observable, lastValueFrom } from 'rxjs';
-import { ApolloError, UserInputError } from 'apollo-server-errors';
+import { ApolloError } from 'apollo-server-errors';
 
 // Allow returning abstract classes
 export type AbstractType<T> = abstract new (...args: any[]) => T;
@@ -28,14 +28,7 @@ export abstract class AbstractBaseGrpcResolver<TService extends object> {
     }
 
     const msg = error.message || 'Unknown error';
-
-    if (msg.includes('Invalid email')) {
-      return new UserInputError(msg);
-    } else if (msg.includes('already registered')) {
-      return new ApolloError(msg, 'ALREADY_EXISTS');
-    }
-
-    return new ApolloError('Unexpected gRPC error');
+    return new ApolloError(`gRPC error: ${msg}`);
   }
 }
 
@@ -51,3 +44,13 @@ export function BaseGrpcResolver<TService extends object>(
 
   return BaseResolver;
 }
+
+function wrapString(value?: string) {
+  return value !== undefined ? { value } : undefined;
+}
+
+function wrapInt(value?: number) {
+  return value !== undefined ? { value } : undefined;
+}
+
+export { wrapString, wrapInt };

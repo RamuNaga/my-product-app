@@ -132,7 +132,7 @@ export const workorderListStoreFactory = (): WorkorderListStoreType => {
               workorderService.getWorkOrders(variables)
             );
 
-            const workorders: WorkorderListModel[] = response?.workorders ?? [];
+            const workorders: WorkorderListModel[] = response.workorders ?? [];
             const total: number = response?.total ?? 0;
 
             this.setWorkorders(workorders, total);

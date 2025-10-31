@@ -5,17 +5,13 @@
 // source: product.proto
 
 /* eslint-disable */
-import { BinaryReader, BinaryWriter } from '@bufbuild/protobuf/wire';
-import type {
-  handleUnaryCall,
-  Metadata,
-  UntypedServiceImplementation,
-} from '@grpc/grpc-js';
-import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
-import { Int32Value } from './google/protobuf/wrappers';
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
+import type { handleUnaryCall, Metadata, UntypedServiceImplementation } from "@grpc/grpc-js";
+import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { Observable } from "rxjs";
+import { Int32Value } from "./google/protobuf/wrappers";
 
-export const protobufPackage = 'product';
+export const protobufPackage = "product";
 
 export interface Product {
   id: number;
@@ -44,50 +40,48 @@ export interface ProductResponse {
   product: Product | undefined;
 }
 
-export interface EmptyRequest {}
+export interface EmptyRequest {
+}
 
 export interface ProductListResponse {
   products: Product[];
 }
 
-export const PRODUCT_PACKAGE_NAME = 'product';
+export const PRODUCT_PACKAGE_NAME = "product";
 
 function createBaseProduct(): Product {
   return {
     id: 0,
-    productCode: '',
-    name: '',
-    description: '',
-    image: '',
-    productWeight: '',
+    productCode: "",
+    name: "",
+    description: "",
+    image: "",
+    productWeight: "",
     price: 0,
     companyId: 0,
-    createdAt: '',
-    updatedAt: '',
+    createdAt: "",
+    updatedAt: "",
   };
 }
 
 export const Product: MessageFns<Product> = {
-  encode(
-    message: Product,
-    writer: BinaryWriter = new BinaryWriter()
-  ): BinaryWriter {
+  encode(message: Product, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
-    if (message.productCode !== '') {
+    if (message.productCode !== "") {
       writer.uint32(18).string(message.productCode);
     }
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(26).string(message.name);
     }
-    if (message.description !== '') {
+    if (message.description !== "") {
       writer.uint32(34).string(message.description);
     }
-    if (message.image !== '') {
+    if (message.image !== "") {
       writer.uint32(42).string(message.image);
     }
-    if (message.productWeight !== '') {
+    if (message.productWeight !== "") {
       writer.uint32(50).string(message.productWeight);
     }
     if (message.price !== 0) {
@@ -96,18 +90,17 @@ export const Product: MessageFns<Product> = {
     if (message.companyId !== 0) {
       writer.uint32(64).int32(message.companyId);
     }
-    if (message.createdAt !== '') {
+    if (message.createdAt !== "") {
       writer.uint32(74).string(message.createdAt);
     }
-    if (message.updatedAt !== '') {
+    if (message.updatedAt !== "") {
       writer.uint32(82).string(message.updatedAt);
     }
     return writer;
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): Product {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProduct();
     while (reader.pos < end) {
@@ -204,35 +197,24 @@ export const Product: MessageFns<Product> = {
 };
 
 function createBaseCreateProductRequest(): CreateProductRequest {
-  return {
-    productCode: '',
-    name: '',
-    description: '',
-    image: '',
-    productWeight: '',
-    price: 0,
-    companyId: 0,
-  };
+  return { productCode: "", name: "", description: "", image: "", productWeight: "", price: 0, companyId: 0 };
 }
 
 export const CreateProductRequest: MessageFns<CreateProductRequest> = {
-  encode(
-    message: CreateProductRequest,
-    writer: BinaryWriter = new BinaryWriter()
-  ): BinaryWriter {
-    if (message.productCode !== '') {
+  encode(message: CreateProductRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.productCode !== "") {
       writer.uint32(10).string(message.productCode);
     }
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
-    if (message.description !== '') {
+    if (message.description !== "") {
       writer.uint32(26).string(message.description);
     }
-    if (message.image !== '') {
+    if (message.image !== "") {
       writer.uint32(34).string(message.image);
     }
-    if (message.productWeight !== '') {
+    if (message.productWeight !== "") {
       writer.uint32(42).string(message.productWeight);
     }
     if (message.price !== 0) {
@@ -244,12 +226,8 @@ export const CreateProductRequest: MessageFns<CreateProductRequest> = {
     return writer;
   },
 
-  decode(
-    input: BinaryReader | Uint8Array,
-    length?: number
-  ): CreateProductRequest {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): CreateProductRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateProductRequest();
     while (reader.pos < end) {
@@ -326,10 +304,7 @@ function createBaseProductResponse(): ProductResponse {
 }
 
 export const ProductResponse: MessageFns<ProductResponse> = {
-  encode(
-    message: ProductResponse,
-    writer: BinaryWriter = new BinaryWriter()
-  ): BinaryWriter {
+  encode(message: ProductResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.product !== undefined) {
       Product.encode(message.product, writer.uint32(10).fork()).join();
     }
@@ -337,8 +312,7 @@ export const ProductResponse: MessageFns<ProductResponse> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): ProductResponse {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProductResponse();
     while (reader.pos < end) {
@@ -367,16 +341,12 @@ function createBaseEmptyRequest(): EmptyRequest {
 }
 
 export const EmptyRequest: MessageFns<EmptyRequest> = {
-  encode(
-    _: EmptyRequest,
-    writer: BinaryWriter = new BinaryWriter()
-  ): BinaryWriter {
+  encode(_: EmptyRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): EmptyRequest {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmptyRequest();
     while (reader.pos < end) {
@@ -397,22 +367,15 @@ function createBaseProductListResponse(): ProductListResponse {
 }
 
 export const ProductListResponse: MessageFns<ProductListResponse> = {
-  encode(
-    message: ProductListResponse,
-    writer: BinaryWriter = new BinaryWriter()
-  ): BinaryWriter {
+  encode(message: ProductListResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.products) {
       Product.encode(v!, writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(
-    input: BinaryReader | Uint8Array,
-    length?: number
-  ): ProductListResponse {
-    const reader =
-      input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): ProductListResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProductListResponse();
     while (reader.pos < end) {
@@ -437,117 +400,76 @@ export const ProductListResponse: MessageFns<ProductListResponse> = {
 };
 
 export interface ProductServiceClient {
-  createProduct(
-    request: CreateProductRequest,
-    metadata?: Metadata
-  ): Observable<ProductResponse>;
+  createProduct(request: CreateProductRequest, metadata?: Metadata): Observable<ProductResponse>;
 
-  getProductById(
-    request: Int32Value,
-    metadata?: Metadata
-  ): Observable<ProductResponse>;
+  getProductById(request: Int32Value, metadata?: Metadata): Observable<ProductResponse>;
 
-  getAllProducts(
-    request: EmptyRequest,
-    metadata?: Metadata
-  ): Observable<ProductListResponse>;
+  getAllProducts(request: EmptyRequest, metadata?: Metadata): Observable<ProductListResponse>;
 }
 
 export interface ProductServiceController {
   createProduct(
     request: CreateProductRequest,
-    metadata?: Metadata
+    metadata?: Metadata,
   ): Promise<ProductResponse> | Observable<ProductResponse> | ProductResponse;
 
   getProductById(
     request: Int32Value,
-    metadata?: Metadata
+    metadata?: Metadata,
   ): Promise<ProductResponse> | Observable<ProductResponse> | ProductResponse;
 
   getAllProducts(
     request: EmptyRequest,
-    metadata?: Metadata
-  ):
-    | Promise<ProductListResponse>
-    | Observable<ProductListResponse>
-    | ProductListResponse;
+    metadata?: Metadata,
+  ): Promise<ProductListResponse> | Observable<ProductListResponse> | ProductListResponse;
 }
 
 export function ProductServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = [
-      'createProduct',
-      'getProductById',
-      'getAllProducts',
-    ];
+    const grpcMethods: string[] = ["createProduct", "getProductById", "getAllProducts"];
     for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method
-      );
-      GrpcMethod('ProductService', method)(
-        constructor.prototype[method],
-        method,
-        descriptor
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("ProductService", method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method
-      );
-      GrpcStreamMethod('ProductService', method)(
-        constructor.prototype[method],
-        method,
-        descriptor
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("ProductService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const PRODUCT_SERVICE_NAME = 'ProductService';
+export const PRODUCT_SERVICE_NAME = "ProductService";
 
 export type ProductServiceService = typeof ProductServiceService;
 export const ProductServiceService = {
   createProduct: {
-    path: '/product.ProductService/CreateProduct',
+    path: "/product.ProductService/CreateProduct",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: CreateProductRequest): Buffer =>
-      Buffer.from(CreateProductRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): CreateProductRequest =>
-      CreateProductRequest.decode(value),
-    responseSerialize: (value: ProductResponse): Buffer =>
-      Buffer.from(ProductResponse.encode(value).finish()),
-    responseDeserialize: (value: Buffer): ProductResponse =>
-      ProductResponse.decode(value),
+    requestSerialize: (value: CreateProductRequest): Buffer => Buffer.from(CreateProductRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): CreateProductRequest => CreateProductRequest.decode(value),
+    responseSerialize: (value: ProductResponse): Buffer => Buffer.from(ProductResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ProductResponse => ProductResponse.decode(value),
   },
   getProductById: {
-    path: '/product.ProductService/GetProductById',
+    path: "/product.ProductService/GetProductById",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: number | undefined): Buffer =>
       Buffer.from(Int32Value.encode({ value: value ?? 0 }).finish()),
-    requestDeserialize: (value: Buffer): number | undefined =>
-      Int32Value.decode(value).value,
-    responseSerialize: (value: ProductResponse): Buffer =>
-      Buffer.from(ProductResponse.encode(value).finish()),
-    responseDeserialize: (value: Buffer): ProductResponse =>
-      ProductResponse.decode(value),
+    requestDeserialize: (value: Buffer): number | undefined => Int32Value.decode(value).value,
+    responseSerialize: (value: ProductResponse): Buffer => Buffer.from(ProductResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ProductResponse => ProductResponse.decode(value),
   },
   getAllProducts: {
-    path: '/product.ProductService/GetAllProducts',
+    path: "/product.ProductService/GetAllProducts",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: EmptyRequest): Buffer =>
-      Buffer.from(EmptyRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): EmptyRequest =>
-      EmptyRequest.decode(value),
-    responseSerialize: (value: ProductListResponse): Buffer =>
-      Buffer.from(ProductListResponse.encode(value).finish()),
-    responseDeserialize: (value: Buffer): ProductListResponse =>
-      ProductListResponse.decode(value),
+    requestSerialize: (value: EmptyRequest): Buffer => Buffer.from(EmptyRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): EmptyRequest => EmptyRequest.decode(value),
+    responseSerialize: (value: ProductListResponse): Buffer => Buffer.from(ProductListResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ProductListResponse => ProductListResponse.decode(value),
   },
 } as const;
 
