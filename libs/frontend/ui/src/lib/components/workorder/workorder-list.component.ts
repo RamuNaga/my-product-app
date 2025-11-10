@@ -19,7 +19,8 @@ import { InputFieldComponent } from '../form-controls/input-field.component';
 import { SelectFieldComponent } from '../form-controls/select-field.component';
 import {
   LoginStore,
-  WORKORDER_LIST_STORE,
+  WorkOrderListStore,
+  WorkorderListStoreType,
 } from '@my-product-app/frontend-shared';
 import { Option } from '@my-product-app/frontend-data-access';
 import { formatDateDDMMYYYY } from '@my-product-app/frontend-core';
@@ -53,8 +54,8 @@ export enum WorkOrderStatus {
   styleUrls: ['./workorder-list.component.scss'],
 })
 export class WorkOrderListComponent {
-  readonly store = inject(WORKORDER_LIST_STORE);
-  readonly loginStore = inject(LoginStore);
+  readonly store = inject<WorkorderListStoreType>(WorkOrderListStore);
+  readonly loginStore = inject<LoginStore>(LoginStore);
 
   filterForm = new FormGroup({
     workorderCodeControl: new FormControl(''),

@@ -150,10 +150,10 @@ export const workorderListStoreFactory = (): WorkorderListStoreType => {
 };
 
 // DI Token and Provider
-export const WORKORDER_LIST_STORE = new InjectionToken<WorkorderListStoreType>(
+export const WorkOrderListStore = new InjectionToken<WorkorderListStoreType>(
   'WORKORDER_LIST_STORE'
 );
 
 export const workorderListStoreProvider = makeEnvironmentProviders([
-  { provide: WORKORDER_LIST_STORE, useFactory: workorderListStoreFactory },
+  { provide: WorkOrderListStore, useFactory: workorderListStoreFactory },
 ]);
