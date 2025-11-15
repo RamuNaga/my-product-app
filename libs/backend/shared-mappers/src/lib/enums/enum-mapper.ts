@@ -1,16 +1,24 @@
-// Constrain S so it can be used as a key in a Record
-export function mapEnum<S extends string | number | symbol, D>(
-  enumMap: Record<S, D>,
-  value: S
-): D {
-  if (value in enumMap) return enumMap[value];
-  throw new Error(`Enum value ${String(value)} not mapped`);
+/**
+ * Generic enum mapper with fallback
+ */
+export function mapEnum<T extends string | number, U>(
+  map: Record<T, U>,
+  value: T | undefined,
+  fallback: U
+): U {
+  if (value !== undefined && value in map) return map[value];
+  console.warn(` Unmapped enum value: ${String(value)}`);
+  return fallback;
 }
 
-export function mapEnumOptional<S extends string | number | symbol, D>(
+/**
+ * Optional enum mapper
+ */
+export function mapEnumOptional<S extends string | number, D>(
   enumMap: Record<S, D>,
-  value?: S
+  value?: S,
+  fallback?: D
 ): D | undefined {
-  if (value === undefined) return undefined;
-  return mapEnum(enumMap, value);
+  if (value === undefined) return fallback;
+  return mapEnum(enumMap, value, fallback!);
 }

@@ -13,6 +13,7 @@ import {
   UserRole,
   WorkOrderStatus,
 } from '@my-product-app/backend-shared-types';
+import { ProtoWorkOrderStatus } from '@my-product-app/backend-proto/generated';
 
 import {
   CurrentUser,
@@ -99,9 +100,9 @@ export class WorkorderResolver extends BaseGrpcResolver(
       workOrderCode: workOrderCode || undefined,
       clientLocation: clientLocation || undefined,
       vendorOrClient: vendorOrClient || undefined,
-      status: mapGraphQLWorkOrderStatusToProto(
-        status ?? WorkOrderStatus.REQUESTED
-      ),
+      status: status
+        ? mapGraphQLWorkOrderStatusToProto(status as WorkOrderStatus)
+        : ProtoWorkOrderStatus.WORK_ORDER_REQUESTED,
       page: page ?? 1,
       pageSize: pageSize ?? 10,
     };

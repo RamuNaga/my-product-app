@@ -2,11 +2,13 @@ import { UserRole as GraphQLUserRole } from '@my-product-app/backend-shared-type
 import { ProtoUserRole } from '@my-product-app/backend-proto/generated';
 import { mapEnum } from '../enums/enum-mapper';
 
-// GraphQL → Proto
-export const mapGraphQLUserRoleToProto = (
-  role: GraphQLUserRole
-): ProtoUserRole =>
-  mapEnum(
+/**
+ * GraphQL → Proto
+ */
+export function mapGraphQLUserRoleToProto(
+  role?: GraphQLUserRole
+): ProtoUserRole {
+  return mapEnum<GraphQLUserRole, ProtoUserRole>(
     {
       [GraphQLUserRole.ADMIN]: ProtoUserRole.ADMIN,
       [GraphQLUserRole.MANAGER]: ProtoUserRole.MANAGER,
@@ -14,21 +16,27 @@ export const mapGraphQLUserRoleToProto = (
       [GraphQLUserRole.STAFF]: ProtoUserRole.STAFF,
       [GraphQLUserRole.VIEWER]: ProtoUserRole.VIEWER,
     },
-    role
+    role,
+    ProtoUserRole.STAFF // ✅ fallback
   );
+}
 
-// Proto → GraphQL
-export const mapProtoUserRoleToGraphQL = (
-  role: ProtoUserRole
-): GraphQLUserRole =>
-  mapEnum(
+/**
+ * Proto → GraphQL
+ */
+export function mapProtoUserRoleToGraphQL(
+  role?: ProtoUserRole
+): GraphQLUserRole {
+  return mapEnum<ProtoUserRole, GraphQLUserRole>(
     {
       [ProtoUserRole.ADMIN]: GraphQLUserRole.ADMIN,
       [ProtoUserRole.MANAGER]: GraphQLUserRole.MANAGER,
       [ProtoUserRole.OPERATOR]: GraphQLUserRole.OPERATOR,
       [ProtoUserRole.STAFF]: GraphQLUserRole.STAFF,
       [ProtoUserRole.VIEWER]: GraphQLUserRole.VIEWER,
-      [ProtoUserRole.UNRECOGNIZED]: GraphQLUserRole.STAFF, // fallback
+      [ProtoUserRole.UNRECOGNIZED]: GraphQLUserRole.STAFF,
     },
-    role
+    role,
+    GraphQLUserRole.STAFF
   );
+}

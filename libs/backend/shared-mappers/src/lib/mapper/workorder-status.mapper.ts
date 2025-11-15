@@ -1,3 +1,5 @@
+// libs/backend/shared-mappers/src/lib/mapper/workorder-status.mapper.ts
+
 import { WorkOrderStatus as GraphQLWorkOrderStatus } from '@my-product-app/backend-shared-types';
 import { ProtoWorkOrderStatus } from '@my-product-app/backend-proto/generated';
 import { mapEnum } from '../enums/enum-mapper';
@@ -6,9 +8,17 @@ import { mapEnum } from '../enums/enum-mapper';
  * GraphQL → Proto
  */
 export function mapGraphQLWorkOrderStatusToProto(
-  status?: GraphQLWorkOrderStatus
+  status?: GraphQLWorkOrderStatus | keyof typeof GraphQLWorkOrderStatus
 ): ProtoWorkOrderStatus {
-  if (!status) return ProtoWorkOrderStatus.WORK_ORDER_REQUESTED; // or a sensible default
+  if (status === undefined || status === null) {
+    return ProtoWorkOrderStatus.WORK_ORDER_REQUESTED;
+  }
+
+  const normalized =
+    typeof status === 'string'
+      ? (GraphQLWorkOrderStatus as any)[status]
+      : status;
+
   return mapEnum(
     {
       [GraphQLWorkOrderStatus.REQUESTED]:
@@ -22,18 +32,19 @@ export function mapGraphQLWorkOrderStatusToProto(
         ProtoWorkOrderStatus.WORK_ORDER_COMPLETED,
       [GraphQLWorkOrderStatus.CANCELLED]:
         ProtoWorkOrderStatus.WORK_ORDER_CANCELLED,
-    },
-    status
+    } as Record<GraphQLWorkOrderStatus, ProtoWorkOrderStatus>,
+    normalized as GraphQLWorkOrderStatus,
+    ProtoWorkOrderStatus.WORK_ORDER_REQUESTED // fallback
   );
 }
 
 /**
  * Proto → GraphQL
  */
-export const mapProtoWorkOrderStatusToGraphQL = (
-  status: ProtoWorkOrderStatus
-): GraphQLWorkOrderStatus =>
-  mapEnum(
+export function mapProtoWorkOrderStatusToGraphQL(
+  status?: ProtoWorkOrderStatus
+): GraphQLWorkOrderStatus {
+  return mapEnum(
     {
       [ProtoWorkOrderStatus.WORK_ORDER_REQUESTED]:
         GraphQLWorkOrderStatus.REQUESTED,
@@ -46,7 +57,9 @@ export const mapProtoWorkOrderStatusToGraphQL = (
         GraphQLWorkOrderStatus.COMPLETED,
       [ProtoWorkOrderStatus.WORK_ORDER_CANCELLED]:
         GraphQLWorkOrderStatus.CANCELLED,
-      [ProtoWorkOrderStatus.UNRECOGNIZED]: GraphQLWorkOrderStatus.PENDING, // fallback
-    },
-    status
+      [ProtoWorkOrderStatus.UNRECOGNIZED]: GraphQLWorkOrderStatus.REQUESTED, // safe fallback
+    } as Record<ProtoWorkOrderStatus, GraphQLWorkOrderStatus>,
+    status,
+    GraphQLWorkOrderStatus.REQUESTED
   );
+}

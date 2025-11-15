@@ -8,10 +8,8 @@ import {
 import { BaseGrpcResolver } from '../../resolvers/base.resolver';
 import { CompanyGrpcClientService } from '@my-product-app/backend-company';
 
-import {
-  CompanyResponse,
-  SearchCompanyByNameResponse,
-} from '@my-product-app/backend-proto/generated';
+import { CompanyResponse } from '@my-product-app/backend-proto/generated';
+import { mapProtoCompanyTypeToGraphQL } from '@my-product-app/backend-shared-mappers';
 
 @Resolver(() => Company)
 export class CompanyResolver extends BaseGrpcResolver(
@@ -36,11 +34,19 @@ export class CompanyResolver extends BaseGrpcResolver(
   @Query(() => [Company], { name: 'searchCompanies' })
   async searchCompanies(
     @Args('searchTerm') searchTerm: string
-  ): Promise<SearchCompanyByNameResponse> {
+  ): Promise<Company[]> {
     const result = await lastValueFrom(
       this.grpcService.searchByName({ searchTerm })
     );
 
-    return result;
+    // Map each ProtoCompany → GraphQLCompany
+    return result.companies.map((company) => ({
+      id: company.id,
+      name: company.name,
+      type: mapProtoCompanyTypeToGraphQL(company.type),
+      contact: company.contact,
+      createdAt: company.createdAt,
+      updatedAt: company.updatedAt,
+    }));
   }
 }

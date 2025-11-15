@@ -45,7 +45,8 @@ export function mapPrismaWorkOrderStatusToProto(
       [PrismaWorkOrderStatus.CANCELLED]:
         ProtoWorkOrderStatus.WORK_ORDER_CANCELLED,
     },
-    status
+    status,
+    ProtoWorkOrderStatus.WORK_ORDER_REQUESTED
   );
 }
 
