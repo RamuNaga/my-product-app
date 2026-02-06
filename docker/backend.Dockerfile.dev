@@ -1,0 +1,46 @@
+# ---------------------------------------------------------
+# Stage 0: Base Node image
+# ---------------------------------------------------------
+FROM node:20-alpine AS base
+
+# Set working directory
+WORKDIR /workspace
+
+# Install dependencies for dev tooling
+RUN apk add --no-cache bash curl git
+
+# Enable PNPM
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Copy wait-for-it.sh
+COPY wait-for-it.sh /workspace/wait-for-it.sh
+RUN chmod +x /workspace/wait-for-it.sh
+
+# ---------------------------------------------------------
+# Stage 1: Install dependencies
+# ---------------------------------------------------------
+FROM base AS deps
+
+# Copy lockfiles only (to leverage Docker cache)
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# Mount pnpm store cache (BuildKit required)
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile --prefer-offline
+
+# ---------------------------------------------------------
+# Stage 2: Development environment
+# ---------------------------------------------------------
+FROM base AS dev
+
+# Copy source code
+COPY . .
+
+# Use cached node_modules from deps stage
+COPY --from=deps /workspace/node_modules ./node_modules
+
+# Expose ports dynamically (override in docker-compose)
+EXPOSE 3000 3001 3002 3003 3004 3005 3006
+
+# Default CMD (can be overridden in docker-compose)
+CMD ["sh", "-c", "pnpm --version && sleep 3600"]

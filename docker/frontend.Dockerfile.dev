@@ -1,0 +1,45 @@
+# ---------------------------------------------------------
+# Stage 0: Base Node image
+# ---------------------------------------------------------
+FROM node:20-alpine AS base
+
+# Set working directory
+WORKDIR /workspace
+
+# Install dependencies for dev tooling
+RUN apk add --no-cache bash curl git
+
+# Enable PNPM
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Copy wait-for-it.sh
+COPY wait-for-it.sh /workspace/wait-for-it.sh
+RUN chmod +x /workspace/wait-for-it.sh
+
+# ---------------------------------------------------------
+# Stage 1: Install dependencies
+# ---------------------------------------------------------
+FROM base AS deps
+
+# Copy lock files only
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# Mount cache for node_modules (used in docker-compose)
+RUN pnpm install --frozen-lockfile --prefer-offline
+
+# ---------------------------------------------------------
+# Stage 2: Development environment
+# ---------------------------------------------------------
+FROM base AS dev
+
+# Copy source code
+COPY . .
+
+# Use cached node_modules from deps stage
+COPY --from=deps /workspace/node_modules ./node_modules
+
+# Expose port
+EXPOSE 4200
+
+# Set entrypoint for dev
+CMD ["sh", "-c", "./wait-for-it.sh api-gateway:3000 --timeout=60 --strict -- pnpm nx serve frontend --host 0.0.0.0 --port 4200"]

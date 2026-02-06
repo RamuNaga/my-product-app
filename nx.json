@@ -156,9 +156,18 @@
       "tags": ["type:service", "scope:backend", "area:product"],
       "implicitDependencies": ["backend-shared", "product"]
     },
-    "backend-workorder-service": {
+    "workorder-service": {
       "tags": ["type:service", "scope:backend", "area:workorder"],
       "implicitDependencies": ["backend-shared", "workorder"]
+    },
+    "company-grpc": {
+      "tags": ["type:grpc", "domain:company", "scope:backend"]
+    },
+    "user-grpc": {
+      "tags": ["type:grpc", "domain:user", "scope:backend"]
+    },
+    "company-location-grpc": {
+      "tags": ["type:grpc", "domain:company-location", "scope:backend"]
     },
     "frontend": {
       "tags": ["type:app", "scope:frontend"]

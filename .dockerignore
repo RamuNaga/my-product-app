@@ -1,0 +1,39 @@
+# Build output
+dist
+build
+tmp
+
+# Node modules
+node_modules
+**/node_modules
+
+# Logs
+*.log
+logs
+*.pid
+
+# Nx cache
+.nx/cache
+.pnpm-store
+
+# Git
+.git
+.gitignore
+
+# Editors
+.vscode
+.idea
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose*.yml
+Dockerfile*
+docker/*.Dockerfile
+
+# DO NOT IGNORE SOURCE CODE
+# KEEP THESE:
+# apps
+# libs

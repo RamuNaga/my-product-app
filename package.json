@@ -167,15 +167,13 @@
       "@prisma/client",
       "@prisma/engines",
       "@swc/core",
-      "apps/*",
-      "bcrypt",
       "cypress",
       "esbuild",
-      "libs/*",
       "lmdb",
       "msgpackr-extract",
       "nx",
-      "prisma"
+      "prisma",
+      "protobufjs"
     ],
     "onlyBuiltDependencies": [
       "unrs-resolver"
