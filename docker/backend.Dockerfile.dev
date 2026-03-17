@@ -1,46 +1,81 @@
 # ---------------------------------------------------------
-# Stage 0: Base Node image
+# Base Dev Image
 # ---------------------------------------------------------
 FROM node:20-alpine AS base
-
-# Set working directory
 WORKDIR /workspace
 
-# Install dependencies for dev tooling
+# Install bash, curl, git
 RUN apk add --no-cache bash curl git
 
-# Enable PNPM
+# Enable corepack & pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy wait-for-it.sh
-COPY wait-for-it.sh /workspace/wait-for-it.sh
-RUN chmod +x /workspace/wait-for-it.sh
-
-# ---------------------------------------------------------
-# Stage 1: Install dependencies
-# ---------------------------------------------------------
-FROM base AS deps
-
-# Copy lockfiles only (to leverage Docker cache)
+# Copy package files for caching
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
-# Mount pnpm store cache (BuildKit required)
-RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
-    pnpm install --frozen-lockfile --prefer-offline
+# Install dev dependencies
+RUN pnpm install --frozen-lockfile --prod=false
 
-# ---------------------------------------------------------
-# Stage 2: Development environment
-# ---------------------------------------------------------
-FROM base AS dev
-
-# Copy source code
+# Copy all source files
 COPY . .
 
-# Use cached node_modules from deps stage
-COPY --from=deps /workspace/node_modules ./node_modules
+# Make wait-for-it.sh executable
+RUN chmod +x wait-for-it.sh
 
-# Expose ports dynamically (override in docker-compose)
-EXPOSE 3000 3001 3002 3003 3004 3005 3006
+# Make dev-entrypoint.sh executable if you plan to use it
+RUN chmod +x dev-entrypoint.sh
 
-# Default CMD (can be overridden in docker-compose)
-CMD ["sh", "-c", "pnpm --version && sleep 3600"]
+# Build the given service including protos
+ARG SERVICE
+RUN pnpm nx run ${SERVICE}:build-with-protos
+
+# ---------------------------------------------------------
+# Runtime Stage
+# ---------------------------------------------------------
+FROM node:20-alpine AS runtime
+WORKDIR /workspace
+
+RUN apk add --no-cache bash
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile --prod
+
+ARG SERVICE
+COPY --from=base /workspace/dist/apps/backend/${SERVICE} ./dist
+
+# Copy wait-for-it.sh so runtime can wait for DB if needed
+COPY --from=base /workspace/wait-for-it.sh ./wait-for-it.sh
+RUN chmod +x wait-for-it.sh
+
+ENV NODE_ENV=development
+EXPOSE 3000
+
+# Use dev-entrypoint.sh as default entrypoint
+COPY --from=base /workspace/dev-entrypoint.sh ./dev-entrypoint.sh
+CMD ["sh", "./dev-entrypoint.sh"]
+
+# ---------------------------------------------------------
+# Migrate Stage
+# ---------------------------------------------------------
+FROM node:20-alpine AS migrate
+WORKDIR /workspace
+
+RUN apk add --no-cache bash curl git
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile --prod
+
+COPY libs/backend/company-prisma/prisma ./prisma/company
+COPY libs/backend/company-location-prisma/prisma ./prisma/company-location
+COPY libs/backend/product-prisma/prisma ./prisma/product
+COPY libs/backend/user-prisma/prisma ./prisma/user
+COPY libs/backend/workorder-prisma/prisma ./prisma/workorder
+
+COPY wait-for-it.sh ./wait-for-it.sh
+COPY scripts/migrate.sh ./scripts/migrate.sh
+RUN chmod +x wait-for-it.sh scripts/migrate.sh
+
+CMD ["bash","scripts/migrate.sh"]

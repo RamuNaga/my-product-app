@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   # ---------------------------------------------------------
   # PostgreSQL
@@ -9,17 +11,32 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: hitman
     ports:
-      - '5432:5432'
+      - "5433:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 30
     networks:
       mynet: {}
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:7
+    container_name: my-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      mynet: {}
+    restart: unless-stopped
 
   # ---------------------------------------------------------
   # Prisma migrations
@@ -27,52 +44,35 @@ services:
   migrate:
     build:
       context: .
-      dockerfile: docker/backend.Dockerfile.dev
+      dockerfile: docker/backend.Dockerfile.migrate
     working_dir: /workspace
     env_file:
       - .env
     environment:
       - CI=true
-    volumes:
-      - ./package.json:/workspace/package.json:ro
-      - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
-      - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
-      - ./nx.json:/workspace/nx.json:ro
-      - ./eslint.config.js:/workspace/eslint.config.js:ro
-      - ./tsconfig.base.json:/workspace/tsconfig.base.json:ro
-      - ./libs:/workspace/libs:ro
-      - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
     depends_on:
       - db
-    command:
-      - sh
-      - -c
-      - |
-        ./wait-for-it.sh db:5432 --timeout=60 --strict -- \
-        corepack enable &&
-        corepack prepare pnpm@latest --activate &&
-        pnpm install --frozen-lockfile --prefer-offline &&
-        pnpm prisma migrate deploy --all
-
+    restart: "no"
     networks:
       mynet: {}
 
   # ---------------------------------------------------------
-  # Backend microservices
+  # Backend Microservices (Built + Run from dist)
   # ---------------------------------------------------------
   api-gateway:
     build:
       context: .
       dockerfile: docker/backend.Dockerfile.dev
+      args:
+        SERVICE: api-gateway
     working_dir: /workspace
     env_file:
       - .env
     environment:
       - CI=true
     ports:
-      - '3000:3000'
+      - "3000:3000"
     volumes:
-      - ./apps/backend/service-name:/workspace/apps/backend/service-name:cached
       - ./libs:/workspace/libs:cached
       - ./nx.json:/workspace/nx.json:ro
       - ./tsconfig.base.json:/workspace/tsconfig.base.json:ro
@@ -81,35 +81,34 @@ services:
       - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
       - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
-      - backend-node-modules:/workspace/node_modules
     depends_on:
       - migrate
-    command:
-      - sh
-      - -c
-      - |
-        ./wait-for-it.sh db:5432 --timeout=60 --strict -- \
-        corepack enable &&
-        corepack prepare pnpm@latest --activate &&
-        pnpm nx serve api-gateway --host 0.0.0.0 --port 3000
+    command: >
+      sh -c "
+      set -e
+      echo 'Waiting for Postgres...'
+      sh ./wait-for-it.sh db:5432 --timeout=60 --strict
+      echo 'Starting API Gateway...'
+      node dist/apps/backend/api-gateway/main.js
+      "
     networks:
       mynet: {}
+    restart: unless-stopped
 
-  # Other backend services (bff, backend-product-service, grpc services, workorder-service)
-  # They all depend only on api-gateway and migrate (already built), but no need to wait unnecessarily
   bff:
     build:
       context: .
       dockerfile: docker/backend.Dockerfile.dev
+      args:
+        SERVICE: bff
     working_dir: /workspace
     env_file:
       - .env
     environment:
       - CI=true
     ports:
-      - '3002:3002'
+      - "3002:3002"
     volumes:
-      - ./apps/backend/service-name:/workspace/apps/backend/service-name:cached
       - ./libs:/workspace/libs:cached
       - ./nx.json:/workspace/nx.json:ro
       - ./tsconfig.base.json:/workspace/tsconfig.base.json:ro
@@ -118,32 +117,35 @@ services:
       - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
       - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
-      - backend-node-modules:/workspace/node_modules
     depends_on:
+      - migrate
       - api-gateway
-    command:
-      - sh
-      - -c
-      - |
-        corepack enable &&
-        corepack prepare pnpm@latest --activate &&
-        pnpm nx serve bff --host 0.0.0.0 --port 3002
+    command: >
+      sh -c "
+      set -e
+      echo 'Waiting for Postgres...'
+      sh ./wait-for-it.sh db:5432 --timeout=60 --strict
+      echo 'Starting BFF...'
+      node dist/apps/backend/bff/main.js
+      "
     networks:
       mynet: {}
+    restart: unless-stopped
 
   backend-product-service:
     build:
       context: .
       dockerfile: docker/backend.Dockerfile.dev
+      args:
+        SERVICE: backend-product-service
     working_dir: /workspace
     env_file:
       - .env
     environment:
       - CI=true
     ports:
-      - '3001:3001'
+      - "3001:3001"
     volumes:
-      - ./apps/backend/product-service:/workspace/apps/backend/product-service:cached
       - ./libs:/workspace/libs:cached
       - ./nx.json:/workspace/nx.json:ro
       - ./tsconfig.base.json:/workspace/tsconfig.base.json:ro
@@ -152,33 +154,38 @@ services:
       - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
       - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
-      - backend-node-modules:/workspace/node_modules
     depends_on:
-      - api-gateway
-    command:
-      - sh
-      - -c
-      - |
-        corepack enable &&
-        corepack prepare pnpm@latest --activate &&
-        pnpm nx serve backend-product-service --host 0.0.0.0 --port 3001
+      - bff
+      - db
+    command: >
+      sh -c "
+      set -e
+      echo 'Waiting for Postgres...'
+      sh ./wait-for-it.sh db:5432 --timeout=60 --strict
+      echo 'Starting Product Service...'
+      node dist/apps/backend/backend-product-service/main.js
+      "
     networks:
       mynet: {}
+    restart: unless-stopped
 
-  # Repeat same for grpc services and workorder-service (remove wait-for-it on api-gateway)
+  # ---------------------------
+  # Other Microservices
+  # ---------------------------
   user-grpc:
     build:
       context: .
       dockerfile: docker/backend.Dockerfile.dev
+      args:
+        SERVICE: user-grpc
     working_dir: /workspace
     env_file:
       - .env
     environment:
       - CI=true
     ports:
-      - '3003:3003'
+      - "3003:3003"
     volumes:
-      - ./apps/backend/user-grpc:/workspace/apps/backend/user-grpc:cached
       - ./libs:/workspace/libs:cached
       - ./nx.json:/workspace/nx.json:ro
       - ./tsconfig.base.json:/workspace/tsconfig.base.json:ro
@@ -187,32 +194,35 @@ services:
       - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
       - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
-      - backend-node-modules:/workspace/node_modules
     depends_on:
-      - api-gateway
-    command:
-      - sh
-      - -c
-      - |
-        corepack enable &&
-        corepack prepare pnpm@latest --activate &&
-        pnpm nx serve user-grpc --host 0.0.0.0 --port 3003
+      - bff
+      - db
+    command: >
+      sh -c "
+      set -e
+      echo 'Waiting for Postgres...'
+      sh ./wait-for-it.sh db:5432 --timeout=60 --strict
+      echo 'Starting User GRPC...'
+      node dist/apps/backend/user-grpc/main.js
+      "
     networks:
       mynet: {}
+    restart: unless-stopped
 
   company-grpc:
     build:
       context: .
       dockerfile: docker/backend.Dockerfile.dev
+      args:
+        SERVICE: company-grpc
     working_dir: /workspace
     env_file:
       - .env
     environment:
       - CI=true
     ports:
-      - '3004:3004'
+      - "3004:3004"
     volumes:
-      - ./apps/backend/company-grpc:/workspace/apps/backend/company-grpc:cached
       - ./libs:/workspace/libs:cached
       - ./nx.json:/workspace/nx.json:ro
       - ./tsconfig.base.json:/workspace/tsconfig.base.json:ro
@@ -221,32 +231,35 @@ services:
       - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
       - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
-      - backend-node-modules:/workspace/node_modules
     depends_on:
-      - api-gateway
-    command:
-      - sh
-      - -c
-      - |
-        corepack enable &&
-        corepack prepare pnpm@latest --activate &&
-        pnpm nx serve company-grpc --host 0.0.0.0 --port 3004
+      - bff
+      - db
+    command: >
+      sh -c "
+      set -e
+      echo 'Waiting for Postgres...'
+      sh ./wait-for-it.sh db:5432 --timeout=60 --strict
+      echo 'Starting Company GRPC...'
+      node dist/apps/backend/company-grpc/main.js
+      "
     networks:
       mynet: {}
+    restart: unless-stopped
 
   company-location-grpc:
     build:
       context: .
       dockerfile: docker/backend.Dockerfile.dev
+      args:
+        SERVICE: company-location-grpc
     working_dir: /workspace
     env_file:
       - .env
     environment:
       - CI=true
     ports:
-      - '3005:3005'
+      - "3005:3005"
     volumes:
-      - ./apps/backend/company-location-grpc:/workspace/apps/backend/company-location-grpc:cached
       - ./libs:/workspace/libs:cached
       - ./nx.json:/workspace/nx.json:ro
       - ./tsconfig.base.json:/workspace/tsconfig.base.json:ro
@@ -255,32 +268,35 @@ services:
       - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
       - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
-      - backend-node-modules:/workspace/node_modules
     depends_on:
-      - api-gateway
-    command:
-      - sh
-      - -c
-      - |
-        corepack enable &&
-        corepack prepare pnpm@latest --activate &&
-        pnpm nx serve company-location-grpc --host 0.0.0.0 --port 3005
+      - bff
+      - db
+    command: >
+      sh -c "
+      set -e
+      echo 'Waiting for Postgres...'
+      sh ./wait-for-it.sh db:5432 --timeout=60 --strict
+      echo 'Starting Company Location GRPC...'
+      node dist/apps/backend/company-location-grpc/main.js
+      "
     networks:
       mynet: {}
+    restart: unless-stopped
 
   workorder-service:
     build:
       context: .
       dockerfile: docker/backend.Dockerfile.dev
+      args:
+        SERVICE: workorder-service
     working_dir: /workspace
     env_file:
       - .env
     environment:
       - CI=true
     ports:
-      - '3006:3006'
+      - "3006:3006"
     volumes:
-      - ./apps/backend/workorder-service:/workspace/apps/backend/workorder-service:cached
       - ./libs:/workspace/libs:cached
       - ./nx.json:/workspace/nx.json:ro
       - ./tsconfig.base.json:/workspace/tsconfig.base.json:ro
@@ -289,18 +305,20 @@ services:
       - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
       - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
-      - backend-node-modules:/workspace/node_modules
     depends_on:
-      - api-gateway
-    command:
-      - sh
-      - -c
-      - |
-        corepack enable &&
-        corepack prepare pnpm@latest --activate &&
-        pnpm nx serve workorder-service --host 0.0.0.0 --port 3006
+      - bff
+      - db
+    command: >
+      sh -c "
+      set -e
+      echo 'Waiting for Postgres...'
+      sh ./wait-for-it.sh db:5432 --timeout=60 --strict
+      echo 'Starting Workorder Service...'
+      node dist/apps/backend/workorder-service/main.js
+      "
     networks:
       mynet: {}
+    restart: unless-stopped
 
   # ---------------------------------------------------------
   # Angular Frontend
@@ -315,7 +333,7 @@ services:
     environment:
       - CI=true
     ports:
-      - '4200:4200'
+      - "4200:4200"
     volumes:
       - ./apps/frontend:/workspace/apps/frontend:cached
       - ./libs:/workspace/libs:cached
@@ -329,16 +347,18 @@ services:
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
     depends_on:
       - api-gateway
-    command:
-      - sh
-      - -c
-      - |
-        corepack enable &&
-        corepack prepare pnpm@latest --activate &&
-        pnpm install --frozen-lockfile --prefer-offline &&
-        pnpm nx serve frontend --host 0.0.0.0 --port 4200
+    command: >
+      sh -c "
+      set -e
+      echo 'Waiting for API Gateway...'
+      sh ./wait-for-it.sh api-gateway:3000 --timeout=60 --strict
+      echo 'Starting Frontend...'
+      pnpm install --frozen-lockfile --prefer-offline &&
+      pnpm nx serve frontend --host 0.0.0.0 --port 4200
+      "
     networks:
       mynet: {}
+    restart: unless-stopped
 
 # ---------------------------------------------------------
 # Volumes + Network
@@ -346,7 +366,6 @@ services:
 volumes:
   postgres-data:
   frontend-node-modules:
-  backend-node-modules:
 
 networks:
   mynet:

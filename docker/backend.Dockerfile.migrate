@@ -1,0 +1,16 @@
+FROM node:20-alpine
+
+WORKDIR /workspace
+
+RUN apk add --no-cache bash curl git
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile
+
+COPY . .
+
+RUN chmod +x scripts/migrate.sh wait-for-it.sh
+
+CMD ["bash", "scripts/migrate.sh"]
