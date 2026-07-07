@@ -1,4 +1,5 @@
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { join } = require('path');
 
 module.exports = {
@@ -44,6 +45,14 @@ module.exports = {
       outputHashing: 'none',
       generatePackageJson: true,
       sourceMaps: true,
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'libs/backend/proto/src/lib/company-location.proto',
+          to: 'company-location.proto',
+        },
+      ],
     }),
   ],
 };

@@ -4,38 +4,27 @@ exports.WorkorderPrismaService = void 0;
 const tslib_1 = require("tslib");
 const common_1 = require("@nestjs/common");
 const workorder_client_1 = require("@my-product-app/backend-prisma/workorder-client");
-let WorkorderPrismaService = class WorkorderPrismaService extends workorder_client_1.PrismaClient {
-    constructor() {
-        super();
-        if (process.env['NODE_ENV'] !== 'production') {
-            this.$extends({
-                query: {
-                    $allModels: {
-                        async $allOperations({ model, operation, args, query }) {
-                            const start = Date.now();
-                            const result = await query(args);
-                            const duration = Date.now() - start;
-                            const safeResult = JSON.stringify(result).length > 1000
-                                ? '[Result too large]'
-                                : JSON.stringify(result);
-                            console.log(`[Prisma] ${operation.toUpperCase()} on ${model} | Duration: ${duration}ms | Args: ${JSON.stringify(args)} | Result: ${safeResult}`);
-                            return result;
-                        },
-                    },
-                },
-            });
-        }
+const workorder_primsa_provider_1 = require("./workorder-primsa.provider");
+let WorkorderPrismaService = class WorkorderPrismaService {
+    constructor(prisma) {
+        Object.defineProperty(this, "prisma", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: prisma
+        });
     }
-    async onModuleInit() {
-        await this.$connect();
+    get client() {
+        return this.prisma;
     }
     async onModuleDestroy() {
-        await this.$disconnect();
+        await this.prisma.$disconnect();
     }
 };
 exports.WorkorderPrismaService = WorkorderPrismaService;
 exports.WorkorderPrismaService = WorkorderPrismaService = tslib_1.__decorate([
     (0, common_1.Injectable)(),
-    tslib_1.__metadata("design:paramtypes", [])
+    tslib_1.__param(0, (0, common_1.Inject)(workorder_primsa_provider_1.PRISMA_WORKORDER)),
+    tslib_1.__metadata("design:paramtypes", [workorder_client_1.PrismaClient])
 ], WorkorderPrismaService);
 //# sourceMappingURL=workorder-prisma.service.js.map

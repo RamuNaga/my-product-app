@@ -38,12 +38,14 @@ export class UserGrpcService {
   async createUser(dto: CreateUserRequest): Promise<CreateUserResponse> {
     const { email, password, username, role, companyId } = dto;
 
-    const emailExists = await this.prisma.user.findUnique({ where: { email } });
+    const emailExists = await this.prisma.client.user.findUnique({
+      where: { email },
+    });
     if (emailExists) throw new ConflictException('Email already in use');
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await this.prisma.user.create({
+    const user = await this.prisma.client.user.create({
       data: {
         email,
         username,
@@ -60,7 +62,7 @@ export class UserGrpcService {
   // Login
   // ----------------------------
   async login(dto: LoginRequest): Promise<LoginResponse> {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.client.user.findUnique({
       where: { email: dto.email },
     });
     if (!user) throw new UnauthorizedException('Invalid email or password');
@@ -96,7 +98,9 @@ export class UserGrpcService {
   // Get user by ID
   // ----------------------------
   async getUserById(dto: GetUserByIdRequest): Promise<GetUserByIdResponse> {
-    const user = await this.prisma.user.findUnique({ where: { id: dto.id } });
+    const user = await this.prisma.client.user.findUnique({
+      where: { id: dto.id },
+    });
     if (!user) throw new NotFoundException('User not found');
 
     return this.mapToCreateUserResponse(user);
@@ -106,7 +110,7 @@ export class UserGrpcService {
   // Find all users
   // ----------------------------
   async findAllUsers(_: FindAllUsersRequest): Promise<FindAllUsersResponse> {
-    const users = await this.prisma.user.findMany();
+    const users = await this.prisma.client.user.findMany();
     return {
       users: users.map((user) => this.mapToCreateUserResponse(user)),
     };

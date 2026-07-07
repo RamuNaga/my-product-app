@@ -2,76 +2,81 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug User gRPC",
       "type": "node",
       "request": "launch",
-      "name": "Debug user-grpc with Nx",
-      "runtimeExecutable": "pnpm exec",
+      "runtimeExecutable": "pnpm",
       "runtimeArgs": ["nx", "serve", "user-grpc"],
-      "env": {
-        "NODE_OPTIONS": "--inspect=9229"
-      },
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
+      "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"],
-      "sourceMaps": true,
-      "outFiles": [
-        "${workspaceFolder}/apps/backend/user-grpc/dist/**/*.(m|c|)js",
-        "!**/node_modules/**"
-      ]
+      "sourceMaps": true
     },
     {
+      "name": "Debug Company gRPC",
       "type": "node",
       "request": "launch",
-      "name": "Debug company-grpc with Nx",
-      "runtimeExecutable": "pnpm exec",
+      "runtimeExecutable": "pnpm",
       "runtimeArgs": ["nx", "serve", "company-grpc"],
-      "env": {
-        "NODE_OPTIONS": "--inspect=9230"
-      },
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
+      "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"],
-      "sourceMaps": true,
-      "outFiles": [
-        "${workspaceFolder}/apps/backend/company-grpc/dist/**/*.(m|c|)js",
-        "!**/node_modules/**"
-      ]
+      "sourceMaps": true
     },
     {
+      "name": "Debug Company Location gRPC",
       "type": "node",
       "request": "launch",
-      "name": "Debug company-location-grpc with Nx",
-      "runtimeExecutable": "pnpm exec",
+      "runtimeExecutable": "pnpm",
       "runtimeArgs": ["nx", "serve", "company-location-grpc"],
-      "env": {
-        "NODE_OPTIONS": "--inspect=9231"
-      },
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
+      "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"],
-      "sourceMaps": true,
-      "outFiles": [
-        "${workspaceFolder}/apps/backend/company-location-grpc/dist/**/*.(m|c|)js",
-        "!**/node_modules/**"
-      ]
+      "sourceMaps": true
     },
     {
+      "name": "Debug Product Service",
       "type": "node",
       "request": "launch",
-      "name": "Debug bff with Nx",
-      "runtimeExecutable": "pnpm exec",
-      "runtimeArgs": ["nx", "serve", "bff"],
-      "env": {
-        "NODE_OPTIONS": "--inspect=9232"
-      },
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["nx", "serve", "backend-product-service"],
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
+      "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"],
-      "sourceMaps": true,
-      "outFiles": [
-        "${workspaceFolder}/apps/backend/bff/dist/**/*.(m|c|)js",
-        "!**/node_modules/**"
-      ]
+      "sourceMaps": true
+    },
+    {
+      "name": "Debug Workorder Service",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["nx", "serve", "workorder-service"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true
+    },
+    {
+      "name": "Debug API Gateway",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["nx", "serve", "api-gateway"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true
+    },
+    {
+      "name": "Debug BFF",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["nx", "serve", "bff"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true
     }
   ]
 }

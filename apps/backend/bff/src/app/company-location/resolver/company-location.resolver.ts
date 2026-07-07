@@ -1,7 +1,7 @@
 import { Resolver, Mutation, Args, Query, Int } from '@nestjs/graphql';
 import { lastValueFrom } from 'rxjs';
 
-import { CompanyLocationGrpcClientService } from '@my-product-app/backend-company-location';
+import { CompanyLocationGrpcClientService } from '@my-product-app/company-location-grpc-client';
 import {
   CreateLocationInput,
   CompanyLocation,

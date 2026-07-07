@@ -1,0 +1,27 @@
+{
+  "name": "company-location-grpc-client",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/backend/company-location-grpc-client/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/company-location-grpc-client",
+        "tsConfig": "libs/backend/company-location-grpc-client/tsconfig.lib.json",
+        "packageJson": "libs/backend/company-location-grpc-client/package.json",
+        "main": "libs/backend/company-location-grpc-client/src/index.ts",
+        "assets": ["libs/backend/company-location-grpc-client/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/backend/company-location-grpc-client/jest.config.ts"
+      }
+    }
+  }
+}

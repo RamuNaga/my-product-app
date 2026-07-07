@@ -6,7 +6,7 @@ import {
   Company,
 } from '@my-product-app/backend-graphql-types';
 import { BaseGrpcResolver } from '../../resolvers/base.resolver';
-import { CompanyGrpcClientService } from '@my-product-app/backend-company';
+import { CompanyGrpcClientService } from '@my-product-app/company-grpc-client';
 
 import { CompanyResponse } from '@my-product-app/backend-proto/generated';
 import { mapProtoCompanyTypeToGraphQL } from '@my-product-app/backend-shared-mappers';

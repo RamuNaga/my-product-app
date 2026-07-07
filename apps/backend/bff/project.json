@@ -3,7 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/backend/bff/src",
   "projectType": "application",
-  "tags": ["type:bff scope:backend"],
+  "tags": ["type:bff", "scope:backend"],
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
@@ -12,46 +12,33 @@
         "webpackConfig": "apps/backend/bff/webpack.config.js",
         "outputPath": "dist/apps/backend/bff",
         "watch": false
-      }
-    },
-
-    "copy-protos": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx copyfiles -u 5 \"libs/backend/proto/src/lib/*.proto\" \"dist/apps/backend/proto/\""
-      }
-    },
-
-    "build-with-protos": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "nx run bff:build && nx run bff:copy-protos"
+      },
+      "configurations": {
+        "development": {
+          "webpackConfig": "apps/backend/bff/webpack.config.js"
+        },
+        "production": {
+          "webpackConfig": "apps/backend/bff/webpack.config.js"
+        }
       }
     },
 
     "serve": {
-      "continuous": true,
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      // "dependsOn": [
-      //   "user-grpc:build-with-protos",
-      //   "company-grpc:build-with-protos",
-      //   "company-location-grpc:build-with-protos",
-      //   "bff:build-with-protos"
-      // ],
       "options": {
-        "buildTarget": "bff:build-with-protos",
-        "runBuildTargetDependencies": false
+        "buildTarget": "bff:build:development"
       },
       "configurations": {
         "development": {
-          "buildTarget": "bff:build-with-protos"
+          "buildTarget": "bff:build:development"
         },
         "production": {
-          "buildTarget": "bff:build-with-protos"
+          "buildTarget": "bff:build:production"
         }
       }
     },
+
     "prune-lockfile": {
       "dependsOn": ["build"],
       "cache": true,
@@ -61,18 +48,20 @@
         "{workspaceRoot}/dist/apps/backend/bff/pnpm-lock.yaml"
       ],
       "options": {
-        "buildTarget": "build"
+        "buildTarget": "bff:build"
       }
     },
+
     "copy-workspace-modules": {
       "dependsOn": ["build"],
       "cache": true,
       "outputs": ["{workspaceRoot}/dist/apps/backend/bff/workspace_modules"],
       "executor": "@nx/js:copy-workspace-modules",
       "options": {
-        "buildTarget": "build"
+        "buildTarget": "bff:build"
       }
     },
+
     "prune": {
       "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
       "executor": "nx:noop"

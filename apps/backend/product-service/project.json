@@ -10,53 +10,34 @@
       "outputs": ["{workspaceRoot}/dist/apps/backend/product-service"],
       "options": {
         "webpackConfig": "apps/backend/product-service/webpack.config.js",
-        "outputPath": "dist/apps/backend/product-service",
-        "watch": false
+        "outputPath": "dist/apps/backend/product-service"
       },
       "configurations": {
         "development": {
-          "webpackConfig": "apps/backend/product-service/webpack.config.js",
-          "outputPath": "dist/apps/backend/product-service"
+          "webpackConfig": "apps/backend/product-service/webpack.config.js"
         },
         "production": {
-          "webpackConfig": "apps/backend/product-service/webpack.config.js",
-          "outputPath": "dist/apps/backend/product-service"
+          "webpackConfig": "apps/backend/product-service/webpack.config.js"
         }
       }
     },
 
-    "copy-protos": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx copyfiles -u 5 \"libs/backend/proto/src/lib/product.proto\" \"dist/apps/backend/product-service/\""
-      }
-    },
-
-    "build-with-protos": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "nx run backend-product-service:build && nx run backend-product-service:copy-protos"
-      }
-    },
     "serve": {
       "continuous": true,
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["build-with-protos"],
       "options": {
-        "buildTarget": "backend-product-service:build-with-protos",
-        "runBuildTargetDependencies": false
+        "buildTarget": "backend-product-service:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "backend-product-service:build-with-protos"
+          "buildTarget": "backend-product-service:build:development"
         },
         "production": {
-          "buildTarget": "backend-product-service:build-with-protos"
+          "buildTarget": "backend-product-service:build:production"
         }
       }
     },
-
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
@@ -67,33 +48,31 @@
     },
 
     "prune-lockfile": {
-      "dependsOn": ["build-with-protos"],
-      "cache": true,
       "executor": "@nx/js:prune-lockfile",
+      "dependsOn": ["build"],
       "outputs": [
         "{workspaceRoot}/dist/apps/backend/product-service/package.json",
         "{workspaceRoot}/dist/apps/backend/product-service/pnpm-lock.yaml"
       ],
       "options": {
-        "buildTarget": "build-with-protos"
+        "buildTarget": "backend-product-service:build"
       }
     },
 
     "copy-workspace-modules": {
-      "dependsOn": ["build-with-protos"],
-      "cache": true,
+      "executor": "@nx/js:copy-workspace-modules",
+      "dependsOn": ["build"],
       "outputs": [
         "{workspaceRoot}/dist/apps/backend/product-service/workspace_modules"
       ],
-      "executor": "@nx/js:copy-workspace-modules",
       "options": {
-        "buildTarget": "build-with-protos"
+        "buildTarget": "backend-product-service:build"
       }
     },
 
     "prune": {
-      "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
-      "executor": "nx:noop"
+      "executor": "nx:noop",
+      "dependsOn": ["prune-lockfile", "copy-workspace-modules"]
     }
   }
 }

@@ -11,7 +11,7 @@ import {
   EmptyRequest,
 } from '@my-product-app/backend-proto/generated';
 import { ProductPrismaService } from '@my-product-app/backend-prisma/product-prisma';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { Prisma } from '@my-product-app/backend-prisma/product-client';
 
 @Injectable()
 export class ProductGrpcService {
@@ -22,7 +22,7 @@ export class ProductGrpcService {
   // ----------------------------
   async createProduct(request: CreateProductRequest): Promise<ProductResponse> {
     try {
-      const product = await this.prisma.product.create({
+      const product = await this.prisma.client.product.create({
         data: {
           productCode: request.productCode,
           name: request.name,
@@ -38,9 +38,9 @@ export class ProductGrpcService {
       return {
         product: this.mapToProtoProduct(product),
       };
-    } catch (error) {
+    } catch (error: any) {
       if (
-        error instanceof PrismaClientKnownRequestError &&
+        error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
         throw new ConflictException('Product code already exists');
@@ -56,7 +56,7 @@ export class ProductGrpcService {
   // ----------------------------
   async getAllProducts(_: EmptyRequest): Promise<ProductListResponse> {
     console.log('getAllProducts in ProductGrpcService is called');
-    const products = await this.prisma.product.findMany({
+    const products = await this.prisma.client.product.findMany({
       orderBy: { createdAt: 'desc' },
     });
     return {
@@ -74,7 +74,7 @@ export class ProductGrpcService {
   }): Promise<ProductResponse> {
     if (!value) throw new NotFoundException('Product ID not provided');
 
-    const product = await this.prisma.product.findUnique({
+    const product = await this.prisma.client.product.findUnique({
       where: { id: value },
     });
 

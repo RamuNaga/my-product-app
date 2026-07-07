@@ -2,62 +2,70 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Serve User gRPC Service",
+      "label": "Serve User gRPC",
       "type": "shell",
-      "command": "nx run user-grpc:serve:development",
+      "command": "pnpm",
+      "args": ["nx", "serve", "user-grpc"],
       "problemMatcher": []
     },
     {
-      "label": "Serve Company gRPC Service",
+      "label": "Serve Company gRPC",
       "type": "shell",
-      "command": "nx run company-grpc:serve:development",
+      "command": "pnpm",
+      "args": ["nx", "serve", "company-grpc"],
       "problemMatcher": []
     },
     {
-      "label": "Serve Company Location gRPC Service",
+      "label": "Serve Company Location gRPC",
       "type": "shell",
-      "command": "nx run company-location-grpc:serve:development",
+      "command": "pnpm",
+      "args": ["nx", "serve", "company-location-grpc"],
       "problemMatcher": []
     },
     {
       "label": "Serve Product Service",
       "type": "shell",
-      "command": "nx run backend-product-service:serve:development",
+      "command": "pnpm",
+      "args": ["nx", "serve", "backend-product-service"],
       "problemMatcher": []
     },
     {
       "label": "Serve Workorder Service",
       "type": "shell",
-      "command": "nx run workorder-service:serve:development",
+      "command": "pnpm",
+      "args": ["nx", "serve", "workorder-service"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve API Gateway",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["nx", "serve", "api-gateway"],
       "problemMatcher": []
     },
     {
       "label": "Serve BFF",
       "type": "shell",
-      "command": "nx run bff:serve:development",
-      "problemMatcher": []
-    },
-    {
-      "label": "Serve Api gateway",
-      "type": "shell",
-      "command": "nx run api-gateway:serve:development",
+      "command": "pnpm",
+      "args": ["nx", "serve", "bff"],
       "problemMatcher": []
     },
     {
       "label": "Serve Frontend",
       "type": "shell",
-      "command": "nx serve frontend",
+      "command": "pnpm",
+      "args": ["nx", "serve", "frontend"],
       "problemMatcher": []
     },
     {
       "label": "Serve All Apps",
       "dependsOn": [
-        "Serve User gRPC Service",
-        "Serve Company gRPC Service",
-        "Serve Company Location gRPC Service",
+        "Serve User gRPC",
+        "Serve Company gRPC",
+        "Serve Company Location gRPC",
         "Serve Product Service",
         "Serve Workorder Service",
-        "Serve Api gateway",
+        "Serve API Gateway",
         "Serve BFF",
         "Serve Frontend"
       ],
@@ -65,7 +73,8 @@
       "group": {
         "kind": "build",
         "isDefault": true
-      }
+      },
+      "problemMatcher": []
     }
   ]
 }

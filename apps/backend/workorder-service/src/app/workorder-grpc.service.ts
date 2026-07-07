@@ -126,7 +126,7 @@ export class WorkOrderGrpcService {
       today.getMonth() + 1
     ).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
 
-    const countToday = await this.prisma.workOrder.count({
+    const countToday = await this.prisma.client.workOrder.count({
       where: {
         createdAt: {
           gte: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
@@ -168,7 +168,7 @@ export class WorkOrderGrpcService {
       cleanData.deliveryDate = new Date(request.deliveryDate.seconds * 1000);
     }
 
-    const workOrderEntity = await this.prisma.workOrder.create({
+    const workOrderEntity = await this.prisma.client.workOrder.create({
       data: cleanData,
     });
 
@@ -182,7 +182,7 @@ export class WorkOrderGrpcService {
 
   // ---------------- Get WorkOrder By ID ----------------
   async getWorkOrderById(id: number): Promise<WorkOrderResponse> {
-    const workOrderEntity = await this.prisma.workOrder.findUnique({
+    const workOrderEntity = await this.prisma.client.workOrder.findUnique({
       where: { id },
     });
 
@@ -229,9 +229,9 @@ export class WorkOrderGrpcService {
         where
       );
 
-      const totalCount = await this.prisma.workOrder.count({ where });
+      const totalCount = await this.prisma.client.workOrder.count({ where });
 
-      const workOrders = await this.prisma.workOrder.findMany({
+      const workOrders = await this.prisma.client.workOrder.findMany({
         where,
         skip: (page - 1) * pageSize,
         take: pageSize,
@@ -259,7 +259,7 @@ export class WorkOrderGrpcService {
   async updateWorkOrder(
     request: UpdateWorkOrderRequest
   ): Promise<WorkOrderResponse> {
-    const existing = await this.prisma.workOrder.findUnique({
+    const existing = await this.prisma.client.workOrder.findUnique({
       where: { id: request.workOrderId },
     });
 
@@ -309,7 +309,7 @@ export class WorkOrderGrpcService {
       data.comments = request.comments;
     }
 
-    const updatedWorkOrder = await this.prisma.workOrder.update({
+    const updatedWorkOrder = await this.prisma.client.workOrder.update({
       where: { id: request.workOrderId },
       data,
     });
@@ -321,7 +321,7 @@ export class WorkOrderGrpcService {
   async approveWorkOrder(
     request: ApproveWorkOrderRequest
   ): Promise<ApproveWorkOrderResponse> {
-    const workorder = await this.prisma.workOrder.findUnique({
+    const workorder = await this.prisma.client.workOrder.findUnique({
       where: { id: request.workOrderId },
     });
 
@@ -356,7 +356,7 @@ export class WorkOrderGrpcService {
       updateData.assignedTo = request.assignedTo;
     if (request.comments !== undefined) updateData.comments = request.comments;
 
-    const approveWorkOder = await this.prisma.workOrder.update({
+    const approveWorkOder = await this.prisma.client.workOrder.update({
       where: { id: request.workOrderId },
       data: updateData,
     });

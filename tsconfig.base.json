@@ -84,6 +84,12 @@
         "libs/backend/shared-types/src/index.ts"
       ],
       "@my-product-app/backend-shared/*": ["libs/backend/shared/src/lib/*"],
+      "@my-product-app/company-grpc-client": [
+        "libs/backend/company-grpc-client/src/index.ts"
+      ],
+      "@my-product-app/company-location-grpc-client": [
+        "libs/backend/company-location-grpc-client/src/index.ts"
+      ],
       "@my-product-app/frontend-core": ["libs/frontend/core/src/index.ts"],
       "@my-product-app/frontend-core/*": ["libs/frontend/core/src/lib/*"],
       "@my-product-app/frontend-data-access": [
@@ -105,6 +111,9 @@
       "@my-product-app/logger": ["libs/backend/logger/src/index.ts"],
       "@my-product-app/product": ["libs/backend/product/src/index.ts"],
       "@my-product-app/user": ["libs/backend/user/src/index.ts"],
+      "@my-product-app/user-grpc-client": [
+        "libs/backend/user-grpc-client/src/index.ts"
+      ],
       "@my-product-app/workorder": ["libs/backend/workorder/src/index.ts"]
     }
   },

@@ -25,35 +25,20 @@
       }
     },
 
-    "copy-protos": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx copyfiles -u 5 \"libs/backend/proto/src/lib/user.proto\" \"dist/apps/backend/user-grpc/\""
-      }
-    },
-
-    "build-with-protos": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "nx run user-grpc:build && nx run user-grpc:copy-protos"
-      }
-    },
-
     "serve": {
       "continuous": true,
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["build-with-protos"],
       "options": {
-        "buildTarget": "user-grpc:build-with-protos",
+        "buildTarget": "user-grpc:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "user-grpc:build-with-protos"
+          "buildTarget": "user-grpc:build"
         },
         "production": {
-          "buildTarget": "user-grpc:build-with-protos"
+          "buildTarget": "user-grpc:build"
         }
       }
     },

@@ -2,6 +2,9 @@ packages:
   - apps/*
   - libs/*
 
+onlyBuiltDependencies:
+  - unrs-resolver
+
 ignoredBuiltDependencies:
   - '@apollo/protobufjs'
   - '@nestjs/core'

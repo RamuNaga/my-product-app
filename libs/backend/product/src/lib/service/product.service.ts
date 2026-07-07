@@ -6,7 +6,7 @@ import {
 
 import { CreateProductInput } from '@my-product-app/backend-graphql-types';
 import { ProductPrismaService } from '@my-product-app/backend-prisma/product-prisma';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { Prisma } from '@my-product-app/backend-prisma/product-client';
 
 @Injectable()
 export class ProductService {
@@ -14,15 +14,15 @@ export class ProductService {
 
   async create(data: CreateProductInput) {
     try {
-      const product = await this.prisma.product.create({
+      const product = await this.prisma.client.product.create({
         data,
       });
       return product;
-    } catch (error) {
+    } catch (error: any) {
       // Prisma unique constraint violation
       console.log('Prisma unique constraint violation calling');
       if (
-        error instanceof PrismaClientKnownRequestError &&
+        error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
         throw new ConflictException('Product code already exists');
@@ -35,13 +35,13 @@ export class ProductService {
   }
 
   findAll() {
-    return this.prisma.product.findMany({
+    return this.prisma.client.product.findMany({
       orderBy: { createdAt: 'desc' },
     });
   }
 
   async getAllProducts() {
-    const products = await this.prisma.product.findMany({
+    const products = await this.prisma.client.product.findMany({
       orderBy: { createdAt: 'desc' },
     });
     return products.map((p) => ({
@@ -51,20 +51,20 @@ export class ProductService {
   }
 
   findOne(id: number) {
-    return this.prisma.product.findUnique({
+    return this.prisma.client.product.findUnique({
       where: { id },
     });
   }
 
   update(id: number, data: Partial<CreateProductInput>) {
-    return this.prisma.product.update({
+    return this.prisma.client.product.update({
       where: { id },
       data,
     });
   }
 
   remove(id: number) {
-    return this.prisma.product.delete({
+    return this.prisma.client.product.delete({
       where: { id },
     });
   }

@@ -20,10 +20,10 @@ const isProd = process.env['NODE_ENV'] === 'production';
  */
 function protoPath(protoFile: string): string {
   if (isDocker || isProd) {
-    return join(__dirname, `../dist/libs/backend/proto/src/lib/${protoFile}`);
+    return join(__dirname, protoFile);
   }
 
-  return join(__dirname, `../libs/backend/proto/src/lib/${protoFile}`);
+  return join(process.cwd(), 'libs/backend/proto/src/lib', protoFile);
 }
 
 /**
@@ -44,7 +44,9 @@ export const getUserServiceOptions = (): ClientProviderOptions => ({
   options: {
     package: 'user',
     protoPath: protoPath('user.proto'),
-    url: `${serviceHost('user-grpc')}:${process.env['USER_SERVICE_MS_PORT'] || 4003}`,
+    url: `${serviceHost('user-grpc')}:${
+      process.env['USER_SERVICE_MS_PORT'] || 4003
+    }`,
   },
 });
 
@@ -57,7 +59,9 @@ export const getProductServiceOptions = (): ClientProviderOptions => ({
   options: {
     package: 'product',
     protoPath: protoPath('product.proto'),
-    url: `${serviceHost('backend-product-service')}:${process.env['PRODUCT_SERVICE_MS_PORT'] || 4001}`,
+    url: `${serviceHost('backend-product-service')}:${
+      process.env['PRODUCT_SERVICE_MS_PORT'] || 4001
+    }`,
   },
 });
 
@@ -70,7 +74,9 @@ export const getWorkorderServiceOptions = (): ClientProviderOptions => ({
   options: {
     package: 'workorder',
     protoPath: protoPath('workorder.proto'),
-    url: `${serviceHost('workorder-service')}:${process.env['WORKORDER_SERVICE_MS_PORT'] || 4006}`,
+    url: `${serviceHost('workorder-service')}:${
+      process.env['WORKORDER_SERVICE_MS_PORT'] || 4006
+    }`,
   },
 });
 
@@ -83,7 +89,9 @@ export const getCompanyServiceOptions = (): ClientProviderOptions => ({
   options: {
     package: 'company',
     protoPath: protoPath('company.proto'),
-    url: `${serviceHost('company-grpc')}:${process.env['COMPANY_SERVICE_MS_PORT'] || 4004}`,
+    url: `${serviceHost('company-grpc')}:${
+      process.env['COMPANY_SERVICE_MS_PORT'] || 4004
+    }`,
   },
 });
 
@@ -96,6 +104,8 @@ export const getCompanyLocationServiceOptions = (): ClientProviderOptions => ({
   options: {
     package: 'companylocation',
     protoPath: protoPath('company-location.proto'),
-    url: `${serviceHost('company-location-grpc')}:${process.env['COMPANY_LOCATION_SERVICE_MS_PORT'] || 4005}`,
+    url: `${serviceHost('company-location-grpc')}:${
+      process.env['COMPANY_LOCATION_SERVICE_MS_PORT'] || 4005
+    }`,
   },
 });

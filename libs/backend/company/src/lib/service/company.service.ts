@@ -9,11 +9,11 @@ export class CompanyService {
   constructor(private readonly prisma: CompanyPrismaService) {}
 
   async create(data: CreateCompanyInput) {
-    return this.prisma.company.create({ data });
+    return this.prisma.client.company.create({ data });
   }
 
   async searchByName(searchTerm: string): Promise<Company[]> {
-    const companies = await this.prisma.company.findMany({
+    const companies = await this.prisma.client.company.findMany({
       where: {
         name: {
           contains: searchTerm,

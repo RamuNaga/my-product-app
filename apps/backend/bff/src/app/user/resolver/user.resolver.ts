@@ -1,5 +1,5 @@
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
-import { UserGrpcClientService } from '@my-product-app/user';
+import { UserGrpcClientService } from '@my-product-app/user-grpc-client';
 import {
   CreateUserInput,
   LoginInput,

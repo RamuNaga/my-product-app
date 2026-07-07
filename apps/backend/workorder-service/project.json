@@ -25,35 +25,20 @@
       }
     },
 
-    "copy-protos": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx copyfiles -u 5 \"libs/backend/proto/src/lib/workorder.proto\" \"dist/apps/backend/workorder-service/\""
-      }
-    },
-
-    "build-with-protos": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "nx run workorder-service:build && nx run workorder-service:copy-protos"
-      }
-    },
-
     "serve": {
       "continuous": true,
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["build-with-protos"],
       "options": {
-        "buildTarget": "workorder-service:build-with-protos",
+        "buildTarget": "workorder-service:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "workorder-service:build-with-protos"
+          "buildTarget": "workorder-service:build"
         },
         "production": {
-          "buildTarget": "workorder-service:build-with-protos"
+          "buildTarget": "workorder-service:build"
         }
       }
     },
@@ -68,7 +53,7 @@
     },
 
     "prune-lockfile": {
-      "dependsOn": ["build-with-protos"],
+      "dependsOn": ["build"],
       "cache": true,
       "executor": "@nx/js:prune-lockfile",
       "outputs": [
@@ -76,19 +61,19 @@
         "{workspaceRoot}/dist/apps/backend/workorder-service/pnpm-lock.yaml"
       ],
       "options": {
-        "buildTarget": "build-with-protos"
+        "buildTarget": "build"
       }
     },
 
     "copy-workspace-modules": {
-      "dependsOn": ["build-with-protos"],
+      "dependsOn": ["build"],
       "cache": true,
       "outputs": [
         "{workspaceRoot}/dist/apps/backend/workorder-service/workspace_modules"
       ],
       "executor": "@nx/js:copy-workspace-modules",
       "options": {
-        "buildTarget": "build-with-protos"
+        "buildTarget": "build"
       }
     },
 

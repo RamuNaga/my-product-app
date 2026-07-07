@@ -14,7 +14,7 @@ export class CompanyLocationGrpcService {
   async createCompanyLocation(
     data: CreateCompanyLocationRequest
   ): Promise<CompanyLocationResponse> {
-    const location = await this.prisma.companyLocation.create({
+    const location = await this.prisma.client.companyLocation.create({
       data: {
         ...data,
         contact: data.contact ?? '', // ensure string
@@ -37,7 +37,7 @@ export class CompanyLocationGrpcService {
   }
 
   async getCompanyLocationById(id: number): Promise<CompanyLocationResponse> {
-    const location = await this.prisma.companyLocation.findUnique({
+    const location = await this.prisma.client.companyLocation.findUnique({
       where: { id },
     });
     console.log('Fetched location:', location);
@@ -60,7 +60,7 @@ export class CompanyLocationGrpcService {
   async getAllCompanyLocations(
     data: GetAllCompanyLocationsRequest
   ): Promise<GetAllCompanyLocationsResponse> {
-    const locations = await this.prisma.companyLocation.findMany({
+    const locations = await this.prisma.client.companyLocation.findMany({
       where: { companyId: data.companyId },
       orderBy: { location: 'asc' },
     });

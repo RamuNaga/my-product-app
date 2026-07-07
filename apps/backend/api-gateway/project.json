@@ -4,25 +4,36 @@
   "sourceRoot": "apps/backend/api-gateway/src",
   "projectType": "application",
   "tags": ["type:gateway", "scope:backend", "area:gateway"],
+
   "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{workspaceRoot}/dist/apps/backend/api-gateway"],
+      "options": {
+        "webpackConfig": "apps/backend/api-gateway/webpack.config.js",
+        "outputPath": "dist/apps/backend/api-gateway",
+        "watch": false
+      }
+    },
+
     "serve": {
+      "continuous": true,
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["build"],
       "options": {
         "buildTarget": "api-gateway:build",
-        "runBuildTargetDependencies": false,
-        "inspect": false
+        "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "api-gateway:build:development"
+          "buildTarget": "api-gateway:build"
         },
         "production": {
-          "buildTarget": "api-gateway:build:production"
+          "buildTarget": "api-gateway:build"
         }
       }
     },
+
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],

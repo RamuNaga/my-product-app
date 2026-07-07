@@ -6,11 +6,13 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "scripts": {
-    "prisma:generate": "pnpm prisma generate --schema=libs/backend/product-prisma/prisma/schema.prisma"
+    "prisma:generate": "pnpm prisma generate --config libs/backend/product-prisma/prisma/prisma.config.ts"
   },
   "dependencies": {
     "tslib": "^2.8.1",
     "@nestjs/common": "^11.1.0",
-    "@prisma/client": "^6.14.0"
+    "dotenv": "16.4.7",
+    "prisma": "^7.8.0",
+    "@prisma/adapter-pg": "^7.8.0"
   }
 }

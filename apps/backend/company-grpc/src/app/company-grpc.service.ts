@@ -20,7 +20,7 @@ export class CompanyGrpcService {
     const mappedType = mapProtoCompanyTypeToGraphQL(data.type);
 
     // Create company in DB
-    const company = await this.prisma.company.create({
+    const company = await this.prisma.client.company.create({
       data: {
         name: data.name,
         type: mappedType, // store as GraphQL enum internally
@@ -44,7 +44,7 @@ export class CompanyGrpcService {
   }
 
   async getCompanyById(id: number): Promise<CompanyResponse> {
-    const company = await this.prisma.company.findUnique({
+    const company = await this.prisma.client.company.findUnique({
       where: { id },
     });
 
@@ -69,7 +69,7 @@ export class CompanyGrpcService {
   async searchByName(
     data: SearchCompanyByNameRequest
   ): Promise<SearchCompanyByNameResponse> {
-    const companies = await this.prisma.company.findMany({
+    const companies = await this.prisma.client.company.findMany({
       where: {
         name: {
           contains: data.searchTerm,
