@@ -1,0 +1,41 @@
+ARG SERVICE
+
+# -----------------------------
+# Builder
+# -----------------------------
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --filter ${SERVICE}...
+
+COPY apps ./apps
+COPY libs ./libs
+COPY nx.json tsconfig.base.json ./
+
+# Build the service along with proto files
+RUN pnpm nx run ${SERVICE}:build-with-protos
+
+# -----------------------------
+# Runtime
+# -----------------------------
+FROM node:20-alpine
+
+WORKDIR /app
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+ARG SERVICE
+RUN pnpm install --filter ${SERVICE}... --prod
+
+# Copy only built files
+COPY --from=builder /app/dist/apps/backend/${SERVICE} ./dist
+
+ENV NODE_ENV=production
+EXPOSE 3000
+
+CMD ["node", "dist/main.js"]

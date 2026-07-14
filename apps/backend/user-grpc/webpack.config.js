@@ -5,6 +5,7 @@ const { join } = require('path');
 module.exports = {
   output: {
     path: join(__dirname, '../../../dist/apps/backend/user-grpc'),
+    filename: 'main.js',
   },
   externals: [
     ({ request }, callback) => {
@@ -48,15 +49,19 @@ module.exports = {
       optimization: false,
       outputHashing: 'none',
       generatePackageJson: true,
-      sourceMaps: true,
+      sourceMaps: false,
+      watch: true,
     }),
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'libs/backend/proto/src/lib/user.proto',
+          from: join(
+            __dirname,
+            '../../../libs/backend/proto/src/lib/user.proto'
+          ),
           to: 'user.proto',
         },
       ],
-    }),
+    })
   ],
 };

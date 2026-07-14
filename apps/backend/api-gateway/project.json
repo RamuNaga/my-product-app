@@ -3,40 +3,53 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/backend/api-gateway/src",
   "projectType": "application",
-  "tags": ["type:gateway", "scope:backend", "area:gateway"],
-
+  "tags": [
+    "type:gateway",
+    "scope:backend",
+    "area:gateway"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
-      "outputs": ["{workspaceRoot}/dist/apps/backend/api-gateway"],
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/api-gateway"
+      ],
       "options": {
         "webpackConfig": "apps/backend/api-gateway/webpack.config.js",
         "outputPath": "dist/apps/backend/api-gateway",
-        "watch": false
-      }
-    },
-
-    "serve": {
-      "continuous": true,
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
-      "options": {
-        "buildTarget": "api-gateway:build",
-        "runBuildTargetDependencies": false
       },
+
       "configurations": {
         "development": {
-          "buildTarget": "api-gateway:build"
+          "watch": true
         },
         "production": {
-          "buildTarget": "api-gateway:build"
+          "watch": false
         }
       }
     },
-
+    "serve": {
+      "executor": "nx:run-commands",
+      "continuous": true,
+      "options": {
+        "parallel": true,
+        "commands": [
+          {
+            "command": "nx build api-gateway --configuration=development",
+            "forwardAllArgs": false
+          },
+          {
+            "command": "wait-on dist/apps/backend/api-gateway/main.js && node dist/apps/backend/api-gateway/main.js",
+            "forwardAllArgs": false
+          }
+        ]
+      }
+    },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/backend/api-gateway/jest.config.ts"
       }

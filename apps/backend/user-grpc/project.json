@@ -3,83 +3,58 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/backend/user-grpc/src",
   "projectType": "application",
-  "tags": ["type:grpc", "domain:user", "scope:backend"],
+  "tags": [
+    "type:grpc",
+    "domain:user",
+    "scope:backend"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
-      "outputs": ["{workspaceRoot}/dist/apps/backend/user-grpc"],
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/user-grpc"
+      ],
       "options": {
         "webpackConfig": "apps/backend/user-grpc/webpack.config.js",
-        "outputPath": "dist/apps/backend/user-grpc",
-        "watch": false
+        "outputPath": "dist/apps/backend/user-grpc"
       },
       "configurations": {
         "development": {
-          "webpackConfig": "apps/backend/user-grpc/webpack.config.js",
-          "outputPath": "dist/apps/backend/user-grpc"
+          "watch": true
         },
         "production": {
-          "webpackConfig": "apps/backend/user-grpc/webpack.config.js",
-          "outputPath": "dist/apps/backend/user-grpc"
+          "watch": false
         }
       }
     },
 
     "serve": {
+      "executor": "nx:run-commands",
       "continuous": true,
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "user-grpc:build",
-        "runBuildTargetDependencies": false
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "user-grpc:build"
-        },
-        "production": {
-          "buildTarget": "user-grpc:build"
-        }
+        "parallel": true,
+        "commands": [
+          {
+            "command": "nx build user-grpc --configuration=development",
+            "forwardAllArgs": false
+          },
+          {
+            "command": "wait-on dist/apps/backend/user-grpc/main.js && node dist/apps/backend/user-grpc/main.js",
+            "forwardAllArgs": false
+          }
+        ]
       }
     },
 
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/backend/user-grpc/jest.config.ts",
         "passWithNoTests": true
       }
-    },
-
-    "prune-lockfile": {
-      "dependsOn": ["build-with-protos"],
-      "cache": true,
-      "executor": "@nx/js:prune-lockfile",
-      "outputs": [
-        "{workspaceRoot}/dist/apps/backend/user-grpc/package.json",
-        "{workspaceRoot}/dist/apps/backend/user-grpc/pnpm-lock.yaml"
-      ],
-      "options": {
-        "buildTarget": "build-with-protos"
-      }
-    },
-
-    "copy-workspace-modules": {
-      "dependsOn": ["build-with-protos"],
-      "cache": true,
-      "outputs": [
-        "{workspaceRoot}/dist/apps/backend/user-grpc/workspace_modules"
-      ],
-      "executor": "@nx/js:copy-workspace-modules",
-      "options": {
-        "buildTarget": "build-with-protos"
-      }
-    },
-
-    "prune": {
-      "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
-      "executor": "nx:noop"
     }
   }
 }
