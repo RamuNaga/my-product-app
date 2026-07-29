@@ -7,6 +7,6 @@ import { CompanyGrpcClientService } from './company-grpc-client.service';
 @Module({
   imports: [ClientsModule.register([getCompanyServiceOptions()])],
   providers: [CompanyGrpcClientService],
-  exports: [CompanyGrpcClientService],
+  exports: [CompanyGrpcClientService, ClientsModule],
 })
 export class CompanyGrpcClientModule {}

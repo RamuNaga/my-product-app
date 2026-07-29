@@ -7,6 +7,6 @@ import { CompanyLocationGrpcClientService } from './company-location-grpc-client
 @Module({
   imports: [ClientsModule.register([getCompanyLocationServiceOptions()])],
   providers: [CompanyLocationGrpcClientService],
-  exports: [CompanyLocationGrpcClientService],
+  exports: [CompanyLocationGrpcClientService, ClientsModule],
 })
 export class CompanyLocationGrpcClientModule {}

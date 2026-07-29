@@ -21,21 +21,21 @@
         }
       }
     },
-
     "serve": {
+      "executor": "nx:run-commands",
       "continuous": true,
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "backend-product-service:build"
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "backend-product-service:build:development"
-        },
-        "production": {
-          "buildTarget": "backend-product-service:build:production"
-        }
+        "parallel": true,
+        "commands": [
+          {
+            "command": "nx build backend-product-service --configuration=development",
+            "forwardAllArgs": false
+          },
+          {
+            "command": "wait-on dist/apps/backend/product-service/main.js && node dist/apps/backend/product-service/main.js",
+            "forwardAllArgs": false
+          }
+        ]
       }
     },
     "test": {

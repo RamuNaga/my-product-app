@@ -49,8 +49,11 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'libs/backend/proto/src/lib/*.proto',
-          to: 'product.proto',
+          from: 'libs/backend/proto/src/lib',
+          to: '.',
+          globOptions: {
+            ignore: ['**/*.ts'],
+          },
         },
       ],
     }),

@@ -4,12 +4,13 @@ exports.CompanyLocationPrismaModule = void 0;
 const tslib_1 = require("tslib");
 const common_1 = require("@nestjs/common");
 const company_location_prisma_service_1 = require("./company-location-prisma.service");
+const company_location_prisma_provider_1 = require("./company-location-prisma.provider");
 let CompanyLocationPrismaModule = class CompanyLocationPrismaModule {
 };
 exports.CompanyLocationPrismaModule = CompanyLocationPrismaModule;
 exports.CompanyLocationPrismaModule = CompanyLocationPrismaModule = tslib_1.__decorate([
     (0, common_1.Module)({
-        providers: [company_location_prisma_service_1.CompanyLocationPrismaService],
+        providers: [company_location_prisma_provider_1.companyLocationPrismaProvider, company_location_prisma_service_1.CompanyLocationPrismaService],
         exports: [company_location_prisma_service_1.CompanyLocationPrismaService],
     })
 ], CompanyLocationPrismaModule);

@@ -6,6 +6,6 @@ import { UserGrpcClientService } from './user-grpc-client.service';
 @Module({
   imports: [ClientsModule.register([getUserServiceOptions()])],
   providers: [UserGrpcClientService],
-  exports: [UserGrpcClientService],
+  exports: [UserGrpcClientService, ClientsModule],
 })
 export class UserGrpcClientModule {}

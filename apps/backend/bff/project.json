@@ -24,18 +24,20 @@
     },
 
     "serve": {
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
+      "executor": "nx:run-commands",
+      "continuous": true,
       "options": {
-        "buildTarget": "bff:build:development"
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "bff:build:development"
-        },
-        "production": {
-          "buildTarget": "bff:build:production"
-        }
+        "parallel": true,
+        "commands": [
+          {
+            "command": "nx build bff --configuration=development",
+            "forwardAllArgs": false
+          },
+          {
+            "command": "wait-on dist/apps/backend/bff/main.js && node dist/apps/backend/bff/main.js",
+            "forwardAllArgs": false
+          }
+        ]
       }
     },
 
