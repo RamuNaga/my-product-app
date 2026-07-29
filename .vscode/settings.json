@@ -1,5 +1,5 @@
 {
   "nxConsole.generateAiAgentRules": true,
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "debug.javascript.autoAttachFilter": "disabled"
+  "debug.javascript.autoAttachFilter": "onlyWithFlag"
 }
