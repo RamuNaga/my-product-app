@@ -18,25 +18,27 @@ function createPrismaClient() {
     adapter,
   });
 
-  return client.$extends({
-    query: {
-      $allModels: {
-        async $allOperations({ model, operation, args, query }) {
-          const start = Date.now();
+  return client;
 
-          const result = await query(args);
+  // return client.$extends({
+  //   query: {
+  //     $allModels: {
+  //       async $allOperations({ model, operation, args, query }) {
+  //         const start = Date.now();
 
-          const duration = Date.now() - start;
+  //         const result = await query(args);
 
-          console.log(
-            `[Prisma] ${String(model)}.${String(operation)} ${duration}ms`
-          );
+  //         const duration = Date.now() - start;
 
-          return result;
-        },
-      },
-    },
-  });
+  //         console.log(
+  //           `[Prisma] ${String(model)}.${String(operation)} ${duration}ms`
+  //         );
+
+  //         return result;
+  //       },
+  //     },
+  //   },
+  // });
 }
 
 export const userPrismaProvider = {

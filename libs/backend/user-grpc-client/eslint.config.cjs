@@ -8,7 +8,11 @@ module.exports = [
       '@nx/enforce-module-boundaries': [
         'error',
         {
-          allow: ['^@my-product-app/backend-shared'],
+          allow: [
+            '^@my-product-app/backend-shared',
+            '^@my-product-app/backend-graphql-types',
+            '^@my-product-app/backend-proto/generated',
+          ],
           enforceBuildableLibDependency: true,
           depConstraints: [
             {

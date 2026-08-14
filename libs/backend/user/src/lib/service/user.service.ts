@@ -22,7 +22,7 @@
 //   async create(createUserInput: CreateUserInput): Promise<UserWithoutPassword> {
 //     const { email, password, username, role, companyId } = createUserInput;
 
-//     const emailExists = await this.prisma.user.findUnique({
+//     const emailExists = await this.prisma.client.user.findUnique({
 //       where: { email },
 //     });
 
@@ -43,7 +43,7 @@
 //       data.companyId = companyId;
 //     }
 
-//     const user = await this.prisma.user.create({
+//     const user = await this.prisma.client.user.create({
 //       data,
 //     });
 
@@ -54,7 +54,7 @@
 //     email: string,
 //     password: string
 //   ): Promise<{ user: Omit<User, 'password'>; accessToken: string }> {
-//     const user = await this.prisma.user.findUnique({ where: { email } });
+//     const user = await this.prisma.client.user.findUnique({ where: { email } });
 
 //     if (!user) {
 //       throw new UnauthorizedException('Invalid email or password');
@@ -82,7 +82,7 @@
 //   }
 
 //   async findAll(): Promise<UserWithoutPassword[]> {
-//     const users = await this.prisma.user.findMany({
+//     const users = await this.prisma.client.user.findMany({
 //       select: {
 //         id: true,
 //         email: true,
@@ -98,7 +98,7 @@
 //   }
 
 //   async isEmailAvailable(email: string): Promise<boolean> {
-//     const user = await this.prisma.user.findUnique({
+//     const user = await this.prisma.client.user.findUnique({
 //       where: { email },
 //     });
 //     return !user;

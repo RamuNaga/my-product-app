@@ -62,6 +62,12 @@ export class UserGrpcService {
   // Login
   // ----------------------------
   async login(dto: LoginRequest): Promise<LoginResponse> {
+    console.log('Before query');
+
+    const count = await this.prisma.client.user.count();
+
+    console.log('Count =', count);
+
     const user = await this.prisma.client.user.findUnique({
       where: { email: dto.email },
     });

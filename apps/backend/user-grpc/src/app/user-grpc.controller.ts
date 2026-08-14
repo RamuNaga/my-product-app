@@ -29,6 +29,7 @@ export class UserGrpcController {
   // ----------------------------
   @GrpcMethod('UserService', 'Login')
   async login(data: LoginRequest): Promise<LoginResponse> {
+    console.log('Controller Login called');
     return this.userGrpcService.login(data);
   }
 
