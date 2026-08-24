@@ -25,21 +25,23 @@
       }
     },
 
+  
+
     "serve": {
-      "executor": "nx:run-commands",
-      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
       "options": {
-        "parallel": true,
-        "commands": [
-          {
-            "command": "nx build workorder-service --configuration=development",
-            "forwardAllArgs": false
-          },
-          {
-            "command": "wait-on dist/apps/backend/workorder-service/main.js && node dist/apps/backend/workorder-service/main.js",
-            "forwardAllArgs": false
-          }
-        ]
+        "buildTarget": "workorder-service:build",
+        "runBuildTargetDependencies": true,
+        "inspect": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "workorder-service:build:development"
+        },
+        "production": {
+          "buildTarget": "workorder-service:build:production"
+        }
       }
     },
 

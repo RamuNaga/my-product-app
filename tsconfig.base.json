@@ -57,10 +57,10 @@
       "@my-product-app/backend-prisma/product-prisma": [
         "libs/backend/product-prisma/src/index.ts"
       ],
-      "@my-product-app/backend-prisma/user-client": [
+      "@my-product-app/user-client": [
         "libs/backend/user-prisma/generated/user-client"
       ],
-      "@my-product-app/backend-prisma/user-prisma": [
+      "@my-product-app/user-prisma": [
         "libs/backend/user-prisma/src/index.ts"
       ],
       "@my-product-app/backend-prisma/workorder-client": [

@@ -3,11 +3,17 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/backend/product-service/src",
   "projectType": "application",
-  "tags": ["type:service", "scope:backend", "area:product"],
+  "tags": [
+    "type:service",
+    "scope:backend",
+    "area:product"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
-      "outputs": ["{workspaceRoot}/dist/apps/backend/product-service"],
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/product-service"
+      ],
       "options": {
         "webpackConfig": "apps/backend/product-service/webpack.config.js",
         "outputPath": "dist/apps/backend/product-service"
@@ -22,34 +28,37 @@
       }
     },
     "serve": {
-      "executor": "nx:run-commands",
-      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
       "options": {
-        "parallel": true,
-        "commands": [
-          {
-            "command": "nx build backend-product-service --configuration=development",
-            "forwardAllArgs": false
-          },
-          {
-            "command": "wait-on dist/apps/backend/product-service/main.js && node dist/apps/backend/product-service/main.js",
-            "forwardAllArgs": false
-          }
-        ]
+        "buildTarget": "product-service:build",
+        "runBuildTargetDependencies": true,
+        "inspect": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "backend-product-service:build:development"
+        },
+        "production": {
+          "buildTarget": "backend-product-service:build:production"
+        }
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/backend/product-service/jest.config.ts",
         "passWithNoTests": true
       }
     },
-
     "prune-lockfile": {
       "executor": "@nx/js:prune-lockfile",
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "outputs": [
         "{workspaceRoot}/dist/apps/backend/product-service/package.json",
         "{workspaceRoot}/dist/apps/backend/product-service/pnpm-lock.yaml"
@@ -58,10 +67,11 @@
         "buildTarget": "backend-product-service:build"
       }
     },
-
     "copy-workspace-modules": {
       "executor": "@nx/js:copy-workspace-modules",
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "outputs": [
         "{workspaceRoot}/dist/apps/backend/product-service/workspace_modules"
       ],
@@ -69,10 +79,12 @@
         "buildTarget": "backend-product-service:build"
       }
     },
-
     "prune": {
       "executor": "nx:noop",
-      "dependsOn": ["prune-lockfile", "copy-workspace-modules"]
+      "dependsOn": [
+        "prune-lockfile",
+        "copy-workspace-modules"
+      ]
     }
   }
 }

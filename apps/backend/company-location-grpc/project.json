@@ -14,21 +14,23 @@
         "watch": false
       }
     },
-    "serve": {
-      "executor": "nx:run-commands",
-      "continuous": true,
+  
+
+     "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
       "options": {
-        "parallel": true,
-        "commands": [
-          {
-            "command": "nx build company-location-grpc --configuration=development",
-            "forwardAllArgs": false
-          },
-          {
-            "command": "wait-on dist/apps/backend/company-location-grpc/main.js && node dist/apps/backend/company-location-grpc/main.js",
-            "forwardAllArgs": false
-          }
-        ]
+        "buildTarget": "company-location-grpc:build",
+        "runBuildTargetDependencies": true,
+        "inspect": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "company-location-grpc:build:development"
+        },
+        "production": {
+          "buildTarget": "company-location-grpc:build:production"
+        }
       }
     },
 

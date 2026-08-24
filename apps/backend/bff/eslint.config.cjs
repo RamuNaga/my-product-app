@@ -14,7 +14,7 @@ module.exports = [
             '^@my-product-app/user',
             '^@my-product-app/user-grpc-client',
             '^@my-product-app/registration',
-            '^@my-product-app/backend-prisma/user-prisma',
+            '^@my-product-app/user-prisma',
             '^@my-product-app/company-grpc-client',
             '^@my-product-app/company-location-grpc-client',
             '^@my-product-app/backend-registration',

@@ -27,22 +27,21 @@
         }
       }
     },
-
     "serve": {
-      "executor": "nx:run-commands",
-      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
       "options": {
-        "parallel": true,
-        "commands": [
-          {
-            "command": "nx build user-grpc --configuration=development",
-            "forwardAllArgs": false
-          },
-          {
-            "command": "wait-on dist/apps/backend/user-grpc/main.js && node dist/apps/backend/user-grpc/main.js",
-            "forwardAllArgs": false
-          }
-        ]
+        "buildTarget": "user-grpc:build",
+        "runBuildTargetDependencies": true,
+        "inspect": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "user-grpc:build:development"
+        },
+        "production": {
+          "buildTarget": "user-grpc:build:production"
+        }
       }
     },
 

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@my-product-app/backend-prisma/user-client';
+import { PrismaClient } from '@my-product-app/user-client';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 export const PRISMA_USER = Symbol('PRISMA_USER');

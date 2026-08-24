@@ -20,7 +20,7 @@ module.exports = [
         {
           allow: [
             '^@my-product-app/logger',
-            '^@my-product-app/backend-prisma/user-client',
+            '^@my-product-app/user-client',
           ],
           enforceBuildableLibDependency: true,
           depConstraints: [

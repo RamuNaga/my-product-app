@@ -1,35 +1,68 @@
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { join } = require('path');
+const { join, resolve } = require('path');
+
+const workspaceRoot = join(__dirname, '../../../');
+
+const companyPrismaClient = resolve(
+  workspaceRoot,
+  'libs/backend/company-prisma/generated/company-client'
+);
 
 module.exports = {
-  output: {
-    path: join(__dirname, '../../../dist/apps/backend/company-grpc'),
-    ...(process.env.NODE_ENV !== 'production' && {
-      devtoolModuleFilenameTemplate: (info) => {
-        // Skip source maps for Prisma-generated code
-        if (info.absoluteResourcePath.includes('/generated/')) {
-          return '';
-        }
-        return '[absolute-resource-path]';
-      },
-    }),
+  target: 'node',
+
+  externalsPresets: {
+    node: true,
   },
 
   externals: [
-    // Ignore all Prisma generated clients at runtime
     function ({ request }, callback) {
-      if (request?.includes('/generated/') && request?.includes('-client')) {
-        return callback(null, 'commonjs ' + request);
+      if (!request) {
+        return callback();
       }
+
+      if (
+        request === '@my-product-app/backend-prisma/company-client' ||
+        request.startsWith(
+          '@my-product-app/backend-prisma/company-client/'
+        )
+      ) {
+        return callback(
+          null,
+          'commonjs @my-product-app/backend-prisma/company-client'
+        );
+      }
+
       callback();
+    },
+
+    {
+      '@prisma/adapter-pg': 'commonjs @prisma/adapter-pg',
+      '@prisma/client-runtime-utils':
+        'commonjs @prisma/client-runtime-utils',
     },
   ],
 
+  output: {
+    path: join(
+      workspaceRoot,
+      'dist/apps/backend/company-grpc'
+    ),
+    filename: 'main.js',
+  },
+
+  resolve: {
+    extensions: ['.ts', '.js', '.mjs'],
+  },
+
+  optimization: {
+    minimize: false,
+  },
+
   ignoreWarnings: [
-    // Suppress source map warnings from Prisma-generated runtime code
     {
-      module: /generated\/.*\/runtime\/library\.js/,
+      module: /generated[\\/].*runtime[\\/].*\.js$/,
       message: /Failed to parse source map/,
     },
   ],
@@ -44,13 +77,23 @@ module.exports = {
       optimization: false,
       outputHashing: 'none',
       generatePackageJson: true,
-      sourceMaps: true,
+      sourceMaps: false,
+      watch: false,
     }),
+
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'libs/backend/proto/src/lib/company.proto',
+          from: join(
+            workspaceRoot,
+            'libs/backend/proto/src/lib/company.proto'
+          ),
           to: 'company.proto',
+        },
+
+        {
+          from: companyPrismaClient,
+          to: 'node_modules/@my-product-app/backend-prisma/company-client',
         },
       ],
     }),
