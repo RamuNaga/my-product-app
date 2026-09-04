@@ -1,77 +1,111 @@
-version: "3.9"
-
 services:
-  # ---------------------------------------------------------
+  # =========================================================
   # PostgreSQL
-  # ---------------------------------------------------------
+  # =========================================================
   db:
     image: postgres:17
     container_name: myproductapp-postgres
+
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: hitman
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
     ports:
       - "5433:5432"
+
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test:
+        - CMD-SHELL
+        - pg_isready -U ${POSTGRES_USER:-postgres}
       interval: 5s
       timeout: 5s
       retries: 30
+      start_period: 5s
+
     networks:
       mynet: {}
+
     restart: unless-stopped
 
+
+  # =========================================================
+  # pgAdmin
+  # =========================================================
   pgadmin:
     image: dpage/pgadmin4:7
     container_name: my-pgadmin
+
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+
     ports:
       - "8080:80"
+
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
     networks:
       mynet: {}
+
     restart: unless-stopped
 
-  # ---------------------------------------------------------
+
+  # =========================================================
   # Prisma migrations
-  # ---------------------------------------------------------
+  # =========================================================
   migrate:
     build:
       context: .
-      dockerfile: docker/backend.Dockerfile.migrate
+      dockerfile: docker/backend.Dockerfile.dev
+      target: migrate
+
     working_dir: /workspace
+
     env_file:
       - .env
+
     environment:
-      - CI=true
+      CI: "true"
+
     depends_on:
-      - db
-    restart: "no"
+      db:
+        condition: service_healthy
+
     networks:
       mynet: {}
 
-  # ---------------------------------------------------------
-  # Backend Microservices (Built + Run from dist)
-  # ---------------------------------------------------------
+    restart: "no"
+
+
+  # =========================================================
+  # API Gateway
+  # =========================================================
   api-gateway:
     build:
       context: .
       dockerfile: docker/backend.Dockerfile.dev
+      target: runtime
       args:
         SERVICE: api-gateway
+        SERVICE_DIR: api-gateway
+
     working_dir: /workspace
+
     env_file:
       - .env
+
     environment:
-      - CI=true
+      CI: "true"
+
     ports:
       - "3000:3000"
+
     volumes:
       - ./libs:/workspace/libs:cached
       - ./nx.json:/workspace/nx.json:ro
@@ -81,70 +115,52 @@ services:
       - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
       - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
+
     depends_on:
-      - migrate
-    command: >
-      sh -c "
-      set -e
-      echo 'Waiting for Postgres...'
-      sh ./wait-for-it.sh db:5432 --timeout=60 --strict
-      echo 'Starting API Gateway...'
-      node dist/apps/backend/api-gateway/main.js
-      "
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "Waiting for Postgres..."
+        bash ./wait-for-it.sh db:5432 --timeout=60 --strict
+        echo "Starting API Gateway..."
+        exec node dist/main.js
+
     networks:
       mynet: {}
+
     restart: unless-stopped
 
-  bff:
-    build:
-      context: .
-      dockerfile: docker/backend.Dockerfile.dev
-      args:
-        SERVICE: bff
-    working_dir: /workspace
-    env_file:
-      - .env
-    environment:
-      - CI=true
-    ports:
-      - "3002:3002"
-    volumes:
-      - ./libs:/workspace/libs:cached
-      - ./nx.json:/workspace/nx.json:ro
-      - ./tsconfig.base.json:/workspace/tsconfig.base.json:ro
-      - ./eslint.config.js:/workspace/eslint.config.js:ro
-      - ./package.json:/workspace/package.json:ro
-      - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
-      - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
-      - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
-    depends_on:
-      - migrate
-      - api-gateway
-    command: >
-      sh -c "
-      set -e
-      echo 'Waiting for Postgres...'
-      sh ./wait-for-it.sh db:5432 --timeout=60 --strict
-      echo 'Starting BFF...'
-      node dist/apps/backend/bff/main.js
-      "
-    networks:
-      mynet: {}
-    restart: unless-stopped
 
+  # =========================================================
+  # Product Service
+  # =========================================================
   backend-product-service:
     build:
       context: .
       dockerfile: docker/backend.Dockerfile.dev
+      target: runtime
       args:
         SERVICE: backend-product-service
+        SERVICE_DIR: product-service
+
     working_dir: /workspace
+
     env_file:
       - .env
+
     environment:
-      - CI=true
+      CI: "true"
+
     ports:
       - "3001:3001"
+
     volumes:
       - ./libs:/workspace/libs:cached
       - ./nx.json:/workspace/nx.json:ro
@@ -154,37 +170,52 @@ services:
       - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
       - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
+
     depends_on:
-      - bff
-      - db
-    command: >
-      sh -c "
-      set -e
-      echo 'Waiting for Postgres...'
-      sh ./wait-for-it.sh db:5432 --timeout=60 --strict
-      echo 'Starting Product Service...'
-      node dist/apps/backend/backend-product-service/main.js
-      "
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "Waiting for Postgres..."
+        bash ./wait-for-it.sh db:5432 --timeout=60 --strict
+        echo "Starting Product Service..."
+        exec node dist/main.js
+
     networks:
       mynet: {}
+
     restart: unless-stopped
 
-  # ---------------------------
-  # Other Microservices
-  # ---------------------------
+
+  # =========================================================
+  # User gRPC Service
+  # =========================================================
   user-grpc:
     build:
       context: .
       dockerfile: docker/backend.Dockerfile.dev
+      target: runtime
       args:
         SERVICE: user-grpc
+        SERVICE_DIR: user-grpc
+
     working_dir: /workspace
+
     env_file:
       - .env
+
     environment:
-      - CI=true
+      CI: "true"
+
     ports:
       - "3003:3003"
+
     volumes:
       - ./libs:/workspace/libs:cached
       - ./nx.json:/workspace/nx.json:ro
@@ -194,34 +225,52 @@ services:
       - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
       - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
+
     depends_on:
-      - bff
-      - db
-    command: >
-      sh -c "
-      set -e
-      echo 'Waiting for Postgres...'
-      sh ./wait-for-it.sh db:5432 --timeout=60 --strict
-      echo 'Starting User GRPC...'
-      node dist/apps/backend/user-grpc/main.js
-      "
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "Waiting for Postgres..."
+        bash ./wait-for-it.sh db:5432 --timeout=60 --strict
+        echo "Starting User GRPC..."
+        exec node dist/main.js
+
     networks:
       mynet: {}
+
     restart: unless-stopped
 
+
+  # =========================================================
+  # Company gRPC Service
+  # =========================================================
   company-grpc:
     build:
       context: .
       dockerfile: docker/backend.Dockerfile.dev
+      target: runtime
       args:
         SERVICE: company-grpc
+        SERVICE_DIR: company-grpc
+
     working_dir: /workspace
+
     env_file:
       - .env
+
     environment:
-      - CI=true
+      CI: "true"
+
     ports:
       - "3004:3004"
+
     volumes:
       - ./libs:/workspace/libs:cached
       - ./nx.json:/workspace/nx.json:ro
@@ -231,34 +280,52 @@ services:
       - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
       - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
+
     depends_on:
-      - bff
-      - db
-    command: >
-      sh -c "
-      set -e
-      echo 'Waiting for Postgres...'
-      sh ./wait-for-it.sh db:5432 --timeout=60 --strict
-      echo 'Starting Company GRPC...'
-      node dist/apps/backend/company-grpc/main.js
-      "
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "Waiting for Postgres..."
+        bash ./wait-for-it.sh db:5432 --timeout=60 --strict
+        echo "Starting Company GRPC..."
+        exec node dist/main.js
+
     networks:
       mynet: {}
+
     restart: unless-stopped
 
+
+  # =========================================================
+  # Company Location gRPC Service
+  # =========================================================
   company-location-grpc:
     build:
       context: .
       dockerfile: docker/backend.Dockerfile.dev
+      target: runtime
       args:
         SERVICE: company-location-grpc
+        SERVICE_DIR: company-location-grpc
+
     working_dir: /workspace
+
     env_file:
       - .env
+
     environment:
-      - CI=true
+      CI: "true"
+
     ports:
       - "3005:3005"
+
     volumes:
       - ./libs:/workspace/libs:cached
       - ./nx.json:/workspace/nx.json:ro
@@ -268,34 +335,52 @@ services:
       - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
       - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
+
     depends_on:
-      - bff
-      - db
-    command: >
-      sh -c "
-      set -e
-      echo 'Waiting for Postgres...'
-      sh ./wait-for-it.sh db:5432 --timeout=60 --strict
-      echo 'Starting Company Location GRPC...'
-      node dist/apps/backend/company-location-grpc/main.js
-      "
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "Waiting for Postgres..."
+        bash ./wait-for-it.sh db:5432 --timeout=60 --strict
+        echo "Starting Company Location GRPC..."
+        exec node dist/main.js
+
     networks:
       mynet: {}
+
     restart: unless-stopped
 
+
+  # =========================================================
+  # Workorder Service
+  # =========================================================
   workorder-service:
     build:
       context: .
       dockerfile: docker/backend.Dockerfile.dev
+      target: runtime
       args:
         SERVICE: workorder-service
+        SERVICE_DIR: workorder-service
+
     working_dir: /workspace
+
     env_file:
       - .env
+
     environment:
-      - CI=true
+      CI: "true"
+
     ports:
       - "3006:3006"
+
     volumes:
       - ./libs:/workspace/libs:cached
       - ./nx.json:/workspace/nx.json:ro
@@ -305,35 +390,122 @@ services:
       - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
       - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
+
     depends_on:
-      - bff
-      - db
-    command: >
-      sh -c "
-      set -e
-      echo 'Waiting for Postgres...'
-      sh ./wait-for-it.sh db:5432 --timeout=60 --strict
-      echo 'Starting Workorder Service...'
-      node dist/apps/backend/workorder-service/main.js
-      "
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "Waiting for Postgres..."
+        bash ./wait-for-it.sh db:5432 --timeout=60 --strict
+        echo "Starting Workorder Service..."
+        exec node dist/main.js
+
     networks:
       mynet: {}
+
     restart: unless-stopped
 
-  # ---------------------------------------------------------
+
+  # =========================================================
+  # BFF
+  # =========================================================
+  bff:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile.dev
+      target: runtime
+      args:
+        SERVICE: bff
+        SERVICE_DIR: bff
+
+    working_dir: /workspace
+
+    env_file:
+      - .env
+
+    environment:
+      CI: "true"
+
+    ports:
+      - "3002:3002"
+
+    volumes:
+      - ./libs:/workspace/libs:cached
+      - ./nx.json:/workspace/nx.json:ro
+      - ./tsconfig.base.json:/workspace/tsconfig.base.json:ro
+      - ./eslint.config.js:/workspace/eslint.config.js:ro
+      - ./package.json:/workspace/package.json:ro
+      - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
+      - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
+      - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+      migrate:
+        condition: service_completed_successfully
+
+      api-gateway:
+        condition: service_started
+
+      backend-product-service:
+        condition: service_started
+
+      user-grpc:
+        condition: service_started
+
+      company-grpc:
+        condition: service_started
+
+      company-location-grpc:
+        condition: service_started
+
+      workorder-service:
+        condition: service_started
+
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "Waiting for Postgres..."
+        bash ./wait-for-it.sh db:5432 --timeout=60 --strict
+        echo "Starting BFF..."
+        exec node dist/main.js
+
+    networks:
+      mynet: {}
+
+    restart: unless-stopped
+
+
+  # =========================================================
   # Angular Frontend
-  # ---------------------------------------------------------
+  # =========================================================
   frontend:
     build:
       context: .
       dockerfile: docker/frontend.Dockerfile.dev
+
     working_dir: /workspace
+
     env_file:
       - .env
+
     environment:
-      - CI=true
+      CI: "true"
+
     ports:
       - "4200:4200"
+
     volumes:
       - ./apps/frontend:/workspace/apps/frontend:cached
       - ./libs:/workspace/libs:cached
@@ -345,28 +517,41 @@ services:
       - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
       - frontend-node-modules:/workspace/apps/frontend/node_modules
       - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
+
     depends_on:
-      - api-gateway
-    command: >
-      sh -c "
-      set -e
-      echo 'Waiting for API Gateway...'
-      sh ./wait-for-it.sh api-gateway:3000 --timeout=60 --strict
-      echo 'Starting Frontend...'
-      pnpm install --frozen-lockfile --prefer-offline &&
-      pnpm nx serve frontend --host 0.0.0.0 --port 4200
-      "
+      api-gateway:
+        condition: service_started
+      bff:
+        condition: service_started
+
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "Waiting for API Gateway..."
+        bash ./wait-for-it.sh api-gateway:3000 --timeout=60 --strict
+        echo "Starting Frontend..."
+        pnpm install --frozen-lockfile --prefer-offline
+        exec pnpm nx serve frontend --host 0.0.0.0 --port 4200
+
     networks:
       mynet: {}
+
     restart: unless-stopped
 
-# ---------------------------------------------------------
-# Volumes + Network
-# ---------------------------------------------------------
+
+# =========================================================
+# Volumes
+# =========================================================
 volumes:
   postgres-data:
   frontend-node-modules:
 
+
+# =========================================================
+# Network
+# =========================================================
 networks:
   mynet:
     driver: bridge

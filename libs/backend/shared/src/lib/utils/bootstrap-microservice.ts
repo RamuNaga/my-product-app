@@ -55,15 +55,23 @@ export async function bootstrapMicroservice(
       app.useGlobalInterceptors(new LoggingInterceptor(logger));
     }
 
-    const host = process.env[options.hostEnv] || 'localhost';
-    const port = Number(process.env[options.portEnv]) || options.fallbackPort;
+    const host =
+      process.env[options.hostEnv] ||
+      (process.env['RUN_ENV'] === 'docker'
+        ? '0.0.0.0'
+        : '127.0.0.1');
+
+    const port =
+      Number(process.env[options.portEnv]) ||
+      options.fallbackPort;
 
     const microserviceEnvKey = `${options.serviceName
       .toUpperCase()
       .replace(/\s/g, '_')}_MS_PORT`;
 
     const microservicePort =
-      Number(process.env[microserviceEnvKey]) || port + 1;
+      Number(process.env[microserviceEnvKey]) ||
+      port + 1;
 
     console.log(`Starting ${options.serviceName} on ${host}:${port}`);
     console.log(
@@ -80,8 +88,7 @@ export async function bootstrapMicroservice(
         },
       });
       console.log(
-        `${options.serviceName} gRPC microservice running on ${
-          options.grpc.url || `${host}:${microservicePort}`
+        `${options.serviceName} gRPC microservice running on ${options.grpc.url || `${host}:${microservicePort}`
         }`
       );
     } else {
@@ -106,7 +113,7 @@ export async function bootstrapMicroservice(
       );
     }
 
-    await app.listen(port);
+    await app.listen(port,host);
     console.log(`${options.serviceName} is running on http://${host}:${port}`);
     console.log(
       `${options.serviceName} /ping endpoint is available at http://${host}:${port}/ping`

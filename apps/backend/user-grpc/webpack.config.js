@@ -1,10 +1,10 @@
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { join, resolve } = require('path');
+const { join } = require('path');
 
 const workspaceRoot = join(__dirname, '../../../');
 
-const userPrismaClient = resolve(
+const userPrismaClient = join(
   workspaceRoot,
   'libs/backend/user-prisma/generated/user-client'
 );
@@ -17,82 +17,27 @@ module.exports = {
   },
 
   /**
-   * IMPORTANT:
+   * Important for pnpm/link dependencies.
    *
-   * Do NOT let webpack bundle the generated Prisma client.
+   * Without this, Webpack follows:
    *
-   * The TypeScript path:
-   *
-   * @my-product-app/user-client
-   *
-   * points to:
-   *
+   * node_modules/user-prisma-client
+   *        ↓
    * libs/backend/user-prisma/generated/user-client
    *
-   * But at runtime we want Node to load the copied package from:
-   *
-   * dist/apps/backend/user-grpc/node_modules/@my-product-app/user-client
+   * and then bundles Prisma as workspace source.
+   */
+  resolve: {
+    extensions: ['.ts', '.js', '.mjs'],
+    symlinks: false,
+  },
+
+  /**
+   * Explicitly keep generated Prisma client external.
    */
   externals: [
-    function ({ request }, callback) {
-      if (!request) {
-        return callback();
-      }
-
-      /*
-       * This is the important part.
-       *
-       * Webpack sees the original module request as:
-       *
-       * @my-product-app/user-client
-       *
-       * so externalize that request directly.
-       */
-      if (
-        request === '@my-product-app/user-client' ||
-        request.startsWith('@my-product-app/user-client/')
-      ) {
-        return callback(
-          null,
-          `commonjs ${request}`
-        );
-      }
-
-      /*
-       * Also protect the generated Prisma client if webpack
-       * reaches it using its filesystem path.
-       */
-      if (
-        request === userPrismaClient ||
-        request.startsWith(`${userPrismaClient}/`) ||
-        request.includes(
-          'libs/backend/user-prisma/generated/user-client'
-        )
-      ) {
-        return callback(
-          null,
-          'commonjs @my-product-app/user-client'
-        );
-      }
-
-      /*
-       * Keep these Prisma dependencies external as well.
-       */
-      if (request === '@prisma/adapter-pg') {
-        return callback(
-          null,
-          'commonjs @prisma/adapter-pg'
-        );
-      }
-
-      if (request === '@prisma/client-runtime-utils') {
-        return callback(
-          null,
-          'commonjs @prisma/client-runtime-utils'
-        );
-      }
-
-      return callback();
+    {
+      'user-prisma-client': 'commonjs user-prisma-client',
     },
   ],
 
@@ -104,10 +49,6 @@ module.exports = {
     filename: 'main.js',
   },
 
-  resolve: {
-    extensions: ['.ts', '.js', '.mjs'],
-  },
-
   optimization: {
     minimize: false,
   },
@@ -116,6 +57,7 @@ module.exports = {
     new NxAppWebpackPlugin({
       target: 'node',
       compiler: 'tsc',
+
       main: './src/main.ts',
       tsConfig: './tsconfig.app.json',
 
@@ -124,20 +66,21 @@ module.exports = {
       optimization: false,
       outputHashing: 'none',
 
-      /*
-       * This is important because we need:
-       *
-       * dist/apps/backend/user-grpc/node_modules/@my-product-app/user-client
-       */
       generatePackageJson: true,
 
       sourceMaps: false,
 
-      watch: true,
+      /**
+       * Keep npm/package dependencies outside main.js.
+       */
+      externalDependencies: 'all',
     }),
 
     new CopyWebpackPlugin({
       patterns: [
+        /**
+         * gRPC proto
+         */
         {
           from: join(
             workspaceRoot,
@@ -146,12 +89,17 @@ module.exports = {
           to: 'user.proto',
         },
 
-        /*
-         * Copy the complete generated Prisma client.
+        /**
+         * Generated Prisma client.
+         *
+         * This satisfies:
+         * require('user-prisma-client')
+         *
+         * when the built app runs.
          */
         {
           from: userPrismaClient,
-          to: 'node_modules/@my-product-app/user-client',
+          to: 'node_modules/user-prisma-client',
         },
       ],
     }),

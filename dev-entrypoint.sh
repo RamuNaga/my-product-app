@@ -22,7 +22,7 @@ corepack prepare pnpm@latest --activate
 
 # Build service including protos
 echo "Building $SERVICE..."
-pnpm nx run $SERVICE:build-with-protos
+pnpm nx run $SERVICE:build
 
 # Start the service
 echo "Starting $SERVICE..."

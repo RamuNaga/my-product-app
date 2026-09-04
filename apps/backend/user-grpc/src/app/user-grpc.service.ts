@@ -18,8 +18,7 @@ import {
   FindAllUsersResponse,
 } from '@my-product-app/backend-proto/generated';
 
-import { UserPrismaService } from '@my-product-app/user-prisma';
-import { UserRole as PrismaUserRole } from '@my-product-app/user-client';
+import { UserPrismaService, UserRole as PrismaUserRole } from '@my-product-app/user-prisma';
 import {
   mapProtoUserRoleToGraphQL,
   mapGraphQLUserRoleToProto,

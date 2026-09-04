@@ -1,45 +1,57 @@
-import { Observable, lastValueFrom } from 'rxjs';
-import { ApolloError } from 'apollo-server-errors';
+import { GraphQLError } from 'graphql';
+import { isObservable, lastValueFrom, Observable } from 'rxjs';
 
 // Allow returning abstract classes
 export type AbstractType<T> = abstract new (...args: any[]) => T;
 
 /**
- *  Base abstract class for shared gRPC logic
+ * Base abstract class for shared gRPC logic.
  */
 export abstract class AbstractBaseGrpcResolver<TService extends object> {
   constructor(protected readonly grpcService: TService) {}
 
-  /** Helper for awaiting gRPC Observables */
-  protected async handleGrpcCall<T>(call$: Observable<T>): Promise<T> {
+  /**
+   * Helper for awaiting gRPC observables or promises.
+   */
+  protected async handleGrpcCall<T>(
+    call$: Observable<T> | Promise<T>,
+  ): Promise<T> {
     try {
-      return call$ instanceof Promise
-        ? await call$
-        : await lastValueFrom(call$);
-    } catch (error) {
+      return isObservable(call$) ? await lastValueFrom(call$) : await call$;
+    } catch (error: unknown) {
       throw this.mapGrpcErrorToGraphQLError(error);
     }
   }
 
-  /** Map low-level gRPC errors to GraphQL-friendly ones */
-  private mapGrpcErrorToGraphQLError(error: unknown): ApolloError {
+  /**
+   * Maps low-level gRPC errors to GraphQL-friendly errors.
+   */
+  private mapGrpcErrorToGraphQLError(error: unknown): GraphQLError {
     if (!(error instanceof Error)) {
-      return new ApolloError('Unknown gRPC error occurred');
+      return new GraphQLError('Unknown gRPC error occurred', {
+        extensions: {
+          code: 'INTERNAL_SERVER_ERROR',
+        },
+      });
     }
 
-    const msg = error.message || 'Unknown error';
-    return new ApolloError(`gRPC error: ${msg}`);
+    return new GraphQLError(`gRPC error: ${error.message}`, {
+      originalError: error,
+      extensions: {
+        code: 'GRPC_ERROR',
+      },
+    });
   }
 }
 
 /**
- *  Factory function returning a subclass of AbstractBaseGrpcResolver
+ * Factory function returning a subclass of AbstractBaseGrpcResolver.
  */
 export function BaseGrpcResolver<TService extends object>(
-  _GrpcService: new (...args: any[]) => TService
+  _GrpcService: new (...args: any[]) => TService,
 ): AbstractType<AbstractBaseGrpcResolver<TService>> {
   abstract class BaseResolver extends AbstractBaseGrpcResolver<TService> {
-    // optional: you can inject shared hooks or decorators here later
+    // Shared hooks or decorators can be added here later.
   }
 
   return BaseResolver;
@@ -53,4 +65,4 @@ function wrapInt(value?: number) {
   return value !== undefined ? { value } : undefined;
 }
 
-export { wrapString, wrapInt };
+export { wrapInt, wrapString };

@@ -1,6 +1,7 @@
 packages:
   - apps/*
   - libs/*
+  - 'libs/backend/user-prisma/generated/user-client'
 
 onlyBuiltDependencies:
   - unrs-resolver

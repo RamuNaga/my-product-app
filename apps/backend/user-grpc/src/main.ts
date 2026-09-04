@@ -6,8 +6,8 @@ async function startUserService() {
   console.log('Starting User Service (gRPC)');
   await bootstrapMicroservice(UserGrpcModule, {
     hostEnv: 'MICROSERVICE_HOST',
-    portEnv: 'USER_SERVICE_MS_PORT',
-    fallbackPort: 4003,
+    portEnv: 'USER_SERVICE_PORT',
+    fallbackPort: 3003,
     serviceName: 'User Service',
     grpc: {
       package: protoPackages.user,
