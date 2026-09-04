@@ -1,4 +1,4 @@
-import { PrismaClient } from '@my-product-app/backend-prisma/company-client';
+import { PrismaClient } from 'company-prisma-client';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 export const PRISMA_COMPANY = Symbol('PRISMA_COMPANY');

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@my-product-app/backend-prisma/company-location-client';
+import { PrismaClient } from 'company-location-prisma-client';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 export const PRISMA_COMPANY_LOCATION = Symbol('PRISMA_COMPANY_LOCATION');

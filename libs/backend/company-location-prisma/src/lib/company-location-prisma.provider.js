@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.companyLocationPrismaProvider = exports.PRISMA_COMPANY_LOCATION = void 0;
-const company_location_client_1 = require("@my-product-app/backend-prisma/company-location-client");
+const company_location_prisma_client_1 = require("company-location-prisma-client");
 const adapter_pg_1 = require("@prisma/adapter-pg");
 exports.PRISMA_COMPANY_LOCATION = Symbol('PRISMA_COMPANY_LOCATION');
 function createPrismaClient() {
@@ -12,7 +12,7 @@ function createPrismaClient() {
     const adapter = new adapter_pg_1.PrismaPg({
         connectionString,
     });
-    const client = new company_location_client_1.PrismaClient({
+    const client = new company_location_prisma_client_1.PrismaClient({
         adapter,
     });
     return client.$extends({

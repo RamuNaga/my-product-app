@@ -15,14 +15,10 @@ import {
   ProtoWorkOrder,
   ProtoPriority,
 } from '@my-product-app/backend-proto/generated';
-import { WorkorderPrismaService } from '@my-product-app/backend-prisma/workorder-prisma';
+import { WorkorderPrismaService,   WorkOrderStatus as PrismaWorkOrderStatus,
+  Priority as PrismaPriority, } from '@my-product-app/backend-prisma/workorder-prisma';
 import { dateToTimestamp } from '@my-product-app/backend-shared';
 import { mapEnum } from '@my-product-app/backend-shared-mappers';
-
-import {
-  WorkOrderStatus as PrismaWorkOrderStatus,
-  Priority as PrismaPriority,
-} from '@my-product-app/backend-prisma/workorder-client';
 import { RpcException } from '@nestjs/microservices';
 
 /**

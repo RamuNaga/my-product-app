@@ -8,7 +8,7 @@ async function startProductService() {
   console.log('Using proto package:', protoPackages.product);
   await bootstrapMicroservice(ProductServiceModule, {
     hostEnv: 'MICROSERVICE_HOST',
-    portEnv: 'PRODUCT_SERVICE_MS_PORT',
+    portEnv: 'PRODUCT_SERVICE_PORT',
     fallbackPort: 4001,
     serviceName: 'Product Service',
     grpc: {

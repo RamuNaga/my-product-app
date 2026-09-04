@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productPrismaProvider = exports.PRISMA_PRODUCT = void 0;
-const product_client_1 = require("@my-product-app/backend-prisma/product-client");
+const product_prisma_client_1 = require("product-prisma-client");
 const adapter_pg_1 = require("@prisma/adapter-pg");
 exports.PRISMA_PRODUCT = Symbol('PRISMA_PRODUCT');
 function createPrismaClient() {
@@ -12,7 +12,7 @@ function createPrismaClient() {
     const adapter = new adapter_pg_1.PrismaPg({
         connectionString,
     });
-    const client = new product_client_1.PrismaClient({
+    const client = new product_prisma_client_1.PrismaClient({
         adapter,
     });
     return client.$extends({

@@ -6,7 +6,7 @@ async function startWorkOrderService() {
   console.log('Starting WorkOrder Service (gRPC)');
   await bootstrapMicroservice(WorkOrderServiceModule, {
     hostEnv: 'MICROSERVICE_HOST',
-    portEnv: 'WORKORDER_SERVICE_MS_PORT',
+    portEnv: 'WORKORDER_SERVICE_PORT',
     fallbackPort: 4006,
     serviceName: 'WorkOrder Service',
     grpc: {

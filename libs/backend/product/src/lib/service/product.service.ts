@@ -5,22 +5,23 @@ import {
 } from '@nestjs/common';
 
 import { CreateProductInput } from '@my-product-app/backend-graphql-types';
-import { ProductPrismaService } from '@my-product-app/backend-prisma/product-prisma';
-import { Prisma } from '@my-product-app/backend-prisma/product-client';
+
+import {
+  ProductPrismaService,
+  Prisma,
+  Product,
+} from '@my-product-app/backend-prisma/product-prisma';
 
 @Injectable()
 export class ProductService {
-  constructor(private prisma: ProductPrismaService) {}
+  constructor(private readonly prisma: ProductPrismaService) {}
 
-  async create(data: CreateProductInput) {
+  async create(data: CreateProductInput): Promise<Product> {
     try {
-      const product = await this.prisma.client.product.create({
+      return await this.prisma.client.product.create({
         data,
       });
-      return product;
-    } catch (error: any) {
-      // Prisma unique constraint violation
-      console.log('Prisma unique constraint violation calling');
+    } catch (error: unknown) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
@@ -28,42 +29,51 @@ export class ProductService {
         throw new ConflictException('Product code already exists');
       }
 
-      // Log and rethrow as generic internal error
       console.error('Create product failed:', error);
-      throw new InternalServerErrorException('Could not create product');
+
+      throw new InternalServerErrorException(
+        'Could not create product'
+      );
     }
   }
 
-  findAll() {
+  findAll(): Promise<Product[]> {
     return this.prisma.client.product.findMany({
       orderBy: { createdAt: 'desc' },
     });
   }
 
-  async getAllProducts() {
-    const products = await this.prisma.client.product.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
-    return products.map((p) => ({
-      ...p,
-      image: p.image ?? '',
+  async getAllProducts(): Promise<
+    Array<Product & { image: string }>
+  > {
+    const products =
+      await this.prisma.client.product.findMany({
+        orderBy: { createdAt: 'desc' },
+      });
+
+    return products.map((product) => ({
+      ...product,
+      image: product.image ?? '',
     }));
   }
 
-  findOne(id: number) {
+  findOne(id: number): Promise<Product | null> {
     return this.prisma.client.product.findUnique({
       where: { id },
     });
   }
 
-  update(id: number, data: Partial<CreateProductInput>) {
+  update(
+    id: number,
+    data: Partial<CreateProductInput>
+  ): Promise<Product> {
     return this.prisma.client.product.update({
       where: { id },
       data,
     });
   }
 
-  remove(id: number) {
+  remove(id: number): Promise<Product> {
     return this.prisma.client.product.delete({
       where: { id },
     });

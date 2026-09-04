@@ -5,56 +5,80 @@
       "label": "Serve User gRPC",
       "type": "shell",
       "command": "pnpm",
-      "args": ["nx", "serve", "user-grpc"],
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "user-grpc"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "problemMatcher": []
     },
     {
       "label": "Serve Company gRPC",
       "type": "shell",
       "command": "pnpm",
-      "args": ["nx", "serve", "company-grpc"],
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "company-grpc"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "problemMatcher": []
     },
     {
       "label": "Serve Company Location gRPC",
       "type": "shell",
       "command": "pnpm",
-      "args": ["nx", "serve", "company-location-grpc"],
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "company-location-grpc"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "problemMatcher": []
     },
     {
       "label": "Serve Product Service",
       "type": "shell",
       "command": "pnpm",
-      "args": ["nx", "serve", "backend-product-service"],
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "backend-product-service"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "problemMatcher": []
     },
     {
       "label": "Serve Workorder Service",
       "type": "shell",
       "command": "pnpm",
-      "args": ["nx", "serve", "workorder-service"],
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "workorder-service"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "problemMatcher": []
     },
     {
       "label": "Serve API Gateway",
       "type": "shell",
       "command": "pnpm",
-      "args": ["nx", "serve", "api-gateway"],
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "api-gateway"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "problemMatcher": []
     },
     {
       "label": "Serve BFF",
       "type": "shell",
       "command": "pnpm",
-      "args": ["nx", "serve", "bff"],
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "bff"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "problemMatcher": []
     },
     {
       "label": "Serve Frontend",
       "type": "shell",
       "command": "pnpm",
-      "args": ["nx", "serve", "frontend"],
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "frontend"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "problemMatcher": []
     },
     {

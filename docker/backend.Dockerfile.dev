@@ -19,6 +19,7 @@ RUN chmod +x wait-for-it.sh
 RUN chmod +x dev-entrypoint.sh
 
 ARG SERVICE
+ARG SERVICE_DIR
 
 RUN pnpm nx run ${SERVICE}:build
 
@@ -36,8 +37,9 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile --prod
 
 ARG SERVICE
+ARG SERVICE_DIR
 
-COPY --from=base /workspace/dist/apps/backend/${SERVICE} ./dist
+COPY --from=base /workspace/dist/apps/backend/${SERVICE_DIR} ./dist
 
 COPY --from=base /workspace/wait-for-it.sh ./wait-for-it.sh
 RUN chmod +x wait-for-it.sh

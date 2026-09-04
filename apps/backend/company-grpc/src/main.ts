@@ -6,7 +6,7 @@ async function startCompanyService() {
   console.log('Starting company Service (gRPC)');
   await bootstrapMicroservice(CompanyGrpcModule, {
     hostEnv: 'MICROSERVICE_HOST',
-    portEnv: 'COMPANY_SERVICE_MS_PORT',
+    portEnv: 'COMPANY_SERVICE_PORT',
     fallbackPort: 4004,
     serviceName: 'Company Service',
     grpc: {

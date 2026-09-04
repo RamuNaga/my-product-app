@@ -2,6 +2,10 @@ packages:
   - apps/*
   - libs/*
   - 'libs/backend/user-prisma/generated/user-client'
+  - 'libs/backend/product-prisma/generated/product-client'
+  - 'libs/backend/company-prisma/generated/company-client'
+  - 'libs/backend/company-location-prisma/generated/company-location-client'
+  - 'libs/backend/workorder-prisma/generated/workorder-client'
 
 onlyBuiltDependencies:
   - unrs-resolver

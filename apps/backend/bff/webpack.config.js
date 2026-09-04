@@ -1,46 +1,8 @@
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { join, resolve } = require('path');
+const { join } = require('path');
 
 const workspaceRoot = join(__dirname, '../../../');
-
-const prismaClients = [
-  {
-    alias: '@my-product-app/backend-prisma/company-client',
-    source: resolve(
-      workspaceRoot,
-      'libs/backend/company-prisma/generated/company-client'
-    ),
-  },
-  {
-    alias: '@my-product-app/backend-prisma/company-location-client',
-    source: resolve(
-      workspaceRoot,
-      'libs/backend/company-location-prisma/generated/company-location-client'
-    ),
-  },
-  {
-    alias: '@my-product-app/backend-prisma/product-client',
-    source: resolve(
-      workspaceRoot,
-      'libs/backend/product-prisma/generated/product-client'
-    ),
-  },
-  {
-    alias: '@my-product-app/backend-prisma/workorder-client',
-    source: resolve(
-      workspaceRoot,
-      'libs/backend/workorder-prisma/generated/workorder-client'
-    ),
-  },
-  {
-    alias: '@my-product-app/user-client',
-    source: resolve(
-      workspaceRoot,
-      'libs/backend/user-prisma/generated/user-client'
-    ),
-  },
-];
 
 module.exports = {
   target: 'node',
@@ -49,70 +11,39 @@ module.exports = {
     node: true,
   },
 
-  externals: [
-    function ({ request }, callback) {
-      if (!request) {
-        return callback();
-      }
-
-      const prismaClient = prismaClients.find(
-        ({ alias }) =>
-          request === alias ||
-          request.startsWith(`${alias}/`)
-      );
-
-      if (prismaClient) {
-        return callback(
-          null,
-          `commonjs ${prismaClient.alias}`
-        );
-      }
-
-      callback();
-    },
-
-    {
-      '@prisma/adapter-pg': 'commonjs @prisma/adapter-pg',
-      '@prisma/client-runtime-utils':
-        'commonjs @prisma/client-runtime-utils',
-    },
-  ],
-
-  output: {
-    path: join(
-      workspaceRoot,
-      'dist/apps/backend/bff'
-    ),
-    filename: 'main.js',
-  },
-
   resolve: {
     extensions: ['.ts', '.js', '.mjs'],
+    symlinks: false,
+  },
+
+  output: {
+    path: join(workspaceRoot, 'dist/apps/backend/bff'),
+    filename: 'main.js',
   },
 
   optimization: {
     minimize: false,
   },
 
-  ignoreWarnings: [
-    {
-      module: /generated[\\/].*runtime[\\/].*\.js$/,
-      message: /Failed to parse source map/,
-    },
-  ],
-
   plugins: [
     new NxAppWebpackPlugin({
       target: 'node',
       compiler: 'tsc',
+
       main: './src/main.ts',
       tsConfig: './tsconfig.app.json',
+
       assets: ['./src/assets'],
+
       optimization: false,
       outputHashing: 'none',
       generatePackageJson: true,
       sourceMaps: false,
-      watch: false,
+
+      /**
+       * Keep normal npm dependencies outside main.js.
+       */
+      externalDependencies: 'all',
     }),
 
     new CopyWebpackPlugin({
@@ -120,18 +51,38 @@ module.exports = {
         {
           from: join(
             workspaceRoot,
-            'libs/backend/proto/src/lib'
+            'libs/backend/proto/src/lib/user.proto',
           ),
-          to: '.',
-          globOptions: {
-            ignore: ['**/*.ts'],
-          },
+          to: 'user.proto',
         },
-
-        ...prismaClients.map(({ alias, source }) => ({
-          from: source,
-          to: `node_modules/${alias}`,
-        })),
+        {
+          from: join(
+            workspaceRoot,
+            'libs/backend/proto/src/lib/company.proto',
+          ),
+          to: 'company.proto',
+        },
+        {
+          from: join(
+            workspaceRoot,
+            'libs/backend/proto/src/lib/company-location.proto',
+          ),
+          to: 'company-location.proto',
+        },
+        {
+          from: join(
+            workspaceRoot,
+            'libs/backend/proto/src/lib/product.proto',
+          ),
+          to: 'product.proto',
+        },
+        {
+          from: join(
+            workspaceRoot,
+            'libs/backend/proto/src/lib/workorder.proto',
+          ),
+          to: 'workorder.proto',
+        },
       ],
     }),
   ],

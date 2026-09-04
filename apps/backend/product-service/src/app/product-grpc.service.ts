@@ -10,8 +10,7 @@ import {
   ProductListResponse,
   EmptyRequest,
 } from '@my-product-app/backend-proto/generated';
-import { ProductPrismaService } from '@my-product-app/backend-prisma/product-prisma';
-import { Prisma } from '@my-product-app/backend-prisma/product-client';
+import { ProductPrismaService, Prisma } from '@my-product-app/backend-prisma/product-prisma';
 
 @Injectable()
 export class ProductGrpcService {

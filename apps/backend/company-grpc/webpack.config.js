@@ -1,12 +1,12 @@
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { join, resolve } = require('path');
+const { join } = require('path');
 
 const workspaceRoot = join(__dirname, '../../../');
 
-const companyPrismaClient = resolve(
+const companyPrismaClient = join(
   workspaceRoot,
-  'libs/backend/company-prisma/generated/company-client'
+  'libs/backend/company-prisma/generated/company-client',
 );
 
 module.exports = {
@@ -16,81 +16,75 @@ module.exports = {
     node: true,
   },
 
+  /**
+   * Prevent Webpack from following the pnpm symlink into the
+   * generated Prisma client workspace source.
+   */
+  resolve: {
+    extensions: ['.ts', '.js', '.mjs'],
+    symlinks: false,
+  },
+
+  /**
+   * Keep the generated company Prisma client external.
+   */
   externals: [
-    function ({ request }, callback) {
-      if (!request) {
-        return callback();
-      }
-
-      if (
-        request === '@my-product-app/backend-prisma/company-client' ||
-        request.startsWith(
-          '@my-product-app/backend-prisma/company-client/'
-        )
-      ) {
-        return callback(
-          null,
-          'commonjs @my-product-app/backend-prisma/company-client'
-        );
-      }
-
-      callback();
-    },
-
     {
-      '@prisma/adapter-pg': 'commonjs @prisma/adapter-pg',
-      '@prisma/client-runtime-utils':
-        'commonjs @prisma/client-runtime-utils',
+      '@my-product-app/backend-prisma/company-client':
+        'commonjs @my-product-app/backend-prisma/company-client',
     },
   ],
 
   output: {
-    path: join(
-      workspaceRoot,
-      'dist/apps/backend/company-grpc'
-    ),
+    path: join(workspaceRoot, 'dist/apps/backend/company-grpc'),
     filename: 'main.js',
-  },
-
-  resolve: {
-    extensions: ['.ts', '.js', '.mjs'],
   },
 
   optimization: {
     minimize: false,
   },
 
-  ignoreWarnings: [
-    {
-      module: /generated[\\/].*runtime[\\/].*\.js$/,
-      message: /Failed to parse source map/,
-    },
-  ],
-
   plugins: [
     new NxAppWebpackPlugin({
       target: 'node',
       compiler: 'tsc',
+
       main: './src/main.ts',
       tsConfig: './tsconfig.app.json',
+
       assets: ['./src/assets'],
+
       optimization: false,
       outputHashing: 'none',
       generatePackageJson: true,
       sourceMaps: false,
-      watch: false,
+
+      /**
+       * Keep package dependencies outside main.js.
+       */
+      externalDependencies: 'all',
     }),
 
     new CopyWebpackPlugin({
       patterns: [
+        /**
+         * Company gRPC definition.
+         */
         {
           from: join(
             workspaceRoot,
-            'libs/backend/proto/src/lib/company.proto'
+            'libs/backend/proto/src/lib/company.proto',
           ),
           to: 'company.proto',
         },
 
+        /**
+         * Copy the generated Prisma client to satisfy:
+         *
+         * require(
+         *   '@my-product-app/backend-prisma/company-client'
+         * )
+         */
         {
           from: companyPrismaClient,
           to: 'node_modules/@my-product-app/backend-prisma/company-client',

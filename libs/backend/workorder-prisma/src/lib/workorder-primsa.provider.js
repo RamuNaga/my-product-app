@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.workorderPrismaProvider = exports.PRISMA_WORKORDER = void 0;
-const workorder_client_1 = require("@my-product-app/backend-prisma/workorder-client");
+const workorder_prisma_client_1 = require("workorder-prisma-client");
 const adapter_pg_1 = require("@prisma/adapter-pg");
 exports.PRISMA_WORKORDER = Symbol('PRISMA_WORKORDER');
 function createPrismaClient() {
@@ -12,7 +12,7 @@ function createPrismaClient() {
     const adapter = new adapter_pg_1.PrismaPg({
         connectionString,
     });
-    const client = new workorder_client_1.PrismaClient({
+    const client = new workorder_prisma_client_1.PrismaClient({
         adapter,
     });
     return client.$extends({

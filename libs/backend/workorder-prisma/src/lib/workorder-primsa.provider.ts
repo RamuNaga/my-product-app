@@ -1,4 +1,4 @@
-import { PrismaClient } from '@my-product-app/backend-prisma/workorder-client';
+import { PrismaClient } from 'workorder-prisma-client';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 export const PRISMA_WORKORDER = Symbol('PRISMA_WORKORDER');

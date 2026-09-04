@@ -3,13 +3,14 @@ services:
   # PostgreSQL
   # =========================================================
   db:
+    env_file:
+      - .env.docker
     image: postgres:17
     container_name: myproductapp-postgres
 
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-
     ports:
       - "5433:5432"
 
@@ -68,7 +69,7 @@ services:
     working_dir: /workspace
 
     env_file:
-      - .env
+      - .env.docker
 
     environment:
       CI: "true"
@@ -98,7 +99,7 @@ services:
     working_dir: /workspace
 
     env_file:
-      - .env
+      - .env.docker
 
     environment:
       CI: "true"
@@ -153,7 +154,7 @@ services:
     working_dir: /workspace
 
     env_file:
-      - .env
+      - .env.docker
 
     environment:
       CI: "true"
@@ -208,7 +209,7 @@ services:
     working_dir: /workspace
 
     env_file:
-      - .env
+      - .env.docker
 
     environment:
       CI: "true"
@@ -263,7 +264,7 @@ services:
     working_dir: /workspace
 
     env_file:
-      - .env
+      - .env.docker
 
     environment:
       CI: "true"
@@ -318,7 +319,7 @@ services:
     working_dir: /workspace
 
     env_file:
-      - .env
+      - .env.docker
 
     environment:
       CI: "true"
@@ -373,7 +374,7 @@ services:
     working_dir: /workspace
 
     env_file:
-      - .env
+      - .env.docker
 
     environment:
       CI: "true"
@@ -428,7 +429,7 @@ services:
     working_dir: /workspace
 
     env_file:
-      - .env
+      - .env.docker
 
     environment:
       CI: "true"
@@ -498,7 +499,7 @@ services:
     working_dir: /workspace
 
     env_file:
-      - .env
+      - .env.docker
 
     environment:
       CI: "true"
