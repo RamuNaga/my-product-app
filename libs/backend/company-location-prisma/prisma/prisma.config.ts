@@ -9,6 +9,6 @@ export default defineConfig({
   },
 
   migrations: {
-    path: './prisma/migrations',
+    path: './migrations',
   },
 });

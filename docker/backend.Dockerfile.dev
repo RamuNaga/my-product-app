@@ -6,14 +6,12 @@ RUN apk add --no-cache bash curl git
 
 RUN corepack enable && corepack prepare pnpm@10.28.2 --activate
 
-# Copy the whole workspace first.
-# .dockerignore now keeps caches/node_modules out of the context.
+# Copy the full Nx/pnpm workspace.
+# .dockerignore should exclude node_modules, dist, Nx cache, etc.
 COPY . .
 
-# pnpm can now see workspace package.json files and link: dependencies.
+# Install both prod + dev dependencies because Nx build tooling is needed here.
 RUN pnpm install --frozen-lockfile --prod=false
-
-RUN node -e "console.log('Prisma client:', require.resolve('user-prisma-client'))"
 
 RUN chmod +x wait-for-it.sh
 RUN chmod +x dev-entrypoint.sh
@@ -24,6 +22,9 @@ ARG SERVICE_DIR
 RUN pnpm nx run ${SERVICE}:build
 
 
+# ---------------------------------------------------------
+# Runtime
+# ---------------------------------------------------------
 FROM node:22-alpine AS runtime
 
 WORKDIR /workspace
@@ -32,27 +33,48 @@ RUN apk add --no-cache bash
 
 RUN corepack enable && corepack prepare pnpm@10.28.2 --activate
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-
-RUN pnpm install --frozen-lockfile --prod
-
 ARG SERVICE
 ARG SERVICE_DIR
 
+# Reuse the fully resolved pnpm dependency tree from the build stage.
+COPY --from=base /workspace/node_modules ./node_modules
+
+# pnpm link: dependencies point to these generated Prisma client directories.
+# They must exist in the runtime image.
+COPY --from=base /workspace/libs/backend/user-prisma/generated \
+  ./libs/backend/user-prisma/generated
+
+COPY --from=base /workspace/libs/backend/product-prisma/generated \
+  ./libs/backend/product-prisma/generated
+
+COPY --from=base /workspace/libs/backend/company-prisma/generated \
+  ./libs/backend/company-prisma/generated
+
+COPY --from=base /workspace/libs/backend/company-location-prisma/generated \
+  ./libs/backend/company-location-prisma/generated
+
+COPY --from=base /workspace/libs/backend/workorder-prisma/generated \
+  ./libs/backend/workorder-prisma/generated
+
+# Built Nx application.
 COPY --from=base /workspace/dist/apps/backend/${SERVICE_DIR} ./dist
 
+# Runtime helper scripts.
 COPY --from=base /workspace/wait-for-it.sh ./wait-for-it.sh
-RUN chmod +x wait-for-it.sh
+COPY --from=base /workspace/dev-entrypoint.sh ./dev-entrypoint.sh
+
+RUN chmod +x wait-for-it.sh dev-entrypoint.sh
 
 ENV NODE_ENV=development
 
 EXPOSE 3000
 
-COPY --from=base /workspace/dev-entrypoint.sh ./dev-entrypoint.sh
-
 CMD ["sh", "./dev-entrypoint.sh"]
 
 
+# ---------------------------------------------------------
+# Migration
+# ---------------------------------------------------------
 FROM node:22-alpine AS migrate
 
 WORKDIR /workspace
@@ -61,15 +83,10 @@ RUN apk add --no-cache bash curl git
 
 RUN corepack enable && corepack prepare pnpm@10.28.2 --activate
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# Migration needs the workspace because Prisma packages/configs live there.
+COPY . .
 
 RUN pnpm install --frozen-lockfile --prod=false
-
-COPY libs/backend/company-prisma/prisma ./prisma/company
-COPY libs/backend/company-location-prisma/prisma ./prisma/company-location
-COPY libs/backend/product-prisma/prisma ./prisma/product
-COPY libs/backend/user-prisma/prisma ./prisma/user
-COPY libs/backend/workorder-prisma/prisma ./prisma/workorder
 
 COPY wait-for-it.sh ./wait-for-it.sh
 COPY scripts/migrate.sh ./scripts/migrate.sh

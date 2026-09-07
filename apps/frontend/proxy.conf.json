@@ -1,6 +1,15 @@
+// {
+//   "/graphql": {
+//     "target": "http://127.0.0.1:3002",
+//     "secure": false,
+//     "changeOrigin": true,
+//     "logLevel": "debug"
+//   }
+// }
+
 {
   "/graphql": {
-    "target": "http://127.0.0.1:3002",
+    "target": "http://bff:3002",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"

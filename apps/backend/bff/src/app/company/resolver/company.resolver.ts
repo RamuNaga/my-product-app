@@ -24,9 +24,11 @@ export class CompanyResolver extends BaseGrpcResolver(
   async createCompany(
     @Args('createCompanyInput') createCompanyInput: CreateCompanyInput
   ): Promise<CompanyResponse> {
+    console.log('Mutation Resolver createCompany Received CreateCompanyInput:', createCompanyInput);
     const result = await this.handleGrpcCall(
       this.grpcService.createCompany(createCompanyInput)
     );
+    console.log('Mutation Resolver createCompany Received result:', result);
     return result;
   }
 

@@ -15,6 +15,7 @@ export class CompanyGrpcController {
 
   @GrpcMethod('CompanyService', 'CreateCompany')
   createCompany(data: CreateCompanyRequest): Promise<CompanyResponse> {
+    console.log('GrpcMethod createCompany Received CreateCompany request:', data);
     return this.companyService.createCompany(data);
   }
 

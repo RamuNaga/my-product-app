@@ -437,26 +437,7 @@ services:
     ports:
       - "3002:3002"
 
-    volumes:
-      - ./libs:/workspace/libs:cached
-      - ./nx.json:/workspace/nx.json:ro
-      - ./tsconfig.base.json:/workspace/tsconfig.base.json:ro
-      - ./eslint.config.js:/workspace/eslint.config.js:ro
-      - ./package.json:/workspace/package.json:ro
-      - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
-      - ./pnpm-workspace.yaml:/workspace/pnpm-workspace.yaml:ro
-      - ./wait-for-it.sh:/workspace/wait-for-it.sh:ro
-
     depends_on:
-      db:
-        condition: service_healthy
-
-      migrate:
-        condition: service_completed_successfully
-
-      api-gateway:
-        condition: service_started
-
       backend-product-service:
         condition: service_started
 
@@ -477,8 +458,14 @@ services:
       - -c
       - |
         set -e
-        echo "Waiting for Postgres..."
-        bash ./wait-for-it.sh db:5432 --timeout=60 --strict
+        echo "Waiting for backend services..."
+
+        bash ./wait-for-it.sh backend-product-service:4001 --timeout=60 --strict
+        bash ./wait-for-it.sh user-grpc:4003 --timeout=60 --strict
+        bash ./wait-for-it.sh company-grpc:4004 --timeout=60 --strict
+        bash ./wait-for-it.sh company-location-grpc:4005 --timeout=60 --strict
+        bash ./wait-for-it.sh workorder-service:4006 --timeout=60 --strict
+
         echo "Starting BFF..."
         exec node dist/main.js
 
@@ -486,7 +473,6 @@ services:
       mynet: {}
 
     restart: unless-stopped
-
 
   # =========================================================
   # Angular Frontend
