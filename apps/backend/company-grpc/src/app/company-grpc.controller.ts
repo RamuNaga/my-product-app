@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { CompanyGrpcService } from './company-grpc.service';
 import {
@@ -8,8 +8,10 @@ import {
   SearchCompanyByNameResponse,
 } from '@my-product-app/backend-proto/generated';
 import { Int32Value } from '@my-product-app/backend-proto/generated';
+import {GrpcExceptionFilter} from '@my-product-app/backend-shared';
 
 @Controller()
+@UseFilters(GrpcExceptionFilter)
 export class CompanyGrpcController {
   constructor(private readonly companyService: CompanyGrpcService) {}
 

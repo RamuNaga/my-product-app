@@ -520,7 +520,7 @@ services:
         bash ./wait-for-it.sh api-gateway:3000 --timeout=60 --strict
         echo "Starting Frontend..."
         pnpm install --frozen-lockfile --prefer-offline
-        exec pnpm nx serve frontend --host 0.0.0.0 --port 4200
+        exec pnpm nx serve frontend --configuration=docker 
 
     networks:
       mynet: {}

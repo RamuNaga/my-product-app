@@ -1,10 +1,10 @@
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { join } = require('path');
+const { resolve } = require('path');
 
 module.exports = {
   output: {
-    path: join(__dirname, '../../../dist/apps/backend/api-gateway'),
+    path: resolve(__dirname, '../../../dist/apps/backend/api-gateway'),
   },
 
   plugins: [
@@ -18,17 +18,18 @@ module.exports = {
       outputHashing: 'none',
       generatePackageJson: true,
       sourceMaps: false,
-      watch: true,
     }),
 
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: join(
+          context: resolve(
             __dirname,
-            '../../../libs/backend/proto/src/lib/*.proto'
+            '../../../libs/backend/proto/src/lib'
           ),
+          from: '*.proto',
           to: '[name][ext]',
+          noErrorOnMissing: false,
         },
       ],
     }),

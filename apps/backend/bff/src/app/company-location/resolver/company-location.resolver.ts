@@ -12,7 +12,9 @@ import {
   CompanyLocationResponse,
   GetAllCompanyLocationsResponse,
 } from '@my-product-app/backend-proto/generated';
-
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '@my-product-app/backend-shared';
+@UseGuards(JwtAuthGuard)
 @Resolver(() => CompanyLocation)
 export class CompanyLocationResolver extends BaseGrpcResolver(
   CompanyLocationGrpcClientService

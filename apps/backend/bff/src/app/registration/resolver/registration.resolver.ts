@@ -2,7 +2,9 @@ import { Resolver, Mutation, Args } from '@nestjs/graphql';
 
 import { RegistrationService } from '@my-product-app/backend-registration';
 import { RegisterCompanyUserInput } from '@my-product-app/backend-graphql-types';
-
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '@my-product-app/backend-shared';
+@UseGuards(JwtAuthGuard)
 @Resolver()
 export class RegistrationResolver {
   constructor(private readonly registrationService: RegistrationService) {}

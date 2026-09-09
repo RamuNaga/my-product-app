@@ -10,7 +10,9 @@ import { CompanyGrpcClientService } from '@my-product-app/company-grpc-client';
 
 import { CompanyResponse } from '@my-product-app/backend-proto/generated';
 import { mapProtoCompanyTypeToGraphQL } from '@my-product-app/backend-shared-mappers';
-
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '@my-product-app/backend-shared';
+@UseGuards(JwtAuthGuard)
 @Resolver(() => Company)
 export class CompanyResolver extends BaseGrpcResolver(
   CompanyGrpcClientService

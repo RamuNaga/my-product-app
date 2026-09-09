@@ -2,7 +2,9 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Product } from '@my-product-app/backend-graphql-types';
 import { CreateProductInput } from '@my-product-app/backend-graphql-types';
 import { ProductGrpcClientService } from '@my-product-app/product';
-
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '@my-product-app/backend-shared';
+@UseGuards(JwtAuthGuard)
 @Resolver(() => Product)
 export class ProductResolver {
   constructor(private readonly productGrpcClient: ProductGrpcClientService) {}

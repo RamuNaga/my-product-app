@@ -1,0 +1,8 @@
+{
+  "/graphql": {
+    "target": "http://bff:3002",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
