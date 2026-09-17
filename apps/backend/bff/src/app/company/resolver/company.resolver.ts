@@ -11,11 +11,12 @@ import { CompanyGrpcClientService } from '@my-product-app/company-grpc-client';
 import { CompanyResponse } from '@my-product-app/backend-proto/generated';
 import { mapProtoCompanyTypeToGraphQL } from '@my-product-app/backend-shared-mappers';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@my-product-app/backend-shared';
+import { JwtAuthGuard, Public } from '@my-product-app/backend-shared';
+
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Company)
 export class CompanyResolver extends BaseGrpcResolver(
-  CompanyGrpcClientService
+  CompanyGrpcClientService,
 ) {
   constructor(protected readonly grpcService: CompanyGrpcClientService) {
     super(grpcService);
@@ -24,23 +25,27 @@ export class CompanyResolver extends BaseGrpcResolver(
   /**  Create a new company */
   @Mutation(() => Company, { name: 'createCompany' })
   async createCompany(
-    @Args('createCompanyInput') createCompanyInput: CreateCompanyInput
+    @Args('createCompanyInput') createCompanyInput: CreateCompanyInput,
   ): Promise<CompanyResponse> {
-    console.log('Mutation Resolver createCompany Received CreateCompanyInput:', createCompanyInput);
+    console.log(
+      'Mutation Resolver createCompany Received CreateCompanyInput:',
+      createCompanyInput,
+    );
     const result = await this.handleGrpcCall(
-      this.grpcService.createCompany(createCompanyInput)
+      this.grpcService.createCompany(createCompanyInput),
     );
     console.log('Mutation Resolver createCompany Received result:', result);
     return result;
   }
 
   /**  Search companies by name */
+  @Public()
   @Query(() => [Company], { name: 'searchCompanies' })
   async searchCompanies(
-    @Args('searchTerm') searchTerm: string
+    @Args('searchTerm') searchTerm: string,
   ): Promise<Company[]> {
     const result = await lastValueFrom(
-      this.grpcService.searchByName({ searchTerm })
+      this.grpcService.searchByName({ searchTerm }),
     );
 
     // Map each ProtoCompany → GraphQLCompany

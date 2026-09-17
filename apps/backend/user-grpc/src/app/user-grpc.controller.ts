@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import {
   CreateUserRequest,
@@ -11,7 +11,8 @@ import {
   FindAllUsersResponse,
 } from '@my-product-app/backend-proto/generated';
 import { UserGrpcService } from './user-grpc.service';
-
+import { GrpcExceptionFilter } from '@my-product-app/backend-shared';
+@UseFilters(GrpcExceptionFilter)
 @Controller()
 export class UserGrpcController {
   constructor(private readonly userGrpcService: UserGrpcService) {}

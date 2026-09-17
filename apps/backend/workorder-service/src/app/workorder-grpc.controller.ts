@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import {
   ApproveWorkOrderRequest,
@@ -12,7 +12,8 @@ import {
   WORK_ORDER_SERVICE_NAME,
 } from '@my-product-app/backend-proto/generated';
 import { WorkOrderGrpcService } from './workorder-grpc.service';
-
+import { GrpcExceptionFilter } from '@my-product-app/backend-shared';
+@UseFilters(GrpcExceptionFilter)
 @Controller()
 export class WorkOrderGrpcController {
   constructor(private readonly workorderService: WorkOrderGrpcService) {}

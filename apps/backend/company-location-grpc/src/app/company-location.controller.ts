@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 
 import {
@@ -9,7 +9,8 @@ import {
 } from '@my-product-app/backend-proto/generated';
 import { Int32Value } from '@my-product-app/backend-proto/generated';
 import { CompanyLocationGrpcService } from './company-location.service';
-
+import { GrpcExceptionFilter } from '@my-product-app/backend-shared';
+@UseFilters(GrpcExceptionFilter)
 @Controller()
 export class CompanyLocationGrpcController {
   constructor(private readonly locationService: CompanyLocationGrpcService) {}

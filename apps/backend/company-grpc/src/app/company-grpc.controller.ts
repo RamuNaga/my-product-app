@@ -9,9 +9,8 @@ import {
 } from '@my-product-app/backend-proto/generated';
 import { Int32Value } from '@my-product-app/backend-proto/generated';
 import {GrpcExceptionFilter} from '@my-product-app/backend-shared';
-
-@Controller()
 @UseFilters(GrpcExceptionFilter)
+@Controller()
 export class CompanyGrpcController {
   constructor(private readonly companyService: CompanyGrpcService) {}
 

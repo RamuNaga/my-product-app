@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { ProductGrpcService } from './product-grpc.service';
 import {
@@ -6,7 +6,8 @@ import {
   ProductListResponse,
   EmptyRequest,
 } from '@my-product-app/backend-proto/generated';
-
+import { GrpcExceptionFilter } from '@my-product-app/backend-shared';
+@UseFilters(GrpcExceptionFilter)
 @Controller()
 export class ProductGrpcController {
   constructor(private readonly productService: ProductGrpcService) {}
