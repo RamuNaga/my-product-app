@@ -1,0 +1,7 @@
+{
+  "apiUrl": "http://127.0.0.1:3002",
+  "apigateUrl": "http://127.0.0.1:3000",
+  "featureFlags": {
+    "enableLogin": true
+  }
+}

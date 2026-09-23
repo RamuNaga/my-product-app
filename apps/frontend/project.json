@@ -28,9 +28,7 @@
         "styles": ["apps/frontend/src/styles.scss"],
         "scripts": [],
         "stylePreprocessorOptions": {
-          "includePaths": [
-            "libs/frontend/shared/src/lib/styles"
-          ]
+          "includePaths": ["libs/frontend/shared/src/lib/styles"]
         }
       },
 
@@ -51,13 +49,31 @@
           "outputHashing": "all",
           "aot": true,
           "optimization": true,
-          "sourceMap": false
+          "sourceMap": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/frontend/src/environments/environments.ts",
+              "with": "apps/frontend/src/environments/environments.prod.ts"
+            }
+          ]
         },
 
         "development": {
           "optimization": false,
           "extractLicenses": false,
           "sourceMap": true
+        },
+
+        "docker": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "fileReplacements": [
+            {
+              "replace": "apps/frontend/src/environments/environments.ts",
+              "with": "apps/frontend/src/environments/environments.docker.ts"
+            }
+          ]
         }
       },
 
@@ -76,7 +92,7 @@
         },
 
         "docker": {
-          "buildTarget": "frontend:build:development",
+          "buildTarget": "frontend:build:docker",
           "proxyConfig": "apps/frontend/proxy.docker.config.json",
           "host": "0.0.0.0",
           "port": 4200

@@ -1,23 +1,31 @@
 <mat-card class="product-card">
   <mat-card-header>
-    <mat-card-title class="product-title">{{ product.name }}</mat-card-title>
+    <mat-card-title class="product-title">
+      {{ product().name }}
+    </mat-card-title>
   </mat-card-header>
 
-  @if (product.image) {
-  <img
-    mat-card-image
-    [src]="'http://localhost:3002' + product.image"
-    alt="{{ product.productCode }}"
-  />
+  @if (productImageUrl(); as imageUrl) {
+    <img
+      mat-card-image
+      [src]="imageUrl"
+      [alt]="product().productCode"
+    />
   }
 
   <mat-card-content>
-    <p>{{ product.productCode }}</p>
+    <p>{{ product().productCode }}</p>
   </mat-card-content>
+
   <div class="card-footer">
-    <button mat-icon-button (click)="triggerEdit()" matTooltip="Edit Product">
+    <button
+      mat-icon-button
+      (click)="triggerEdit()"
+      matTooltip="Edit Product"
+    >
       <mat-icon>edit</mat-icon>
     </button>
+
     <button
       mat-icon-button
       (click)="triggerWorkOrder()"
@@ -26,6 +34,7 @@
     >
       <mat-icon>shopping_cart</mat-icon>
     </button>
+
     <button
       mat-icon-button
       (click)="triggerDelete()"

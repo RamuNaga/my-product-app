@@ -1,9 +1,7 @@
-import {
-  Injectable,
-  ConflictException,
-  UnauthorizedException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
+import { status } from '@grpc/grpc-js';
+
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
@@ -18,29 +16,33 @@ import {
   FindAllUsersResponse,
 } from '@my-product-app/backend-proto/generated';
 
-import { UserPrismaService, UserRole as PrismaUserRole } from '@my-product-app/user-prisma';
+import { UserPrismaService, User } from '@my-product-app/user-prisma';
+
 import {
-  mapProtoUserRoleToGraphQL,
-  mapGraphQLUserRoleToProto,
-} from '@my-product-app/backend-shared-mappers';
+  mapProtoUserRoleToPrisma,
+  mapPrismaUserRoleToProto,
+} from './prisma-proto/user-role.mapper';
 
 @Injectable()
 export class UserGrpcService {
   constructor(
     private readonly prisma: UserPrismaService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
   ) {}
 
-  // ----------------------------
-  // Create user
-  // ----------------------------
   async createUser(dto: CreateUserRequest): Promise<CreateUserResponse> {
     const { email, password, username, role, companyId } = dto;
 
-    const emailExists = await this.prisma.client.user.findUnique({
+    const existingUser = await this.prisma.client.user.findUnique({
       where: { email },
     });
-    if (emailExists) throw new ConflictException('Email already in use');
+
+    if (existingUser) {
+      throw new RpcException({
+        code: status.ALREADY_EXISTS,
+        message: 'Email already in use',
+      });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -49,49 +51,49 @@ export class UserGrpcService {
         email,
         username,
         password: hashedPassword,
-        role: mapProtoUserRoleToGraphQL(role) as PrismaUserRole, // ProtoUserRole → PrismaUserRole (direct cast)
+        role: mapProtoUserRoleToPrisma(role),
         companyId,
       },
     });
 
-    return this.mapToCreateUserResponse(user);
+    return this.mapPrismaUserToProto(user);
   }
 
-  // ----------------------------
-  // Login
-  // ----------------------------
   async login(dto: LoginRequest): Promise<LoginResponse> {
-    console.log('Before query');
-
-    const count = await this.prisma.client.user.count();
-
-    console.log('Count =', count);
-
     const user = await this.prisma.client.user.findUnique({
-      where: { email: dto.email },
-    });
-    if (!user) throw new UnauthorizedException('Invalid email or password');
-
-    const valid = await bcrypt.compare(dto.password, user.password);
-    if (!valid) throw new UnauthorizedException('Invalid email or password');
-
-    const accessToken = this.jwtService.sign(
-      {
-        sub: user.id,
-        email: user.email,
-        role: user.role,
-        companyId: user.companyId,
+      where: {
+        email: dto.email,
       },
-      { expiresIn: '1h' }
-    );
+    });
+
+    if (!user) {
+      throw new RpcException({
+        code: status.UNAUTHENTICATED,
+        message: 'Invalid email or password',
+      });
+    }
+
+    const validPassword = await bcrypt.compare(dto.password, user.password);
+
+    if (!validPassword) {
+      throw new RpcException({
+        code: status.UNAUTHENTICATED,
+        message: 'Invalid email or password',
+      });
+    }
+
+    const accessToken = this.jwtService.sign({
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+      companyId: user.companyId,
+    });
 
     return {
       id: user.id,
       username: user.username,
       email: user.email,
-      role: mapGraphQLUserRoleToProto(
-        user.role as unknown as import('@my-product-app/backend-shared-types').UserRole
-      ),
+      role: mapPrismaUserRoleToProto(user.role),
       companyId: user.companyId ?? 0,
       accessToken,
       createdAt: user.createdAt.toISOString(),
@@ -99,39 +101,37 @@ export class UserGrpcService {
     };
   }
 
-  // ----------------------------
-  // Get user by ID
-  // ----------------------------
   async getUserById(dto: GetUserByIdRequest): Promise<GetUserByIdResponse> {
     const user = await this.prisma.client.user.findUnique({
-      where: { id: dto.id },
+      where: {
+        id: dto.id,
+      },
     });
-    if (!user) throw new NotFoundException('User not found');
 
-    return this.mapToCreateUserResponse(user);
+    if (!user) {
+      throw new RpcException({
+        code: status.NOT_FOUND,
+        message: 'User not found',
+      });
+    }
+
+    return this.mapPrismaUserToProto(user);
   }
 
-  // ----------------------------
-  // Find all users
-  // ----------------------------
   async findAllUsers(_: FindAllUsersRequest): Promise<FindAllUsersResponse> {
     const users = await this.prisma.client.user.findMany();
+
     return {
-      users: users.map((user) => this.mapToCreateUserResponse(user)),
+      users: users.map((user) => this.mapPrismaUserToProto(user)),
     };
   }
 
-  // ----------------------------
-  // Helper to map Prisma user → gRPC CreateUserResponse
-  // ----------------------------
-  private mapToCreateUserResponse(user: any): CreateUserResponse {
+  private mapPrismaUserToProto(user: User): CreateUserResponse {
     return {
       id: user.id,
       username: user.username,
       email: user.email,
-      role: mapGraphQLUserRoleToProto(
-        user.role as unknown as import('@my-product-app/backend-shared-types').UserRole
-      ),
+      role: mapPrismaUserRoleToProto(user.role),
       companyId: user.companyId ?? 0,
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),

@@ -6,9 +6,16 @@ import {
   User,
   LoginResponse as LoginResponseGql,
 } from '@my-product-app/backend-graphql-types';
-import { CreateUserResponse } from '@my-product-app/backend-proto/generated';
+import {
+  CreateUserResponse,
+  CreateUserRequest,
+  LoginRequest,
+} from '@my-product-app/backend-proto/generated';
 import { BaseGrpcResolver } from '../../resolvers/base.resolver';
-import { mapProtoUserRoleToGraphQL } from '@my-product-app/backend-shared-mappers';
+import {
+  mapProtoUserRoleToGraphQL,
+  mapGraphQLUserRoleToProto,
+} from '@my-product-app/backend-shared-mappers';
 import { JwtAuthGuard, Public } from '@my-product-app/backend-shared';
 import { UseGuards } from '@nestjs/common';
 
@@ -23,7 +30,12 @@ export class UserResolver extends BaseGrpcResolver(UserGrpcClientService) {
   async createUser(
     @Args('createUserInput') input: CreateUserInput,
   ): Promise<CreateUserResponse> {
-    return this.handleGrpcCall(this.grpcService.createUser(input));
+    const request: CreateUserRequest = {
+      ...input,
+      role: mapGraphQLUserRoleToProto(input.role),
+      companyId: input.companyId ?? 0,
+    };
+    return this.handleGrpcCall(this.grpcService.createUser(request));
   }
 
   @Public()
@@ -31,8 +43,13 @@ export class UserResolver extends BaseGrpcResolver(UserGrpcClientService) {
   async login(
     @Args('loginInput') loginInput: LoginInput,
   ): Promise<LoginResponseGql> {
+    const request: LoginRequest = {
+      email: loginInput.email,
+      password: loginInput.password,
+    };
+
     const grpcResponse = await this.handleGrpcCall(
-      this.grpcService.login(loginInput),
+      this.grpcService.login(request),
     );
 
     return {

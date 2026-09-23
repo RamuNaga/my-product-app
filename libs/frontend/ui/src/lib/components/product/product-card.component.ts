@@ -1,7 +1,21 @@
-import { Component, inject, Input, output } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginStore, MaterialModule } from '@my-product-app/frontend-shared';
-import { ProductListModel as Product } from '@my-product-app/frontend-shared';
+
+import {
+  LoginStore,
+  MaterialModule,
+  ProductListModel as Product,
+} from '@my-product-app/frontend-shared';
+
+import {
+  RuntimeConfigStore,
+} from '@my-product-app/frontend-core';
 
 @Component({
   selector: 'lib-product-card',
@@ -12,23 +26,41 @@ import { ProductListModel as Product } from '@my-product-app/frontend-shared';
 })
 export class ProductCardComponent {
   readonly loginStore = inject(LoginStore);
-  @Input() product!: Product;
+  private readonly runtimeConfigStore =
+    inject(RuntimeConfigStore);
 
-  // Signals instead of EventEmitters
-  // Use the new signal-based output
+  readonly product = input.required<Product>();
+
+  readonly productImageUrl = computed(() => {
+    const image = this.product().image;
+
+    if (!image) {
+      return null;
+    }
+
+    const baseUrl =
+      this.runtimeConfigStore.apigateUrl();
+
+    const path = image.startsWith('/')
+      ? image
+      : `/${image}`;
+
+    return `${baseUrl}${path}`;
+  });
+
   readonly edit = output<Product>();
-  readonly delete = output<number>(); // maybe ID
+  readonly delete = output<number>();
   readonly workOrder = output<Product>();
 
-  triggerEdit() {
-    this.edit.emit(this.product);
+  triggerEdit(): void {
+    this.edit.emit(this.product());
   }
 
-  triggerDelete() {
-    this.delete.emit(this.product.id);
+  triggerDelete(): void {
+    this.delete.emit(this.product().id);
   }
 
-  triggerWorkOrder() {
-    this.workOrder.emit(this.product);
+  triggerWorkOrder(): void {
+    this.workOrder.emit(this.product());
   }
 }

@@ -1,6 +1,6 @@
 import { UserRole as GraphQLUserRole } from '@my-product-app/backend-shared-types';
 import { ProtoUserRole } from '@my-product-app/backend-proto/generated';
-import { mapEnum } from '../enums/enum-mapper';
+import { mapEnum } from '../../enums/enum-mapper';
 
 /**
  * GraphQL → Proto

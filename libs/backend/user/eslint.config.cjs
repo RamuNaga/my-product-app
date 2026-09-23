@@ -10,8 +10,7 @@ module.exports = [
         {
           allow: [
             '^@my-product-app/backend-shared',
-            '^@my-product-app/backend-prisma/user-prisma',
-            '^@my-product-app/backend-prisma/user-client',
+            '^@my-product-app/user-prisma',
             '^@my-product-app/backend-shared-types',
             '^@my-product-app/backend-graphql-types',
             '^@my-product-app/backend-proto/generated',
