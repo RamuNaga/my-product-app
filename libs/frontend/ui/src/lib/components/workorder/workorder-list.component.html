@@ -31,7 +31,7 @@
 </div>
 
 <ng-container>
-  <div *ngIf="isLoading(); else gridTemplate" class="loader">
+  <div *ngIf="store.loading(); else gridTemplate" class="loader">
     <lib-ui-material-loader></lib-ui-material-loader>
   </div>
 

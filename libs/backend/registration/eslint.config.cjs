@@ -10,10 +10,14 @@ module.exports = [
         {
           allow: [
             '^@my-product-app/backend-shared',
-            '^@my-product-app/prisma',
-            '^@my-product-app/user',
-            '@my-product-app/backend-company',
-            '@my-product-app/backend-company-location',
+            '^@my-product-app/user-grpc-client',
+
+            '^@my-product-app/company-grpc-client',
+            '^@my-product-app/company-location-grpc-client',
+            '^@my-product-app/backend-proto',
+            '^@my-product-app/backend-proto/generated',
+            '^@my-product-app/backend-graphql-types',
+            '^@my-product-app/backend-shared-mappers',
           ],
           enforceBuildableLibDependency: true,
           depConstraints: [

@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@my-product-app/prisma';
-import { CreateCompanyInput } from '../dto/create-company.input';
-import { Company } from '../graphql/company.model';
-import { CompanyType as GQLCompanyType } from '../graphql/company.model';
+import { CreateCompanyInput } from '@my-product-app/backend-graphql-types';
+import { Company } from '@my-product-app/backend-graphql-types';
+import { CompanyType as GQLCompanyType } from '@my-product-app/backend-shared-types';
+import { CompanyPrismaService } from '@my-product-app/backend-company-prisma';
 
 @Injectable()
 export class CompanyService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: CompanyPrismaService) {}
 
   async create(data: CreateCompanyInput) {
-    return this.prisma.company.create({ data });
+    return this.prisma.client.company.create({ data });
   }
 
   async searchByName(searchTerm: string): Promise<Company[]> {
-    const companies = await this.prisma.company.findMany({
+    const companies = await this.prisma.client.company.findMany({
       where: {
         name: {
           contains: searchTerm,

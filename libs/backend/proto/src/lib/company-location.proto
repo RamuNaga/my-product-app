@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package companylocation;
+
+import "google/protobuf/wrappers.proto";
+
+message CompanyLocation {
+  int32 id = 1;
+  string location = 2;
+  string address = 3;
+  string city = 4;
+  string country = 5;
+  string postalCode = 6;
+  string county = 7;
+  string contact = 8;
+  int32 companyId = 9;
+  string createdAt = 10;
+  string updatedAt = 11;
+}
+
+message CreateCompanyLocationRequest {
+  string location = 1;
+  string address = 2;
+  string city = 3;
+  string country = 4;
+  string postalCode = 5;
+  string county = 6;
+  string contact = 7;
+  int32 companyId = 8;
+}
+
+message CompanyLocationResponse {
+  CompanyLocation location = 1;
+}
+
+message GetAllCompanyLocationsRequest {
+  int32 companyId = 1;
+}
+
+message GetAllCompanyLocationsResponse {
+  repeated CompanyLocation locations = 1;
+}
+
+service CompanyLocationService {
+  rpc CreateCompanyLocation (CreateCompanyLocationRequest) returns (CompanyLocationResponse);
+  rpc GetCompanyLocationById (google.protobuf.Int32Value) returns (CompanyLocationResponse);
+  rpc GetAllCompanyLocations (GetAllCompanyLocationsRequest) returns (GetAllCompanyLocationsResponse);
+}

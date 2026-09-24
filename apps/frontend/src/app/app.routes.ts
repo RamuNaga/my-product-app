@@ -48,7 +48,7 @@ export const appRoutes: Routes = [
             '@my-product-app/frontend-ui/components/workorder/workorder.routes'
           ).then((m) => m.workOrderRoutes),
       },
-      // Lazy-load other routes here...
+      //Lazy-load other routes here...
     ],
   },
 ];

@@ -2,13 +2,14 @@
   "compilerOptions": {
     "target": "es2022",
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "strict": false,
+    "noImplicitAny": false,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true
   },
-  "files": [],
+
   "include": [],
 
   "angularCompilerOptions": {

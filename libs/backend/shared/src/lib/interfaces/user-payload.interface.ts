@@ -1,4 +1,4 @@
-import { UserRole } from '../enums/enum';
+import { UserRole } from '@my-product-app/backend-shared-types';
 
 export interface UserPayload {
   id: number;

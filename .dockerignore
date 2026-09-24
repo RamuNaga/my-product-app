@@ -1,0 +1,55 @@
+# Build output
+dist
+build
+tmp
+
+# Angular cache
+.angular
+**/.angular
+
+# Node modules
+node_modules
+**/node_modules
+
+# Logs
+*.log
+logs
+*.pid
+
+# Nx cache
+.nx
+.nx/cache
+**/.nx
+.pnpm-store
+
+# Test / coverage output
+coverage
+**/coverage
+
+# Git
+.git
+.gitignore
+
+# Editors
+.vscode
+.idea
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker files not required inside build context
+docker-compose*.yml
+Dockerfile*
+
+# Local environment overrides
+.env.local
+.env.*.local
+
+# Keep actual Dockerfiles used by COPY/build context if needed
+# Do NOT ignore docker/*.Dockerfile because your build uses:
+# docker/backend.Dockerfile.dev
+
+# DO NOT IGNORE SOURCE CODE
+# apps
+# libs

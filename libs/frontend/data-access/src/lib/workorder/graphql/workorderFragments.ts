@@ -3,7 +3,7 @@ import { gql } from 'apollo-angular';
 
 // ------------------ Base fields (for creation) ------------------
 export const WORKORDER_BASE_FIELDS = gql`
-  fragment WorkorderBaseFields on Workorder {
+  fragment WorkorderBaseFields on WorkOrder {
     id
     clientLocation
     vendorOrClient
@@ -15,23 +15,18 @@ export const WORKORDER_BASE_FIELDS = gql`
 
 // ------------------ Full fields (for detailed queries) ------------------
 export const WORKORDER_FIELDS = gql`
-  fragment WorkorderFields on Workorder {
+  fragment WorkorderFields on WorkOrder {
     ...WorkorderBaseFields
     workOrderCode
     status
     priority
-    product {
-      id
-      name
-      productCode
-      price
-    }
-    createdBy {
-      id
-      role
-      username
-      email
-    }
+    productId
+    createdById
+    approvedById
+    companyId
+    attachments
+    assignedTo
+    comments
     createdAt
     updatedAt
   }
@@ -40,7 +35,7 @@ export const WORKORDER_FIELDS = gql`
 
 // ------------------ Minimal fields for table/list ------------------
 export const WORKORDER_LIST_FIELDS = gql`
-  fragment WorkorderListFields on Workorder {
+  fragment WorkorderListFields on WorkOrder {
     id
     workOrderCode
     clientLocation
@@ -49,26 +44,22 @@ export const WORKORDER_LIST_FIELDS = gql`
     deliveryDate
     status
     priority
-    product {
-      id
-      name
-      productCode
-      price
-    }
+    productId
   }
 `;
 
 // ------------------ Full details for single workorder view ------------------
 export const WORKORDER_DETAILS_FIELDS = gql`
-  fragment WorkorderDetailsFields on Workorder {
+  fragment WorkorderDetailsFields on WorkOrder {
     ...WorkorderListFields
     description
-    createdBy {
-      id
-      role
-      username
-      email
-    }
+    productId
+    createdById
+    approvedById
+    companyId
+    attachments
+    assignedTo
+    comments
     createdAt
     updatedAt
   }

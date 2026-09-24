@@ -6,24 +6,33 @@
   "tags": ["type:service", "scope:backend", "area:workorder"],
   "targets": {
     "build": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{workspaceRoot}/dist/apps/backend/workorder-service"],
       "options": {
-        "command": "webpack-cli build",
-        "args": ["node-env=production"]
+        "webpackConfig": "apps/backend/workorder-service/webpack.config.js",
+        "outputPath": "dist/apps/backend/workorder-service",
+        "watch": false
       },
       "configurations": {
         "development": {
-          "args": ["node-env=development"]
+          "webpackConfig": "apps/backend/workorder-service/webpack.config.js",
+          "outputPath": "dist/apps/backend/workorder-service"
+        },
+        "production": {
+          "webpackConfig": "apps/backend/workorder-service/webpack.config.js",
+          "outputPath": "dist/apps/backend/workorder-service"
         }
       }
     },
+
+  
+
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["build"],
       "options": {
         "buildTarget": "workorder-service:build",
-        "runBuildTargetDependencies": false,
+        "runBuildTargetDependencies": true,
         "inspect": false
       },
       "configurations": {
@@ -35,10 +44,44 @@
         }
       }
     },
+
     "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
+        "jestConfig": "apps/backend/workorder-service/jest.config.ts",
         "passWithNoTests": true
       }
+    },
+
+    "prune-lockfile": {
+      "dependsOn": ["build"],
+      "cache": true,
+      "executor": "@nx/js:prune-lockfile",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/workorder-service/package.json",
+        "{workspaceRoot}/dist/apps/backend/workorder-service/pnpm-lock.yaml"
+      ],
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+
+    "copy-workspace-modules": {
+      "dependsOn": ["build"],
+      "cache": true,
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/workorder-service/workspace_modules"
+      ],
+      "executor": "@nx/js:copy-workspace-modules",
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+
+    "prune": {
+      "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
+      "executor": "nx:noop"
     }
   }
 }

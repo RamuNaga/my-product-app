@@ -1,0 +1,92 @@
+{
+  "name": "bff",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/backend/bff/src",
+  "projectType": "application",
+  "tags": [
+    "type:bff",
+    "scope:backend"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/bff"
+      ],
+      "options": {
+        "webpackConfig": "apps/backend/bff/webpack.config.js",
+        "outputPath": "dist/apps/backend/bff",
+        "watch": false
+      },
+      "configurations": {
+        "development": {
+          "webpackConfig": "apps/backend/bff/webpack.config.js"
+        },
+        "production": {
+          "webpackConfig": "apps/backend/bff/webpack.config.js"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "bff:build",
+        "runBuildTargetDependencies": true,
+        "inspect": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "bff:build:development"
+        },
+        "production": {
+          "buildTarget": "bff:build:production"
+        }
+      }
+    },
+    "prune-lockfile": {
+      "dependsOn": [
+        "build"
+      ],
+      "cache": true,
+      "executor": "@nx/js:prune-lockfile",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/bff/package.json",
+        "{workspaceRoot}/dist/apps/backend/bff/pnpm-lock.yaml"
+      ],
+      "options": {
+        "buildTarget": "bff:build"
+      }
+    },
+    "copy-workspace-modules": {
+      "dependsOn": [
+        "build"
+      ],
+      "cache": true,
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/bff/workspace_modules"
+      ],
+      "executor": "@nx/js:copy-workspace-modules",
+      "options": {
+        "buildTarget": "bff:build"
+      }
+    },
+    "prune": {
+      "dependsOn": [
+        "prune-lockfile",
+        "copy-workspace-modules"
+      ],
+      "executor": "nx:noop"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "apps/backend/bff/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

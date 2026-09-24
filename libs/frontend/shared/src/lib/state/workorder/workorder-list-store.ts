@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { signalStore, withMethods, withState } from '@ngrx/signals';
-import { firstValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 import {
   WorkorderService,
@@ -128,11 +128,11 @@ export const workorderListStoreFactory = (): WorkorderListStoreType => {
             if (filters.status()) variables.status = filters.status();
 
             // Service returns Observable<WorkorderListResponse>
-            const response: WorkorderListResponse = await firstValueFrom(
+            const response: WorkorderListResponse = await lastValueFrom(
               workorderService.getWorkOrders(variables)
             );
 
-            const workorders: WorkorderListModel[] = response?.workorders ?? [];
+            const workorders: WorkorderListModel[] = response.workorders ?? [];
             const total: number = response?.total ?? 0;
 
             this.setWorkorders(workorders, total);
@@ -150,10 +150,10 @@ export const workorderListStoreFactory = (): WorkorderListStoreType => {
 };
 
 // DI Token and Provider
-export const WORKORDER_LIST_STORE = new InjectionToken<WorkorderListStoreType>(
+export const WorkOrderListStore = new InjectionToken<WorkorderListStoreType>(
   'WORKORDER_LIST_STORE'
 );
 
 export const workorderListStoreProvider = makeEnvironmentProviders([
-  { provide: WORKORDER_LIST_STORE, useFactory: workorderListStoreFactory },
+  { provide: WorkOrderListStore, useFactory: workorderListStoreFactory },
 ]);

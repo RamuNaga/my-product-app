@@ -1,0 +1,8 @@
+{
+  "apiUrl": "http://localhost:3002",
+
+  "apigateUrl": "http://localhost:3000",
+  "featureFlags": {
+    "enableLogin": true
+  }
+}

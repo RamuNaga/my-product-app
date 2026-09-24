@@ -16,6 +16,7 @@ module.exports = [
             '^@my-product-app/backend-company-location',
             '@my-product-app/backend-registration',
             '@my-product-app/workorder',
+            '^@my-product-app/backend-proto',
           ],
           enforceBuildableLibDependency: true,
           depConstraints: [

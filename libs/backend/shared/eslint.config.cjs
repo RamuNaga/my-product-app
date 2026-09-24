@@ -8,21 +8,23 @@ module.exports = [
       '@nx/enforce-module-boundaries': [
         'error',
         {
-          allow: ['^@my-product-app/prisma', '^@my-product-app/logger'],
+          allow: [
+            '^@my-product-app/logger',
+            '^@my-product-app/backend-proto',
+            '^@my-product-app/backend-proto/generated',
+            '^@my-product-app/backend-shared-types',
+          ],
           enforceBuildableLibDependency: true,
           depConstraints: [
             {
               sourceTag: 'type:shared',
-              onlyDependOnLibsWithTags: ['type:shared', 'type:buildable'],
+              onlyDependOnLibsWithTags: [
+                'type:shared',
+                'type:buildable',
+                'type:proto',
+              ],
             },
-            {
-              sourceTag: 'scope:user',
-              onlyDependOnLibsWithTags: ['type:shared'],
-            },
-            {
-              sourceTag: 'scope:product',
-              onlyDependOnLibsWithTags: ['type:shared'],
-            },
+
             {
               sourceTag: 'scope:logger',
               onlyDependOnLibsWithTags: [],

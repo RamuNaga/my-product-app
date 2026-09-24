@@ -1,0 +1,145 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: myproductapp-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: hitman
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - mynet
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+      args:
+        SERVICE: api-gateway
+    environment:
+      NODE_ENV: production
+      DATABASE_URL_USER: ${DATABASE_URL_USER}
+      DATABASE_URL_COMPANY: ${DATABASE_URL_COMPANY}
+      DATABASE_URL_COMPANY_LOCATION: ${DATABASE_URL_COMPANY_LOCATION}
+      DATABASE_URL_PRODUCT: ${DATABASE_URL_PRODUCT}
+      DATABASE_URL_WORKORDER: ${DATABASE_URL_WORKORDER}
+    ports:
+      - '${API_GATEWAY_PORT:-3000}:3000'
+    depends_on:
+      - db
+    networks:
+      - mynet
+
+  bff:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+      args:
+        SERVICE: bff
+    environment:
+      NODE_ENV: production
+    ports:
+      - '${BFF_PORT:-3002}:3002'
+    depends_on:
+      - db
+    networks:
+      - mynet
+
+  product-service:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+      args:
+        SERVICE: product-service
+    environment:
+      NODE_ENV: production
+      DATABASE_URL_PRODUCT: ${DATABASE_URL_PRODUCT}
+    ports:
+      - '${PRODUCT_SERVICE_PORT:-3001}:3001'
+    depends_on:
+      - db
+    networks:
+      - mynet
+
+  user-grpc:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+      args:
+        SERVICE: user-grpc
+    environment:
+      NODE_ENV: production
+      DATABASE_URL_USER: ${DATABASE_URL_USER}
+    ports:
+      - '${USER_SERVICE_PORT:-3003}:3003'
+    depends_on:
+      - db
+    networks:
+      - mynet
+
+  company-grpc:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+      args:
+        SERVICE: company-grpc
+    environment:
+      NODE_ENV: production
+      DATABASE_URL_COMPANY: ${DATABASE_URL_COMPANY}
+    ports:
+      - '${COMPANY_SERVICE_PORT:-3004}:3004'
+    depends_on:
+      - db
+    networks:
+      - mynet
+
+  company-location-grpc:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+      args:
+        SERVICE: company-location-grpc
+    environment:
+      NODE_ENV: production
+      DATABASE_URL_COMPANY_LOCATION: ${DATABASE_URL_COMPANY_LOCATION}
+    ports:
+      - '${COMPANY_LOCATION_SERVICE_PORT:-3005}:3005'
+    depends_on:
+      - db
+    networks:
+      - mynet
+
+  workorder-service:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+      args:
+        SERVICE: workorder-service
+    environment:
+      NODE_ENV: production
+      DATABASE_URL_WORKORDER: ${DATABASE_URL_WORKORDER}
+    ports:
+      - '${WORKORDER_SERVICE_PORT:-3006}:3006'
+    depends_on:
+      - db
+    networks:
+      - mynet
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    ports:
+      - '4200:80'
+    networks:
+      - mynet
+
+volumes:
+  postgres-data:
+
+networks:
+  mynet:
+    driver: bridge

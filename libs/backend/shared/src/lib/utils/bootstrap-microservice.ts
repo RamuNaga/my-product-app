@@ -2,94 +2,201 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Type } from '@nestjs/common'; // INestMicroservice,
 import { AppLoggerService, LoggingInterceptor } from '@my-product-app/logger';
 import * as bodyParser from 'body-parser';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+
+interface GrpcOptions {
+  package: string;
+  protoPath: string;
+  url?: string;
+}
 
 interface BootstrapOptions {
   hostEnv: string;
   portEnv: string;
   fallbackPort: number;
   serviceName: string;
+  grpc?: GrpcOptions;
 }
 
-async function tryGetLogger(
-  app: INestApplication
-): Promise<AppLoggerService | undefined> {
+function tryGetLogger(app: INestApplication): AppLoggerService | undefined {
   try {
     return app.get(AppLoggerService);
-  } catch (err) {
-    console.warn('AppLoggerService not available:', err);
+  } catch (error) {
+    console.warn('AppLoggerService not available:', error);
+
     return undefined;
   }
 }
 
 export async function bootstrapMicroservice(
-  AppModule: any,
-  options: BootstrapOptions
+  AppModule: Type<unknown>,
+  options: BootstrapOptions,
 ): Promise<INestApplication> {
   try {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-    // Body parser config (good for large payloads)
-    app.use(bodyParser.json({ limit: '10mb' }));
-    app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+    /*
+     * Configure the HTTP portion of the application.
+     */
+    app.use(
+      bodyParser.json({
+        limit: '10mb',
+      }),
+    );
 
-    // Serve static assets
-    app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads' });
+    app.use(
+      bodyParser.urlencoded({
+        extended: true,
+        limit: '10mb',
+      }),
+    );
 
-    // Enable CORS
+    app.useStaticAssets(join(process.cwd(), 'uploads'), {
+      prefix: '/uploads',
+    });
+
+    console.log('RUN_ENV:', process.env['RUN_ENV'],  'FRONTEND_URL:', process.env['FRONTEND_URL']);
+
+    const frontendUrl = process.env['FRONTEND_URL'];
+
+    console.log("frontendUrl:", frontendUrl);
+
+    if (!frontendUrl) {
+      throw new Error('FRONTEND_URL is not configured');
+    }
+
     app.enableCors({
-      origin: process.env['FRONTEND_URL'] || 'http://localhost:4200',
+      origin: frontendUrl,
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
       credentials: true,
     });
 
-    // Logger setup
-    const logger = await tryGetLogger(app);
+    /*
+     * Configure the application logger and HTTP interceptor
+     * before connecting the microservice.
+     */
+    const logger = tryGetLogger(app);
+
     if (logger) {
       app.useLogger(logger);
+
       app.useGlobalInterceptors(new LoggingInterceptor(logger));
     }
 
-    const host = process.env[options.hostEnv] || 'localhost';
+    /*
+     * Determine the HTTP host and port.
+     */
+    const host =
+      process.env[options.hostEnv] ||
+      (process.env['RUN_ENV'] === 'docker' ? '0.0.0.0' : '127.0.0.1');
+
     const port = Number(process.env[options.portEnv]) || options.fallbackPort;
 
+    /*
+     * Example:
+     *
+     * serviceName = "Company Service"
+     * environment key = COMPANY_SERVICE_MS_PORT
+     */
     const microserviceEnvKey = `${options.serviceName
       .toUpperCase()
-      .replace(/\s/g, '_')}_MS_PORT`;
+      .replace(/\s+/g, '_')}_MS_PORT`;
+
     const microservicePort =
-      Number(process.env[microserviceEnvKey]) || port + 1000;
+      Number(process.env[microserviceEnvKey]) || port + 1;
 
     console.log(`Starting ${options.serviceName} on ${host}:${port}`);
 
-    // Connect Microservice
-    app.connectMicroservice<MicroserviceOptions>({
-      transport: Transport.TCP,
-      options: { host, port: microservicePort },
-    });
+    console.log(
+      `microserviceEnvKey: ${microserviceEnvKey}, ` +
+        `microservicePort: ${microservicePort}`,
+    );
 
+    //let microservice: INestMicroservice;
+
+    /*
+     * Connect either a gRPC or TCP microservice.
+     *
+     * inheritAppConfig makes the microservice inherit global
+     * guards and interceptors registered on the HTTP app.
+     */
+    if (options.grpc) {
+      const grpcUrl = options.grpc.url || `${host}:${microservicePort}`;
+
+      app.connectMicroservice<MicroserviceOptions>(
+        {
+          transport: Transport.GRPC,
+          options: {
+            package: options.grpc.package,
+            protoPath: options.grpc.protoPath,
+            url: grpcUrl,
+          },
+        },
+        {
+          inheritAppConfig: true,
+        },
+      );
+
+      console.log(
+        `${options.serviceName} gRPC microservice ` +
+          `configured on ${grpcUrl}`,
+      );
+    } else {
+      app.connectMicroservice<MicroserviceOptions>(
+        {
+          transport: Transport.TCP,
+          options: {
+            host,
+            port: microservicePort,
+          },
+        },
+        {
+          inheritAppConfig: true,
+        },
+      );
+
+      console.log(
+        `${options.serviceName} TCP microservice ` +
+          `configured on ${host}:${microservicePort}`,
+      );
+    }
+
+    /*
+     * Do not call the following here:
+     *
+     * microservice.useGlobalFilters(...)
+     * microservice.useGlobalGuards(...)
+     * microservice.useGlobalInterceptors(...)
+     *
+     * The guard and interceptor are inherited from app.
+     * The gRPC filter is applied to RPC controllers.
+     */
     await app.startAllMicroservices();
 
-    // Initialize DI
-    await app.init();
+    /*
+     * NestFactory.create() applications are normally initialized
+     * automatically by listen(), so calling app.init() separately
+     * is unnecessary.
+     */
+    await app.listen(port, host);
 
-    const jwtAuthGuard = app.get(JwtAuthGuard);
-    app.useGlobalGuards(jwtAuthGuard);
+    console.log(`${options.serviceName} microservice successfully started`);
 
-    await app.listen(port);
-    console.log(`${options.serviceName} is running on http://${host}:${port}`);
     console.log(
-      `${options.serviceName} TCP microservice running on ${host}:${microservicePort}`
+      `${options.serviceName} is running on ` + `http://${host}:${port}`,
     );
+
     console.log(
-      `${options.serviceName} /ping endpoint is available at http://${host}:${port}/ping`
+      `${options.serviceName} /ping endpoint is available at ` +
+        `http://${host}:${port}/ping`,
     );
 
     return app;
   } catch (error) {
     console.error(`Error during ${options.serviceName} bootstrap:`, error);
+
     throw error;
   }
 }

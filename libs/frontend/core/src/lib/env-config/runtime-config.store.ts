@@ -10,8 +10,8 @@ export class RuntimeConfigStore {
   readonly config = computed(() => this._config());
   readonly apiUrl = computed(() => this._config()?.apiUrl ?? '');
   readonly authUrl = computed(() => this._config()?.authUrl ?? '');
-  readonly productServiceUrl = computed(
-    () => this._config()?.productServiceUrl ?? ''
+  readonly apigateUrl = computed(
+    () => this._config()?.apigateUrl ?? ''
   );
 
   setConfig(config: RuntimeEnvConfig) {

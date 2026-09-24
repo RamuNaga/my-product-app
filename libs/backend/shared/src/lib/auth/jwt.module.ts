@@ -21,7 +21,7 @@ import { Reflector } from '@nestjs/core';
         return {
           secret,
           signOptions: {
-            expiresIn: configService.get<string>('JWT_EXPIRATION') || '3600s',
+            expiresIn: Number(configService.get<string>('JWT_EXPIRES_IN')), 
           },
         };
       },

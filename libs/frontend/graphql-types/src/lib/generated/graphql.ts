@@ -19,6 +19,15 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type ApproveWorkorderInput = {
+  assignedTo?: InputMaybe<Scalars['String']['input']>;
+  attachments?: InputMaybe<Array<Scalars['String']['input']>>;
+  comments?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  priority?: InputMaybe<Priority>;
+  status: WorkOrderStatus;
+};
+
 export type Company = {
   __typename?: 'Company';
   contact?: Maybe<Scalars['String']['output']>;
@@ -31,7 +40,7 @@ export type CompanyLocation = {
   __typename?: 'CompanyLocation';
   address: Scalars['String']['output'];
   city: Scalars['String']['output'];
-  companyId?: Maybe<Scalars['Float']['output']>;
+  companyId: Scalars['Float']['output'];
   contact?: Maybe<Scalars['String']['output']>;
   country: Scalars['String']['output'];
   county: Scalars['String']['output'];
@@ -42,7 +51,6 @@ export type CompanyLocation = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
-/** Type of company */
 export enum CompanyType {
   Client = 'CLIENT',
   Manufacturer = 'MANUFACTURER',
@@ -106,16 +114,20 @@ export type LoginResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  approveWorkorder: WorkOrder;
   createCompany: Company;
   createCompanyLocation: CompanyLocation;
   createProduct: Product;
   createUser: User;
-  createWorkOrder: Workorder;
-  deleteProduct: Product;
+  createWorkOrder: WorkOrder;
   login: LoginResponse;
   registerCompanyUser: Scalars['Boolean']['output'];
-  updateProduct: Product;
-  updateWorkorder: Workorder;
+  updateWorkorder: WorkOrder;
+};
+
+
+export type MutationApproveWorkorderArgs = {
+  input: ApproveWorkorderInput;
 };
 
 
@@ -130,7 +142,7 @@ export type MutationCreateCompanyLocationArgs = {
 
 
 export type MutationCreateProductArgs = {
-  data: CreateProductInput;
+  input: CreateProductInput;
 };
 
 
@@ -144,11 +156,6 @@ export type MutationCreateWorkOrderArgs = {
 };
 
 
-export type MutationDeleteProductArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
 export type MutationLoginArgs = {
   loginInput: LoginInput;
 };
@@ -156,12 +163,6 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterCompanyUserArgs = {
   registerCompanyUserInput: RegisterCompanyUserInput;
-};
-
-
-export type MutationUpdateProductArgs = {
-  data: UpdateProductInput;
-  id: Scalars['ID']['input'];
 };
 
 
@@ -201,30 +202,16 @@ export type Product = {
 export type Query = {
   __typename?: 'Query';
   companyLocations: Array<CompanyLocation>;
-  findAllProduct: Array<Product>;
-  findOneProduct: Product;
-  getAllUsers: Array<User>;
-  isEmailAvailable: Scalars['Boolean']['output'];
   ping: Scalars['String']['output'];
   products: Array<Product>;
   searchCompanies: Array<Company>;
-  workorder: Workorder;
+  workorder: WorkOrder;
   workorders: WorkordersResponse;
 };
 
 
 export type QueryCompanyLocationsArgs = {
   companyId: Scalars['Int']['input'];
-};
-
-
-export type QueryFindOneProductArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type QueryIsEmailAvailableArgs = {
-  email: Scalars['String']['input'];
 };
 
 
@@ -243,6 +230,7 @@ export type QueryWorkordersArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
   pageSize?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
+  vendorOrClient?: InputMaybe<Scalars['String']['input']>;
   workOrderCode?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -253,35 +241,29 @@ export type RegisterCompanyUserInput = {
   user: CreateUserInput;
 };
 
-export type UpdateProductInput = {
-  companyId?: InputMaybe<Scalars['Float']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['Int']['input'];
-  image?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  price?: InputMaybe<Scalars['Float']['input']>;
-  productCode?: InputMaybe<Scalars['String']['input']>;
-  productWeight?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type UpdateWorkorderInput = {
+  assignedTo?: InputMaybe<Scalars['String']['input']>;
+  attachments?: InputMaybe<Array<Scalars['String']['input']>>;
   clientLocation?: InputMaybe<Scalars['String']['input']>;
+  comments?: InputMaybe<Scalars['String']['input']>;
   deliveryDate?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
+  priority?: InputMaybe<Priority>;
   productId?: InputMaybe<Scalars['Int']['input']>;
   quantity?: InputMaybe<Scalars['Int']['input']>;
+  status: WorkOrderStatus;
   vendorOrClient?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type User = {
   __typename?: 'User';
-  companyId?: Maybe<Scalars['Float']['output']>;
-  createdAt: Scalars['DateTime']['output'];
+  companyId?: Maybe<Scalars['Int']['output']>;
+  createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   role: UserRole;
-  updatedAt: Scalars['DateTime']['output'];
+  updatedAt: Scalars['String']['output'];
   username: Scalars['String']['output'];
 };
 
@@ -294,6 +276,28 @@ export enum UserRole {
   Viewer = 'VIEWER'
 }
 
+export type WorkOrder = {
+  __typename?: 'WorkOrder';
+  approvedById?: Maybe<Scalars['Int']['output']>;
+  assignedTo?: Maybe<Scalars['String']['output']>;
+  attachments?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  clientLocation: Scalars['String']['output'];
+  comments?: Maybe<Scalars['String']['output']>;
+  companyId?: Maybe<Scalars['Int']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  createdById: Scalars['Int']['output'];
+  deliveryDate: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  priority?: Maybe<Priority>;
+  productId: Scalars['Int']['output'];
+  quantity: Scalars['Int']['output'];
+  status: WorkOrderStatus;
+  updatedAt: Scalars['DateTime']['output'];
+  vendorOrClient: Scalars['String']['output'];
+  workOrderCode: Scalars['String']['output'];
+};
+
 export enum WorkOrderStatus {
   Approved = 'APPROVED',
   Cancelled = 'CANCELLED',
@@ -303,32 +307,10 @@ export enum WorkOrderStatus {
   Requested = 'REQUESTED'
 }
 
-export type Workorder = {
-  __typename?: 'Workorder';
-  approvedBy?: Maybe<User>;
-  assignedTo?: Maybe<Scalars['String']['output']>;
-  attachments?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  clientLocation: Scalars['String']['output'];
-  comments?: Maybe<Scalars['String']['output']>;
-  company?: Maybe<Company>;
-  createdAt: Scalars['DateTime']['output'];
-  createdBy: User;
-  deliveryDate: Scalars['DateTime']['output'];
-  description?: Maybe<Scalars['String']['output']>;
-  id: Scalars['Int']['output'];
-  priority?: Maybe<Priority>;
-  product?: Maybe<Product>;
-  quantity: Scalars['Int']['output'];
-  status: WorkOrderStatus;
-  updatedAt: Scalars['DateTime']['output'];
-  vendorOrClient: Scalars['String']['output'];
-  workOrderCode: Scalars['String']['output'];
-};
-
 export type WorkordersResponse = {
   __typename?: 'WorkordersResponse';
   total: Scalars['Int']['output'];
-  workorders: Array<Workorder>;
+  workorders: Array<WorkOrder>;
 };
 
 export type CreateCompanyLocationMutationVariables = Exact<{
@@ -336,7 +318,7 @@ export type CreateCompanyLocationMutationVariables = Exact<{
 }>;
 
 
-export type CreateCompanyLocationMutation = { __typename?: 'Mutation', createCompanyLocation: { __typename?: 'CompanyLocation', id: number, location: string, address: string, city: string, country: string, postalCode: string, county: string, contact?: string | null, companyId?: number | null } };
+export type CreateCompanyLocationMutation = { __typename?: 'Mutation', createCompanyLocation: { __typename?: 'CompanyLocation', id: number, location: string, address: string, city: string, country: string, postalCode: string, county: string, contact?: string | null, companyId: number } };
 
 export type GetCompanyLocationsQueryVariables = Exact<{
   companyId: Scalars['Int']['input'];
@@ -373,17 +355,24 @@ export type CreateUserMutationVariables = Exact<{
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: number, email: string, username: string, role: UserRole } };
 
-export type FindAllProductQueryVariables = Exact<{ [key: string]: never; }>;
+export type FindAllProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FindAllProductQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', id: number, productCode: string, name: string, description: string, image?: string | null, productWeight: string, price: number, createdAt: any }> };
+export type FindAllProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', id: number, productCode: string, name: string, description: string, image?: string | null, productWeight: string, price: number, createdAt: any }> };
+
+export type ApproveWorkOrderMutationVariables = Exact<{
+  input: ApproveWorkorderInput;
+}>;
+
+
+export type ApproveWorkOrderMutation = { __typename?: 'Mutation', approveWorkorder: { __typename?: 'WorkOrder', workOrderCode: string, status: WorkOrderStatus, priority?: Priority | null, productId: number, createdById: number, approvedById?: number | null, companyId?: number | null, attachments?: Array<string | null> | null, assignedTo?: string | null, comments?: string | null, createdAt: any, updatedAt: any, id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null } };
 
 export type CreateWorkOrderMutationVariables = Exact<{
   input: CreateWorkorderInput;
 }>;
 
 
-export type CreateWorkOrderMutation = { __typename?: 'Mutation', createWorkOrder: { __typename?: 'Workorder', id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null } };
+export type CreateWorkOrderMutation = { __typename?: 'Mutation', createWorkOrder: { __typename?: 'WorkOrder', id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null } };
 
 export type GetWorkOrdersQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -394,25 +383,25 @@ export type GetWorkOrdersQueryVariables = Exact<{
 }>;
 
 
-export type GetWorkOrdersQuery = { __typename?: 'Query', workorders: { __typename?: 'WorkordersResponse', total: number, workorders: Array<{ __typename?: 'Workorder', id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, product?: { __typename?: 'Product', id: number, name: string, productCode: string, price: number } | null }> } };
+export type GetWorkOrdersQuery = { __typename?: 'Query', workorders: { __typename?: 'WorkordersResponse', total: number, workorders: Array<{ __typename?: 'WorkOrder', id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, productId: number, createdAt: any, description?: string | null }> } };
 
 export type UpdateWorkOrderMutationVariables = Exact<{
   input: UpdateWorkorderInput;
 }>;
 
 
-export type UpdateWorkOrderMutation = { __typename?: 'Mutation', updateWorkorder: { __typename?: 'Workorder', workOrderCode: string, status: WorkOrderStatus, priority?: Priority | null, createdAt: any, updatedAt: any, id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null, product?: { __typename?: 'Product', id: number, name: string, productCode: string, price: number } | null, createdBy: { __typename?: 'User', id: number, role: UserRole, username: string, email: string } } };
+export type UpdateWorkOrderMutation = { __typename?: 'Mutation', updateWorkorder: { __typename?: 'WorkOrder', workOrderCode: string, status: WorkOrderStatus, priority?: Priority | null, productId: number, createdById: number, approvedById?: number | null, companyId?: number | null, attachments?: Array<string | null> | null, assignedTo?: string | null, comments?: string | null, createdAt: any, updatedAt: any, id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null } };
 
-export type WorkorderBaseFieldsFragment = { __typename?: 'Workorder', id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null };
+export type WorkorderBaseFieldsFragment = { __typename?: 'WorkOrder', id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null };
 
-export type WorkorderFieldsFragment = { __typename?: 'Workorder', workOrderCode: string, status: WorkOrderStatus, priority?: Priority | null, createdAt: any, updatedAt: any, id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null, product?: { __typename?: 'Product', id: number, name: string, productCode: string, price: number } | null, createdBy: { __typename?: 'User', id: number, role: UserRole, username: string, email: string } };
+export type WorkorderFieldsFragment = { __typename?: 'WorkOrder', workOrderCode: string, status: WorkOrderStatus, priority?: Priority | null, productId: number, createdById: number, approvedById?: number | null, companyId?: number | null, attachments?: Array<string | null> | null, assignedTo?: string | null, comments?: string | null, createdAt: any, updatedAt: any, id: number, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, description?: string | null };
 
-export type WorkorderListFieldsFragment = { __typename?: 'Workorder', id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, product?: { __typename?: 'Product', id: number, name: string, productCode: string, price: number } | null };
+export type WorkorderListFieldsFragment = { __typename?: 'WorkOrder', id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, productId: number, createdAt: any, description?: string | null };
 
-export type WorkorderDetailsFieldsFragment = { __typename?: 'Workorder', description?: string | null, createdAt: any, updatedAt: any, id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null, product?: { __typename?: 'Product', id: number, name: string, productCode: string, price: number } | null, createdBy: { __typename?: 'User', id: number, role: UserRole, username: string, email: string } };
+export type WorkorderDetailsFieldsFragment = { __typename?: 'WorkOrder', description?: string | null, productId: number, createdById: number, approvedById?: number | null, companyId?: number | null, attachments?: Array<string | null> | null, assignedTo?: string | null, comments?: string | null, createdAt: any, updatedAt: any, id: number, workOrderCode: string, clientLocation: string, vendorOrClient: string, quantity: number, deliveryDate: any, status: WorkOrderStatus, priority?: Priority | null };
 
 export const WorkorderBaseFieldsFragmentDoc = gql`
-    fragment WorkorderBaseFields on Workorder {
+    fragment WorkorderBaseFields on WorkOrder {
   id
   clientLocation
   vendorOrClient
@@ -422,29 +411,24 @@ export const WorkorderBaseFieldsFragmentDoc = gql`
 }
     `;
 export const WorkorderFieldsFragmentDoc = gql`
-    fragment WorkorderFields on Workorder {
+    fragment WorkorderFields on WorkOrder {
   ...WorkorderBaseFields
   workOrderCode
   status
   priority
-  product {
-    id
-    name
-    productCode
-    price
-  }
-  createdBy {
-    id
-    role
-    username
-    email
-  }
+  productId
+  createdById
+  approvedById
+  companyId
+  attachments
+  assignedTo
+  comments
   createdAt
   updatedAt
 }
     ${WorkorderBaseFieldsFragmentDoc}`;
 export const WorkorderListFieldsFragmentDoc = gql`
-    fragment WorkorderListFields on Workorder {
+    fragment WorkorderListFields on WorkOrder {
   id
   workOrderCode
   clientLocation
@@ -453,30 +437,22 @@ export const WorkorderListFieldsFragmentDoc = gql`
   deliveryDate
   status
   priority
-  product {
-    id
-    name
-    productCode
-    price
-  }
+  productId
+  createdAt
+  description
 }
     `;
 export const WorkorderDetailsFieldsFragmentDoc = gql`
-    fragment WorkorderDetailsFields on Workorder {
+    fragment WorkorderDetailsFields on WorkOrder {
   ...WorkorderListFields
   description
-  product {
-    id
-    name
-    productCode
-    price
-  }
-  createdBy {
-    id
-    role
-    username
-    email
-  }
+  productId
+  createdById
+  approvedById
+  companyId
+  attachments
+  assignedTo
+  comments
   createdAt
   updatedAt
 }
@@ -609,8 +585,8 @@ export const CreateUserDocument = gql`
       super(apollo);
     }
   }
-export const FindAllProductDocument = gql`
-    query findAllProduct {
+export const FindAllProductsDocument = gql`
+    query findAllProducts {
   products {
     id
     productCode
@@ -627,8 +603,26 @@ export const FindAllProductDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class FindAllProductGQL extends Apollo.Query<FindAllProductQuery, FindAllProductQueryVariables> {
-    document = FindAllProductDocument;
+  export class FindAllProductsGQL extends Apollo.Query<FindAllProductsQuery, FindAllProductsQueryVariables> {
+    document = FindAllProductsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ApproveWorkOrderDocument = gql`
+    mutation ApproveWorkOrder($input: ApproveWorkorderInput!) {
+  approveWorkorder(input: $input) {
+    ...WorkorderFields
+  }
+}
+    ${WorkorderFieldsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ApproveWorkOrderGQL extends Apollo.Mutation<ApproveWorkOrderMutation, ApproveWorkOrderMutationVariables> {
+    document = ApproveWorkOrderDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

@@ -1,0 +1,59 @@
+{
+  "name": "user-grpc",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/backend/user-grpc/src",
+  "projectType": "application",
+  "tags": [
+    "type:grpc",
+    "domain:user",
+    "scope:backend"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/user-grpc"
+      ],
+      "options": {
+        "webpackConfig": "apps/backend/user-grpc/webpack.config.js",
+        "outputPath": "dist/apps/backend/user-grpc"
+      },
+      "configurations": {
+        "development": {
+          "watch": true
+        },
+        "production": {
+          "watch": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "user-grpc:build",
+        "runBuildTargetDependencies": true,
+        "inspect": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "user-grpc:build:development"
+        },
+        "production": {
+          "buildTarget": "user-grpc:build:production"
+        }
+      }
+    },
+
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "apps/backend/user-grpc/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

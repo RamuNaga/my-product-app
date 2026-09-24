@@ -3,15 +3,36 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/backend/product-service/src",
   "projectType": "application",
-  "tags": ["type:service", "scope:backend", "area:product"],
+  "tags": [
+    "type:service",
+    "scope:backend",
+    "area:product"
+  ],
   "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/product-service"
+      ],
+      "options": {
+        "webpackConfig": "apps/backend/product-service/webpack.config.js",
+        "outputPath": "dist/apps/backend/product-service"
+      },
+      "configurations": {
+        "development": {
+          "webpackConfig": "apps/backend/product-service/webpack.config.js"
+        },
+        "production": {
+          "webpackConfig": "apps/backend/product-service/webpack.config.js"
+        }
+      }
+    },
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["build"],
       "options": {
-        "buildTarget": "backend-product-service:build",
-        "runBuildTargetDependencies": false,
+        "buildTarget": "product-service:build",
+        "runBuildTargetDependencies": true,
         "inspect": false
       },
       "configurations": {
@@ -25,10 +46,45 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
-        "jestConfig": "apps/backend/product-service/jest.config.ts"
+        "jestConfig": "apps/backend/product-service/jest.config.ts",
+        "passWithNoTests": true
       }
+    },
+    "prune-lockfile": {
+      "executor": "@nx/js:prune-lockfile",
+      "dependsOn": [
+        "build"
+      ],
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/product-service/package.json",
+        "{workspaceRoot}/dist/apps/backend/product-service/pnpm-lock.yaml"
+      ],
+      "options": {
+        "buildTarget": "backend-product-service:build"
+      }
+    },
+    "copy-workspace-modules": {
+      "executor": "@nx/js:copy-workspace-modules",
+      "dependsOn": [
+        "build"
+      ],
+      "outputs": [
+        "{workspaceRoot}/dist/apps/backend/product-service/workspace_modules"
+      ],
+      "options": {
+        "buildTarget": "backend-product-service:build"
+      }
+    },
+    "prune": {
+      "executor": "nx:noop",
+      "dependsOn": [
+        "prune-lockfile",
+        "copy-workspace-modules"
+      ]
     }
   }
 }

@@ -1,4 +1,4 @@
-query findAllProduct {
+query findAllProducts {
   products {
     id
     productCode

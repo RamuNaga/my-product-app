@@ -1,31 +1,19 @@
 import { Module } from '@nestjs/common';
-import { SharedModule } from '@my-product-app/backend-shared';
-import { PrismaService } from '@my-product-app/prisma';
+
 import { RegistrationService } from './service/registration.service';
-import { RegistrationResolver } from './resolver/registration.resolver';
-import { UserModule, UserService } from '@my-product-app/user';
-import { CompanyModule, CompanyService } from '@my-product-app/backend-company';
-import {
-  CompanyLocationModule,
-  CompanyLocationService,
-} from '@my-product-app/backend-company-location';
+import { SharedModule } from '@my-product-app/backend-shared';
+import { UserGrpcClientModule } from '@my-product-app/user-grpc-client';
+import { CompanyGrpcClientModule } from '@my-product-app/company-grpc-client';
+import { CompanyLocationGrpcClientModule } from '@my-product-app/company-location-grpc-client';
 
 @Module({
-  imports: [SharedModule, UserModule, CompanyModule, CompanyLocationModule],
-  providers: [
-    PrismaService,
-    RegistrationService,
-    RegistrationResolver,
-    UserService,
-    CompanyService,
-    CompanyLocationService,
+  imports: [
+    SharedModule,
+    UserGrpcClientModule,
+    CompanyGrpcClientModule,
+    CompanyLocationGrpcClientModule,
   ],
-  exports: [
-    RegistrationService,
-    RegistrationResolver,
-    UserModule,
-    CompanyModule,
-    CompanyLocationModule,
-  ],
+  providers: [RegistrationService],
+  exports: [RegistrationService],
 })
 export class RegistrationModule {}

@@ -1,5 +1,8 @@
+export * from './lib/config/config.module';
 export * from './lib/utils/bootstrap-microservice';
-export * from './lib/config/microservice.options';
+//export * from './lib/config/microservice.options';
+export * from './lib/config/grpc.options';
+//export * from './lib/config/grpc-microservice.module';
 export * from './lib/shared.module';
 export * from './lib/graphql/base.input';
 export * from './lib/graphql/base.model';
@@ -13,7 +16,10 @@ export * from './lib/auth/jwt.module';
 export * from './lib/auth/jwt.strategy';
 export * from './lib/interceptors/response.interceptor';
 export * from './lib/auth/current-user.decorator';
-export * from './lib/enums/enum';
 export * from './lib/guards/roles.guard';
 export * from './lib/decorators/roles.decorator';
 export * from './lib/interfaces/user-payload.interface';
+
+export * from './lib/utils/timestamp.util';
+export * from './lib/filters/grpc-exception.filter';
+export * from './lib/auth/public.decorator';

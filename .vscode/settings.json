@@ -1,3 +1,32 @@
 {
-  "nxConsole.generateAiAgentRules": true
+  "nxConsole.generateAiAgentRules": true,
+  "js/ts.tsdk.path": "node_modules\\typescript\\lib",
+  "debug.javascript.autoAttachFilter": "onlyWithFlag",
+  "nxConsole.commonNxCommands": [
+    "run",
+    "run-many",
+    "affected",
+    "affected --graph",
+    "list",
+    "build"
+  ],
+  "nxConsole.nxWorkspacePath": "",
+  "nxConsole.nxWorkspaceJsonPath": "packages/workspace/nx.json",
+  "nxConsole.enableLibraryImports": true,
+  "nxConsole.generatorAllowlist": [
+    "@nx/react:*",
+    "@nx/next:application",
+    "@nx/workspace:library",
+    "@nx/nest:*",
+    "@nx/angular:*"
+  ],
+   "nxConsole.enableTaskExecutionDryRunOnChange": true,
+   "nxConsole.moveGeneratorPatterns": {
+    "apps/**": "@nx/workspace:move",
+    "libs/**": "@custom/generators:move"
+  },
+  "nxConsole.nxCloudNotifications": "errors",
+  "nxConsole.enableDebugLogging": true,
+  "nxConsole.disableFileWatching": true
+  
 }

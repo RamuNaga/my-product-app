@@ -10,8 +10,11 @@ module.exports = [
         {
           allow: [
             '^@my-product-app/backend-shared',
-            '^@my-product-app/prisma',
             '^@my-product-app/workorder',
+            '^@my-product-app/backend-proto',
+            '^@my-product-app/backend-proto/generated',
+            '^@my-product-app/backend-prisma/workorder-prisma',
+            '@my-product-app/backend-prisma/workorder-client',
           ],
           enforceBuildableLibDependency: true,
           depConstraints: [

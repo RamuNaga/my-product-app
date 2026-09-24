@@ -2,49 +2,103 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Serve API Gateway",
+      "label": "Serve User gRPC",
       "type": "shell",
-      "command": "nx serve api-gateway",
+      "command": "pnpm",
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "user-grpc"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Company gRPC",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "company-grpc"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Company Location gRPC",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "company-location-grpc"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "problemMatcher": []
     },
     {
       "label": "Serve Product Service",
       "type": "shell",
-      "command": "nx serve backend-product-service",
-      "problemMatcher": []
-    },
-    {
-      "label": "Serve User Service",
-      "type": "shell",
-      "command": "nx serve backend-user-service",
+      "command": "pnpm",
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "backend-product-service"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "problemMatcher": []
     },
     {
       "label": "Serve Workorder Service",
       "type": "shell",
-      "command": "nx serve workorder-service",
+      "command": "pnpm",
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "workorder-service"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve API Gateway",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "api-gateway"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve BFF",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "bff"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "problemMatcher": []
     },
     {
       "label": "Serve Frontend",
       "type": "shell",
-      "command": "nx serve frontend",
+      "command": "pnpm",
+      "args": ["exec", "dotenv", "-e", ".env.local", "--", "nx", "serve", "frontend"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "problemMatcher": []
     },
     {
       "label": "Serve All Apps",
       "dependsOn": [
-        "Serve API Gateway",
+        "Serve User gRPC",
+        "Serve Company gRPC",
+        "Serve Company Location gRPC",
         "Serve Product Service",
-        "Serve User Service",
         "Serve Workorder Service",
+        "Serve API Gateway",
+        "Serve BFF",
         "Serve Frontend"
       ],
       "dependsOrder": "parallel",
       "group": {
         "kind": "build",
         "isDefault": true
-      }
+      },
+      "problemMatcher": []
     }
   ]
 }

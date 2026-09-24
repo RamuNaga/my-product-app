@@ -1,5 +1,5 @@
 import {
-  Workorder as GqlWorkorder,
+  WorkOrder as GqlWorkorder,
   Priority,
   WorkOrderStatus,
 } from '@my-product-app/frontend-graphql-types';
@@ -30,16 +30,9 @@ export interface WorkorderListModel {
   deliveryDate: string; // normalized to ISO string in mapper
   status: WorkOrderStatus;
   priority?: Priority | null;
-
-  // keep product minimal for list UI
-  product?: {
-    id: number;
-    name: string;
-    productCode: string;
-    price?: number | null;
-  } | null;
-
-  createdAt: string; // normalized ISO string
+  description: string; // normalized ISO string
+  productId: number;
+  createdAt: string;
 }
 
 export interface WorkorderListResponse {

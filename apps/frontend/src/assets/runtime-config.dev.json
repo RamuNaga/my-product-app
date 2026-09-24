@@ -1,7 +1,0 @@
-{
-  "apiUrl": "http://localhost:3000",
-  "productServiceUrl": "http://localhost:3001",
-  "featureFlags": {
-    "enableLogin": true
-  }
-}
