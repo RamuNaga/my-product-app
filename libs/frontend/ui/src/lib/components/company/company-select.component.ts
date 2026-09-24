@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   Component,
   Input,
@@ -16,7 +16,7 @@ import {
 import { Company } from '@my-product-app/frontend-graphql-types';
 
 @Component({
-  imports: [CommonModule, ReactiveFormsModule, MaterialModule],
+  imports: [ReactiveFormsModule, MaterialModule],
   standalone: true,
   selector: 'lib-ui-company-select',
   templateUrl: './company-select.component.html',

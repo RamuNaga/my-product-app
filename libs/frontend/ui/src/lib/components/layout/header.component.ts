@@ -6,7 +6,7 @@ import {
   signal,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import {
   LoginStore,
   LoginUser as User,
@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'lib-header',
   standalone: true,
-  imports: [CommonModule, MaterialModule],
+  imports: [MaterialModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,7 +2,7 @@
   [formGroup]="loginForm"
   (ngSubmit)="onSubmit()"
   class="auth-form space-y-4"
->
+  >
   <lib-input-field
     label="Email"
     placeholder="Enter email"
@@ -19,16 +19,18 @@
     [required]="true"
   ></lib-input-field>
 
-  <div *ngIf="loginStore.errorMessage()" class="text-red-600 text-sm">
-    {{ loginStore.errorMessage() }}
-  </div>
+  @if (loginStore.errorMessage()) {
+    <div class="text-red-600 text-sm">
+      {{ loginStore.errorMessage() }}
+    </div>
+  }
 
   <button
     mat-raised-button
     color="primary"
     type="submit"
     [disabled]="loginForm.invalid || loginStore.isLoading()"
-  >
+    >
     Login
   </button>
 </form>

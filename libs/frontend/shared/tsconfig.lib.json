@@ -3,7 +3,10 @@
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc/libs/frontend/shared",
     "declaration": true,
-    "composite": true
+    "composite": true,
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "lib": ["dom", "es2022"]
   },
   "exclude": ["**/*.spec.ts", "**/*.test.ts", "**/*.ngtypecheck.ts"],
   "include": ["src/**/*.ts"],

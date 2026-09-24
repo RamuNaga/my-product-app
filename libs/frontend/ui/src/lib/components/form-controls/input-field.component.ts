@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, Input } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -12,7 +12,7 @@ import { MaterialModule } from '@my-product-app/frontend-shared';
   standalone: true,
   templateUrl: './input-field.component.html',
   styleUrls: ['./input-field.component.scss'],
-  imports: [CommonModule, MaterialModule, ReactiveFormsModule],
+  imports: [MaterialModule, ReactiveFormsModule],
 })
 export class InputFieldComponent implements ControlValueAccessor {
   @Input() type = 'text';

@@ -5,22 +5,25 @@
     placeholder="Search for a company..."
     [formControl]="control"
     [matAutocomplete]="auto"
-  />
+    />
 
   <mat-autocomplete
     #auto="matAutocomplete"
     [displayWith]="displayCompanyName"
     (optionSelected)="onOptionSelected($event.option.value)"
-  >
-    <mat-option *ngFor="let company of companies()" [value]="company">
-      {{ company.name }} - {{ company.type }}
-    </mat-option>
+    >
+    @for (company of companies(); track company) {
+      <mat-option [value]="company">
+        {{ company.name }} - {{ company.type }}
+      </mat-option>
+    }
   </mat-autocomplete>
 
-  <mat-progress-spinner
-    *ngIf="isLoading()"
-    diameter="20"
-    mode="indeterminate"
-    class="absolute top-3 right-3"
-  ></mat-progress-spinner>
+  @if (isLoading()) {
+    <mat-progress-spinner
+      diameter="20"
+      mode="indeterminate"
+      class="absolute top-3 right-3"
+    ></mat-progress-spinner>
+  }
 </mat-form-field>

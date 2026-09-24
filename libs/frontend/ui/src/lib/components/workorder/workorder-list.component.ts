@@ -6,7 +6,7 @@ import {
   ViewChild,
   untracked,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -38,7 +38,6 @@ export enum WorkOrderStatus {
   selector: 'lib-workorder-list',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatButtonModule,
     MatCardModule,
@@ -48,8 +47,8 @@ export enum WorkOrderStatus {
     InputFieldComponent,
     SelectFieldComponent,
     MaterialLoaderComponent,
-    DataGridComponent,
-  ],
+    DataGridComponent
+],
   templateUrl: './workorder-list.component.html',
   styleUrls: ['./workorder-list.component.scss'],
 })

@@ -1,7 +1,9 @@
 <mat-toolbar class="w-full bg-gray-700 text-white flex justify-between px-4">
-  <button mat-icon-button (click)="drawer.toggle()" *ngIf="drawer">
-    <mat-icon>menu</mat-icon>
-  </button>
+  @if (drawer) {
+    <button mat-icon-button (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  }
 
   <span class="text-lg font-semibold">My Product App</span>
 
@@ -9,7 +11,7 @@
     mat-icon-button
     [matMenuTriggerFor]="accountMenu"
     #menuTrigger="matMenuTrigger"
-  >
+    >
     <mat-icon>account_circle</mat-icon>
   </button>
 

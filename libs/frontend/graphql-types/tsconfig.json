@@ -6,7 +6,9 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "module": "preserve",
+    "moduleResolution": "bundler"
   },
   "files": [],
   "include": [],
@@ -18,7 +20,6 @@
       "path": "./tsconfig.spec.json"
     }
   ],
-
   "angularCompilerOptions": {
     "compilationMode": "full",
     "enableI18nLegacyMessageIdFormat": false,

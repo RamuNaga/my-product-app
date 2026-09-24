@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import {
@@ -9,7 +9,7 @@ import {
 @Component({
   selector: 'lib-product-shell',
   standalone: true,
-  imports: [CommonModule, MaterialModule, RouterModule],
+  imports: [MaterialModule, RouterModule],
   templateUrl: './product-shell.component.html',
   styleUrls: ['./product-shell.component.scss'],
 })

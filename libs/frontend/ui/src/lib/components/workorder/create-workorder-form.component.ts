@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import {
   LoginStore,
   MaterialModule,
@@ -30,14 +30,13 @@ export type Option = { label: string; value: string };
   styleUrls: ['./create-workorder-form.component.scss'],
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MaterialModule,
     InputFieldComponent,
     SelectFieldComponent,
     MaterialLoaderComponent,
-    DatePickerFieldComponent,
-  ],
+    DatePickerFieldComponent
+],
 })
 export class CreateWorkOrderFormComponent {
   titleLabel = 'Work Order';

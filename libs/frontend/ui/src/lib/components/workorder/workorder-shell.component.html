@@ -2,8 +2,10 @@
   [selectedIndex]="selectedIndex()"
   (selectedIndexChange)="onTabChange($event)"
   class="workorder-tab-group"
->
-  <mat-tab *ngFor="let tab of tabs" [label]="tab.label"></mat-tab>
+  >
+  @for (tab of tabs; track tab) {
+    <mat-tab [label]="tab.label"></mat-tab>
+  }
 </mat-tab-group>
 
 <router-outlet></router-outlet>

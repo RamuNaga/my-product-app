@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'graphql-types',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

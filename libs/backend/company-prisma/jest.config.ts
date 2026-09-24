@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'company-prisma',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

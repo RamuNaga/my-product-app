@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'workorder-service',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

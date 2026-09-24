@@ -5,7 +5,7 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { LoginStore, MaterialModule } from '@my-product-app/frontend-shared';
 import { InputFieldComponent } from '../form-controls/input-field.component';
 
@@ -15,11 +15,10 @@ import { InputFieldComponent } from '../form-controls/input-field.component';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MaterialModule,
-    InputFieldComponent,
-  ],
+    InputFieldComponent
+],
 })
 export class LoginComponent {
   loginForm: FormGroup;

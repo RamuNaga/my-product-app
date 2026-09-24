@@ -2,9 +2,9 @@
   <mat-card class="form-card">
     <mat-tab-group [(selectedIndex)]="selectedTabIndex">
       <mat-tab label="Login">
-        <ng-container *ngIf="loginComponent">
+        @if (loginComponent) {
           <ng-container *ngComponentOutlet="loginComponent"></ng-container>
-        </ng-container>
+        }
       </mat-tab>
 
       <mat-tab label="Sign Up">

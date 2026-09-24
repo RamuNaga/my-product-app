@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -16,12 +16,11 @@ import { tap } from 'rxjs';
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.scss'],
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MaterialModule,
     InputFieldComponent,
-    SelectFieldComponent,
-  ],
+    SelectFieldComponent
+],
 })
 export class UserFormComponent {
   private readonly optionsService = inject(OptionsService);

@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'company-grpc-client',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

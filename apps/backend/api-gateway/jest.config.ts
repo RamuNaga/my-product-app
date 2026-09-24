@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'api-gateway',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

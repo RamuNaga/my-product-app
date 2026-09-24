@@ -18,7 +18,7 @@ import {
   MaterialModule,
   SignupFormStore,
 } from '@my-product-app/frontend-shared';
-import { CommonModule } from '@angular/common';
+
 import { UserFormComponent } from '../user/user-form.component';
 import { CompanyFormComponent } from '../company/company-form.component';
 import { LocationFormComponent } from '../location/location-form.component';
@@ -28,14 +28,13 @@ import { CompanySelectComponent } from '../company/company-select.component';
   selector: 'lib-ui-signup-stepper',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MaterialModule,
     UserFormComponent,
     CompanyFormComponent,
     LocationFormComponent,
-    CompanySelectComponent,
-  ],
+    CompanySelectComponent
+],
   templateUrl: './signup-stepper.component.html',
   styleUrls: ['./signup-stepper.component.scss'],
 })

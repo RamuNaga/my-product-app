@@ -2,7 +2,10 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc/libs/frontend/ui",
-    "declaration": true
+    "declaration": true,
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "lib": ["dom", "es2022"]
   },
   "exclude": ["**/*.spec.ts", "**/*.test.ts", "**/*.ngtypecheck.ts"],
   "include": ["src/**/*.ts"],
@@ -10,7 +13,11 @@
     "compilationMode": "full"
   },
   "references": [
-    { "path": "../data-access/tsconfig.lib.json" },
-    { "path": "../shared/tsconfig.lib.json" }
+    {
+      "path": "../data-access/tsconfig.lib.json"
+    },
+    {
+      "path": "../shared/tsconfig.lib.json"
+    }
   ]
 }

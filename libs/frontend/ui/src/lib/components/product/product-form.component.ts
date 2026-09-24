@@ -4,7 +4,7 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import {
   FormBuilder,
   FormGroup,
@@ -28,13 +28,12 @@ import { lastValueFrom } from 'rxjs';
   selector: 'lib-product-form',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MaterialModule,
     InputFieldComponent,
     ProductImageUploadComponent,
-    MaterialLoaderComponent,
-  ],
+    MaterialLoaderComponent
+],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

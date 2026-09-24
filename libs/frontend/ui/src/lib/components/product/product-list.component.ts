@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'lib-product-list',
   standalone: true,
-  imports: [CommonModule, MaterialModule, ProductCardComponent],
+  imports: [MaterialModule, ProductCardComponent],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

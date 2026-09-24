@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnInit, forwardRef, signal } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -14,7 +14,7 @@ type DateRestriction = 'future' | 'past' | 'none';
   selector: 'lib-date-picker-field',
   templateUrl: './date-picker-field.component.html',
   styleUrls: ['./date-picker-field.component.scss'],
-  imports: [MaterialModule, CommonModule, ReactiveFormsModule],
+  imports: [MaterialModule, ReactiveFormsModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

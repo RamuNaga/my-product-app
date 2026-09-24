@@ -1,12 +1,9 @@
-<ng-container
-  *ngIf="!loadingVendors() && !loadingLocations(); else loadingTemplate"
->
+@if (!loadingVendors() && !loadingLocations()) {
   <div class="form-container">
     <mat-card class="form-card">
       <mat-card-header>
         <mat-card-title>{{ titleLabel }}</mat-card-title>
       </mat-card-header>
-
       <form [formGroup]="form()" class="form-layout" (ngSubmit)="onSubmit()">
         <!-- Row 1: Vendor or Client + Client Location -->
         <div class="form-row">
@@ -18,7 +15,6 @@
               [required]="true"
             ></lib-select-field>
           </div>
-
           <div class="form-field">
             <lib-select-field
               label="Client Location"
@@ -28,7 +24,6 @@
             ></lib-select-field>
           </div>
         </div>
-
         <!-- Row 2: Quantity + Delivery Date -->
         <div class="form-row">
           <div class="form-field">
@@ -40,7 +35,6 @@
               [required]="true"
             ></lib-input-field>
           </div>
-
           <div class="form-field">
             <lib-date-picker-field
               label="Delivery Date"
@@ -50,7 +44,6 @@
             ></lib-date-picker-field>
           </div>
         </div>
-
         <!-- Description -->
         <div class="form-field form-full-width">
           <lib-input-field
@@ -60,7 +53,6 @@
             type="text"
           ></lib-input-field>
         </div>
-
         <!-- Actions -->
         <div class="form-actions">
           <button
@@ -68,24 +60,27 @@
             color="primary"
             type="submit"
             [disabled]="form().invalid || submitting()"
-          >
-            <mat-progress-spinner
-              *ngIf="submitting()"
-              mode="indeterminate"
-              diameter="20"
-              color="accent"
-            ></mat-progress-spinner>
-            <span *ngIf="!submitting()">Save Work Order</span>
-            <span *ngIf="submitting()">Submitting...</span>
+            >
+            @if (submitting()) {
+              <mat-progress-spinner
+                mode="indeterminate"
+                diameter="20"
+                color="accent"
+              ></mat-progress-spinner>
+            }
+            @if (!submitting()) {
+              <span>Save Work Order</span>
+            }
+            @if (submitting()) {
+              <span>Submitting...</span>
+            }
           </button>
         </div>
       </form>
     </mat-card>
   </div>
-</ng-container>
-
-<ng-template #loadingTemplate>
+} @else {
   <div class="loader-container">
     <lib-ui-material-loader></lib-ui-material-loader>
   </div>
-</ng-template>
+}

@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject } from '@angular/core';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MaterialModule } from '@my-product-app/frontend-shared';
 
 @Component({
   selector: 'lib-workorder-shell',
-  imports: [CommonModule, MaterialModule, RouterModule],
+  imports: [MaterialModule, RouterModule],
   templateUrl: './workorder-shell.component.html',
   styleUrls: ['./workorder-shell.component.scss'],
 })

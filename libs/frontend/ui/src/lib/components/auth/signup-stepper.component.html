@@ -6,77 +6,76 @@
     [errorMessage]="
       companyStepControl.invalid ? 'Please fix errors in company form' : ''
     "
-  >
+    >
     <div>
       <mat-radio-group
         [formControl]="store.companyModeControl"
         (change)="onCompanyModeChange(store.companyModeControl.value === 'new')"
-      >
+        >
         <mat-radio-button value="new">Create New Company</mat-radio-button>
         <mat-radio-button value="existing"
           >Join Existing Company</mat-radio-button
-        >
-      </mat-radio-group>
-    </div>
+          >
+        </mat-radio-group>
+      </div>
 
-    <ng-container *ngIf="isNewCompany(); else existingCompanySelect">
-      <lib-ui-company-form
-        [formGroup]="companyFormGroup"
-        step1
-      ></lib-ui-company-form>
-    </ng-container>
+      @if (isNewCompany()) {
+        <lib-ui-company-form
+          [formGroup]="companyFormGroup"
+          step1
+        ></lib-ui-company-form>
+      } @else {
+        <lib-ui-company-select
+          [control]="existingCompanyCtrl"
+        ></lib-ui-company-select>
+      }
 
-    <ng-template #existingCompanySelect>
-      <lib-ui-company-select
-        [control]="existingCompanyCtrl"
-      ></lib-ui-company-select>
-    </ng-template>
 
-    <div class="actions">
-      <!-- No Back button on first step -->
-      <button mat-raised-button color="primary" (click)="goNext()">Next</button>
-    </div>
-  </mat-step>
+      <div class="actions">
+        <!-- No Back button on first step -->
+        <button mat-raised-button color="primary" (click)="goNext()">Next</button>
+      </div>
+    </mat-step>
 
-  <!-- Step 2: Location -->
-  <mat-step
-    [stepControl]="locationStepControl"
-    label="Location"
+    <!-- Step 2: Location -->
+    <mat-step
+      [stepControl]="locationStepControl"
+      label="Location"
     [errorMessage]="
       locationStepControl.invalid ? 'Please fix errors in location form' : ''
     "
-  >
-    <lib-ui-location-form
-      [formGroup]="locationFormGroup"
-      step2
-    ></lib-ui-location-form>
+      >
+      <lib-ui-location-form
+        [formGroup]="locationFormGroup"
+        step2
+      ></lib-ui-location-form>
 
-    <div class="actions">
-      <button mat-button (click)="goBack()">Back</button>
-      <button mat-raised-button color="primary" (click)="goNext()">Next</button>
-    </div>
-  </mat-step>
+      <div class="actions">
+        <button mat-button (click)="goBack()">Back</button>
+        <button mat-raised-button color="primary" (click)="goNext()">Next</button>
+      </div>
+    </mat-step>
 
-  <!-- Step 3: User -->
-  <mat-step
-    [stepControl]="userStepControl"
-    label="User"
+    <!-- Step 3: User -->
+    <mat-step
+      [stepControl]="userStepControl"
+      label="User"
     [errorMessage]="
       userStepControl.invalid ? 'Please fix errors in user form' : ''
     "
-  >
-    <lib-ui-user-form [formGroup]="userFormGroup" step3></lib-ui-user-form>
-
-    <div class="actions">
-      <button mat-button (click)="goBack()">Back</button>
-      <button
-        mat-raised-button
-        color="primary"
-        [disabled]="!isFormValid"
-        (click)="onSubmitClick()"
       >
-        Submit
-      </button>
-    </div>
-  </mat-step>
-</mat-horizontal-stepper>
+      <lib-ui-user-form [formGroup]="userFormGroup" step3></lib-ui-user-form>
+
+      <div class="actions">
+        <button mat-button (click)="goBack()">Back</button>
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!isFormValid"
+          (click)="onSubmitClick()"
+          >
+          Submit
+        </button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>

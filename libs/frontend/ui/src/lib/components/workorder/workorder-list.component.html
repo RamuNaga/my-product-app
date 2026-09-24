@@ -31,11 +31,11 @@
 </div>
 
 <ng-container>
-  <div *ngIf="store.loading(); else gridTemplate" class="loader">
-    <lib-ui-material-loader></lib-ui-material-loader>
-  </div>
-
-  <ng-template #gridTemplate>
+  @if (store.loading()) {
+    <div class="loader">
+      <lib-ui-material-loader></lib-ui-material-loader>
+    </div>
+  } @else {
     <lib-data-grid
       #dataGrid
       [dataSourceData]="rowData()"
@@ -45,5 +45,6 @@
       (deleteClicked)="onDelete($event)"
       (approveClicked)="onApprove($event)"
     ></lib-data-grid>
-  </ng-template>
+  }
+
 </ng-container>

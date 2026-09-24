@@ -14,11 +14,15 @@ export interface NotificationSnackbarData {
   imports: [CommonModule, MatIconModule, NgClass],
   template: `
     <div class="snackbar-container" [ngClass]="data.type">
-      <mat-icon *ngIf="data.type === 'error'">error</mat-icon>
-      <mat-icon *ngIf="data.type === 'success'">check_circle</mat-icon>
+      @if (data.type === 'error') {
+        <mat-icon>error</mat-icon>
+      }
+      @if (data.type === 'success') {
+        <mat-icon>check_circle</mat-icon>
+      }
       <span>{{ data.message }}</span>
     </div>
-  `,
+    `,
   styles: [
     `
       .snackbar-container {

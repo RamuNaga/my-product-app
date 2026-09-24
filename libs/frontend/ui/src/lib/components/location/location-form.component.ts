@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -21,12 +21,11 @@ export type Option = { label: string; value: string };
   templateUrl: './location-form.component.html',
   styleUrls: ['./location-form.component.scss'],
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MaterialModule,
     InputFieldComponent,
-    SelectFieldComponent,
-  ],
+    SelectFieldComponent
+],
 })
 export class LocationFormComponent {
   private readonly locationsService = inject(LocationsService);

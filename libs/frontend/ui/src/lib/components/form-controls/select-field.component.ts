@@ -1,6 +1,6 @@
 import { Component, Input, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
@@ -12,7 +12,7 @@ export interface SelectOption {
 @Component({
   selector: 'lib-select-field',
   standalone: true,
-  imports: [CommonModule, MatFormFieldModule, MatSelectModule],
+  imports: [MatFormFieldModule, MatSelectModule],
   templateUrl: './select-field.component.html',
   styleUrls: ['./select-field.component.scss'],
   providers: [

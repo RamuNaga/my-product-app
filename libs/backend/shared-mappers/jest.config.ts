@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'shared-mappers',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',

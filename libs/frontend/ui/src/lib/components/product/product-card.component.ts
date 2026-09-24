@@ -5,7 +5,7 @@ import {
   input,
   output,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 import {
   LoginStore,
@@ -20,7 +20,7 @@ import {
 @Component({
   selector: 'lib-product-card',
   standalone: true,
-  imports: [CommonModule, MaterialModule],
+  imports: [MaterialModule],
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.scss'],
 })
