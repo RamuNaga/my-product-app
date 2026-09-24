@@ -111,6 +111,7 @@ services:
       - ./libs:/workspace/libs:cached
       - ./nx.json:/workspace/nx.json:ro
       - ./tsconfig.base.json:/workspace/tsconfig.base.json:ro
+      - product_uploads:/workspace/uploads
       - ./eslint.config.js:/workspace/eslint.config.js:ro
       - ./package.json:/workspace/package.json:ro
       - ./pnpm-lock.yaml:/workspace/pnpm-lock.yaml:ro
@@ -534,6 +535,7 @@ services:
 volumes:
   postgres-data:
   frontend-node-modules:
+  product_uploads:
 
 
 # =========================================================

@@ -10,13 +10,13 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { extname, join, sep } from 'path';
+import { extname, join } from 'path';
 import * as fs from 'fs';
 import { CurrentUser, JwtAuthGuard } from '@my-product-app/backend-shared';
 import { ProductGrpcClientService } from '@my-product-app/product';
 import { CreateProductRequest } from '@my-product-app/backend-proto/generated';
 
-const uploadPath = join(__dirname, '../../../../uploads/products');
+const uploadPath = join(process.cwd(), 'uploads', 'products');
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
 }
@@ -58,7 +58,8 @@ export class ProductController {
       throw new HttpException('File is required', HttpStatus.BAD_REQUEST);
     }
 
-    const relativePath = '/' + file.path.split(sep).slice(-3).join('/');
+    //const relativePath = '/' + file.path.split(sep).slice(-3).join('/');
+    const relativePath = `/uploads/products/${file.filename}`;
 
     try {
       const grpcData: CreateProductRequest = {
