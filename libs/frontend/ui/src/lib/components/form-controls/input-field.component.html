@@ -10,16 +10,18 @@
     [readonly]="readonly"
     (input)="onInput($event)"
     (blur)="onBlur()"
-    />
+  />
 
-  @if (control?.invalid && control?.touched) {
-    <mat-error>
-      @if (control?.errors?.['required']) {
-        This field is required
-      }
-      @if (control?.errors?.['email']) {
-        Please enter a valid email
-      }
-    </mat-error>
+  @if (control; as formControl) {
+    @if (formControl.invalid && formControl.touched) {?
+      <mat-error>
+        @if (formControl.errors?.['required']) {
+          This field is required
+        }
+        @if (formControl.errors?.['email']) {
+          Please enter a valid email
+        }
+      </mat-error>
+    }
   }
 </mat-form-field>

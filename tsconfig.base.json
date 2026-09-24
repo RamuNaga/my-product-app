@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "rootDir": ".",
     "outDir": "./dist/out-tsc",
     "target": "ES2022",
@@ -24,83 +25,83 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
     "types": ["node"],
-    "baseUrl": ".",
+    
     "paths": {
-      "@my-product-app/backend-company": ["libs/backend/company/src/index.ts"],
+      "@my-product-app/backend-company": ["./libs/backend/company/src/index.ts"],
       "@my-product-app/backend-company-location": [
-        "libs/backend/company-location/src/index.ts"
+        "./libs/backend/company-location/src/index.ts"
       ],
       "@my-product-app/backend-company-location-prisma": [
-        "libs/backend/company-location-prisma/src/index.ts"
+        "./libs/backend/company-location-prisma/src/index.ts"
       ],
       "@my-product-app/backend-company-prisma": [
-        "libs/backend/company-prisma/src/index.ts"
+        "./libs/backend/company-prisma/src/index.ts"
       ],
       "@my-product-app/backend-graphql-types": [
-        "libs/backend/graphql-types/src/index.ts"
+        "./libs/backend/graphql-types/src/index.ts"
       ],
       "@my-product-app/backend-prisma/company-location-prisma": [
-        "libs/backend/company-location-prisma/src/index.ts"
+        "./libs/backend/company-location-prisma/src/index.ts"
       ],
       "@my-product-app/backend-prisma/company-prisma": [
-        "libs/backend/company-prisma/src/index.ts"
+        "./libs/backend/company-prisma/src/index.ts"
       ],
       "@my-product-app/backend-prisma/product-prisma": [
-        "libs/backend/product-prisma/src/index.ts"
+        "./libs/backend/product-prisma/src/index.ts"
       ],
   
       "@my-product-app/user-prisma": [
-        "libs/backend/user-prisma/src/index.ts"
+        "./libs/backend/user-prisma/src/index.ts"
       ],
       "@my-product-app/backend-prisma/workorder-prisma": [
-        "libs/backend/workorder-prisma/src/index.ts"
+        "./libs/backend/workorder-prisma/src/index.ts"
       ],
-      "@my-product-app/backend-proto": ["libs/backend/proto/src/index.ts"],
+      "@my-product-app/backend-proto": ["./libs/backend/proto/src/index.ts"],
       "@my-product-app/backend-proto/generated": [
-        "libs/backend/proto/src/lib/generated/index.ts"
+        "./libs/backend/proto/src/lib/generated/index.ts"
       ],
       "@my-product-app/backend-registration": [
-        "libs/backend/registration/src/index.ts"
+        "./libs/backend/registration/src/index.ts"
       ],
-      "@my-product-app/backend-shared": ["libs/backend/shared/src/index.ts"],
+      "@my-product-app/backend-shared": ["./libs/backend/shared/src/index.ts"],
       "@my-product-app/backend-shared-mappers": [
-        "libs/backend/shared-mappers/src/index.ts"
+        "./libs/backend/shared-mappers/src/index.ts"
       ],
       "@my-product-app/backend-shared-types": [
-        "libs/backend/shared-types/src/index.ts"
+        "./libs/backend/shared-types/src/index.ts"
       ],
-      "@my-product-app/backend-shared/*": ["libs/backend/shared/src/lib/*"],
+      "@my-product-app/backend-shared/*": ["./libs/backend/shared/src/lib/*"],
       "@my-product-app/company-grpc-client": [
-        "libs/backend/company-grpc-client/src/index.ts"
+        "./libs/backend/company-grpc-client/src/index.ts"
       ],
       "@my-product-app/company-location-grpc-client": [
-        "libs/backend/company-location-grpc-client/src/index.ts"
+        "./libs/backend/company-location-grpc-client/src/index.ts"
       ],
-      "@my-product-app/frontend-core": ["libs/frontend/core/src/index.ts"],
-      "@my-product-app/frontend-core/*": ["libs/frontend/core/src/lib/*"],
+      "@my-product-app/frontend-core": ["./libs/frontend/core/src/index.ts"],
+      "@my-product-app/frontend-core/*": ["./libs/frontend/core/src/lib/*"],
       "@my-product-app/frontend-data-access": [
-        "libs/frontend/data-access/src/index.ts"
+        "./libs/frontend/data-access/src/index.ts"
       ],
       "@my-product-app/frontend-data-access/*": [
-        "libs/frontend/data-access/src/lib/*"
+        "./libs/frontend/data-access/src/lib/*"
       ],
       "@my-product-app/frontend-graphql-types": [
-        "libs/frontend/graphql-types/src/index.ts"
+        "./libs/frontend/graphql-types/src/index.ts"
       ],
       "@my-product-app/frontend-graphql-types/*": [
-        "libs/frontend/graphql-types/src/lib/*"
+        "./libs/frontend/graphql-types/src/lib/*"
       ],
-      "@my-product-app/frontend-shared": ["libs/frontend/shared/src/index.ts"],
-      "@my-product-app/frontend-shared/*": ["libs/frontend/shared/src/lib/*"],
-      "@my-product-app/frontend-ui": ["libs/frontend/ui/src/index.ts"],
-      "@my-product-app/frontend-ui/*": ["libs/frontend/ui/src/lib/*"],
-      "@my-product-app/logger": ["libs/backend/logger/src/index.ts"],
-      "@my-product-app/product": ["libs/backend/product/src/index.ts"],
-      "@my-product-app/user": ["libs/backend/user/src/index.ts"],
+      "@my-product-app/frontend-shared": ["./libs/frontend/shared/src/index.ts"],
+      "@my-product-app/frontend-shared/*": ["./libs/frontend/shared/src/lib/*"],
+      "@my-product-app/frontend-ui": ["./libs/frontend/ui/src/index.ts"],
+      "@my-product-app/frontend-ui/*": ["./libs/frontend/ui/src/lib/*"],
+      "@my-product-app/logger": ["./libs/backend/logger/src/index.ts"],
+      "@my-product-app/product": ["./libs/backend/product/src/index.ts"],
+      "@my-product-app/user": ["./libs/backend/user/src/index.ts"],
       "@my-product-app/user-grpc-client": [
-        "libs/backend/user-grpc-client/src/index.ts"
+        "./libs/backend/user-grpc-client/src/index.ts"
       ],
-      "@my-product-app/workorder": ["libs/backend/workorder/src/index.ts"]
+      "@my-product-app/workorder": ["./libs/backend/workorder/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "dist", "tmp"]

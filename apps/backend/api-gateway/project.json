@@ -10,16 +10,8 @@
       "outputs": ["{workspaceRoot}/dist/apps/backend/api-gateway"],
       "options": {
         "webpackConfig": "apps/backend/api-gateway/webpack.config.js",
-        "outputPath": "dist/apps/backend/api-gateway"
-      },
-
-      "configurations": {
-        "development": {
-          "watch": true
-        },
-        "production": {
-          "watch": false
-        }
+        "outputPath": "dist/apps/backend/api-gateway",
+         "watch": false
       }
     },
 

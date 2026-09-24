@@ -35,7 +35,7 @@ export class DataGridComponent implements AfterViewInit {
   @Output() deleteClicked = new EventEmitter<any>();
   @Output() approveClicked = new EventEmitter<any>();
 
-  dataSource = new MatTableDataSource<any>([]);
+  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
   @ViewChild(MatSort) sort!: MatSort;
 
   @Input() set dataSourceData(value: any[]) {
