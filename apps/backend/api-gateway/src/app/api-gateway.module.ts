@@ -1,5 +1,8 @@
-import { Module } from '@nestjs/common';
-import { SharedModule } from '@my-product-app/backend-shared';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  CorrelationMiddleware,
+  SharedModule,
+} from '@my-product-app/backend-shared';
 import { ProductController } from './controllers/product.controller';
 import { PingResolver } from './resolvers/ping.resolver';
 import { ProductGrpcClientModule } from '@my-product-app/product';
@@ -9,4 +12,8 @@ import { ProductGrpcClientModule } from '@my-product-app/product';
   controllers: [ProductController],
   providers: [PingResolver],
 })
-export class ApiGatewayModule {}
+export class ApiGatewayModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(CorrelationMiddleware).forRoutes('*');
+  }
+}

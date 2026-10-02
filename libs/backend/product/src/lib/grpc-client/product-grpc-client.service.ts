@@ -1,6 +1,9 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { PRODUCT_SERVICE } from '@my-product-app/backend-shared';
+import {
+  GrpcCorrelationMetadataService,
+  PRODUCT_SERVICE,
+} from '@my-product-app/backend-shared';
 import {
   ProductServiceClient,
   CreateProductRequest,
@@ -16,7 +19,10 @@ import { lastValueFrom } from 'rxjs';
 export class ProductGrpcClientService implements OnModuleInit {
   private productService!: ProductServiceClient;
 
-  constructor(@Inject(PRODUCT_SERVICE) private readonly client: ClientGrpc) {}
+  constructor(
+    @Inject(PRODUCT_SERVICE) private readonly client: ClientGrpc,
+    private readonly grpcMetadata: GrpcCorrelationMetadataService,
+  ) {}
 
   onModuleInit() {
     this.productService =
@@ -26,21 +32,32 @@ export class ProductGrpcClientService implements OnModuleInit {
   createProduct(data: CreateProductInput): Promise<ProductResponse> {
     console.log(
       'ProductGrpcClientService Creating product with data is calling:',
-      data
+      data,
     );
     return lastValueFrom(
-      this.productService.createProduct(data as CreateProductRequest)
+      this.productService.createProduct(
+        data as CreateProductRequest,
+        this.grpcMetadata.create(),
+      ),
     );
   }
 
   getProductById(id: number): Promise<ProductResponse> {
-    return lastValueFrom(this.productService.getProductById({ value: id }));
+    return lastValueFrom(
+      this.productService.getProductById(
+        { value: id },
+        this.grpcMetadata.create(),
+      ),
+    );
   }
 
   getAllProducts(): Promise<ProductListResponse> {
     console.log('getAllProducts in ProductGrpcClientService is calling');
     return lastValueFrom(
-      this.productService.getAllProducts({} as EmptyRequest)
+      this.productService.getAllProducts(
+        {} as EmptyRequest,
+        this.grpcMetadata.create(),
+      ),
     );
   }
 }

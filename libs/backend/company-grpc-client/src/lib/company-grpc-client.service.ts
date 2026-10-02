@@ -13,12 +13,16 @@ import {
 
 import { CreateCompanyInput } from '@my-product-app/backend-graphql-types';
 import { mapGraphQLCompanyTypeToProto } from '@my-product-app/backend-shared-mappers'; // if you have type mapping utils
+import { GrpcCorrelationMetadataService } from '@my-product-app/backend-shared';
 
 @Injectable()
 export class CompanyGrpcClientService implements OnModuleInit {
   private companyService!: CompanyServiceClient;
 
-  constructor(@Inject('COMPANY_SERVICE') private readonly client: ClientGrpc) {}
+  constructor(
+    @Inject('COMPANY_SERVICE') private readonly client: ClientGrpc,
+    private readonly grpcMetadata: GrpcCorrelationMetadataService,
+  ) {}
 
   /** Called once when module is initialized */
   onModuleInit() {
@@ -32,19 +36,28 @@ export class CompanyGrpcClientService implements OnModuleInit {
       ...input,
       type: mapGraphQLCompanyTypeToProto(input.type),
     };
-    return this.companyService.createCompany(request);
+    return this.companyService.createCompany(
+      request,
+      this.grpcMetadata.create(),
+    );
   }
 
   /**  Get company by ID */
   getCompanyById(id: number): Observable<CompanyResponse> {
     // google.protobuf.Int32Value equivalent for wrapping primitives
-    return this.companyService.getCompanyById({ value: id });
+    return this.companyService.getCompanyById(
+      { value: id },
+      this.grpcMetadata.create(),
+    );
   }
 
   /**  Search company by name (supports partial or exact matching) */
   searchByName(
-    request: SearchCompanyByNameRequest
+    request: SearchCompanyByNameRequest,
   ): Observable<SearchCompanyByNameResponse> {
-    return this.companyService.searchByName(request);
+    return this.companyService.searchByName(
+      request,
+      this.grpcMetadata.create(),
+    );
   }
 }

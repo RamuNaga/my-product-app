@@ -12,51 +12,72 @@ import {
   ApproveWorkOrderResponse,
 } from '@my-product-app/backend-proto/generated';
 import { Observable } from 'rxjs';
-import { WORKORDER_SERVICE } from '@my-product-app/backend-shared';
+import {
+  GrpcCorrelationMetadataService,
+  WORKORDER_SERVICE,
+} from '@my-product-app/backend-shared';
 
 @Injectable()
 export class WorkOrderGrpcClientService implements OnModuleInit {
   private workOrderService!: WorkOrderServiceClient;
 
-  constructor(@Inject(WORKORDER_SERVICE) private readonly client: ClientGrpc) {}
+  constructor(
+    @Inject(WORKORDER_SERVICE) private readonly client: ClientGrpc,
+    private readonly grpcMetadata: GrpcCorrelationMetadataService,
+  ) {}
 
   onModuleInit() {
     this.workOrderService = this.client.getService<WorkOrderServiceClient>(
-      WORK_ORDER_SERVICE_NAME
+      WORK_ORDER_SERVICE_NAME,
     );
   }
 
   // ----------- CREATE WORK ORDER -----------
 
   createWorkOrder(
-    request: CreateWorkOrderRequest
+    request: CreateWorkOrderRequest,
   ): Observable<WorkOrderResponse> {
-    return this.workOrderService.createWorkOrder(request); // Observable
+    return this.workOrderService.createWorkOrder(
+      request,
+      this.grpcMetadata.create(),
+    ); // Observable
   }
 
   // ----------- GET WORK ORDER BY ID -----------
   getWorkOrderById(id: number): Observable<WorkOrderResponse> {
-    return this.workOrderService.getWorkOrderById({ value: id });
+    return this.workOrderService.getWorkOrderById(
+      { value: id },
+      this.grpcMetadata.create(),
+    );
   }
 
   // ----------- LIST WORK ORDERS WITH FILTERS -----------
   getWorkOrders(
-    filters: GetWorkOrdersRequest
+    filters: GetWorkOrdersRequest,
   ): Observable<GetWorkOrdersResponse> {
-    return this.workOrderService.getWorkOrders(filters);
+    return this.workOrderService.getWorkOrders(
+      filters,
+      this.grpcMetadata.create(),
+    );
   }
 
   // ----------- UPDATE WORK ORDER -----------
   updateWorkOrder(
-    request: UpdateWorkOrderRequest
+    request: UpdateWorkOrderRequest,
   ): Observable<WorkOrderResponse> {
-    return this.workOrderService.updateWorkOrder(request);
+    return this.workOrderService.updateWorkOrder(
+      request,
+      this.grpcMetadata.create(),
+    );
   }
 
   // ----------- APPROVE WORK ORDER -----------
   approveWorkOrder(
-    request: ApproveWorkOrderRequest
+    request: ApproveWorkOrderRequest,
   ): Observable<ApproveWorkOrderResponse> {
-    return this.workOrderService.approveWorkOrder(request);
+    return this.workOrderService.approveWorkOrder(
+      request,
+      this.grpcMetadata.create(),
+    );
   }
 }

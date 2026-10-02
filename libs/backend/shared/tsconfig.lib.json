@@ -12,6 +12,9 @@
     "moduleResolution": "node",
     "strict": true
   },
-  "include": ["src/**/*.ts", "src/lib/types/**/*.d.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/lib/types/**/*.d.ts",
+  ],
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }

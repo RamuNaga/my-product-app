@@ -5,6 +5,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { INestApplication, Type } from '@nestjs/common'; // INestMicroservice,
 import { AppLoggerService, LoggingInterceptor } from '@my-product-app/logger';
 import * as bodyParser from 'body-parser';
+import { GrpcCorrelationInterceptor } from '../correlation';
 
 interface GrpcOptions {
   package: string;
@@ -57,11 +58,16 @@ export async function bootstrapMicroservice(
       prefix: '/uploads',
     });
 
-    console.log('RUN_ENV:', process.env['RUN_ENV'],  'FRONTEND_URL:', process.env['FRONTEND_URL']);
+    console.log(
+      'RUN_ENV:',
+      process.env['RUN_ENV'],
+      'FRONTEND_URL:',
+      process.env['FRONTEND_URL'],
+    );
 
     const frontendUrl = process.env['FRONTEND_URL'];
 
-    console.log("frontendUrl:", frontendUrl);
+    console.log('frontendUrl:', frontendUrl);
 
     if (!frontendUrl) {
       throw new Error('FRONTEND_URL is not configured');
@@ -82,7 +88,12 @@ export async function bootstrapMicroservice(
     if (logger) {
       app.useLogger(logger);
 
-      app.useGlobalInterceptors(new LoggingInterceptor(logger));
+      app.useGlobalInterceptors(
+        app.get(GrpcCorrelationInterceptor),
+        new LoggingInterceptor(logger),
+      );
+    } else {
+      app.useGlobalInterceptors(app.get(GrpcCorrelationInterceptor));
     }
 
     /*

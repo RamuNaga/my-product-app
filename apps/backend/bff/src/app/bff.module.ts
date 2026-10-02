@@ -1,5 +1,8 @@
-import { Module } from '@nestjs/common';
-import { SharedModule } from '@my-product-app/backend-shared'; // for JWT or utilities later
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  CorrelationMiddleware,
+  SharedModule,
+} from '@my-product-app/backend-shared'; // for JWT or utilities later
 import { RegistrationModule } from '@my-product-app/backend-registration'; // business logic
 import { GraphQLConfigModule } from './config/graphql.module';
 import { PingResolver } from './resolvers/ping.resolver';
@@ -37,4 +40,8 @@ import { RegistrationResolver } from './registration/resolver/registration.resol
     RegistrationResolver,
   ],
 })
-export class BffModule {}
+export class BffModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(CorrelationMiddleware).forRoutes('*');
+  }
+}

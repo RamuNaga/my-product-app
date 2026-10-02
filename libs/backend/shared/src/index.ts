@@ -23,3 +23,4 @@ export * from './lib/interfaces/user-payload.interface';
 export * from './lib/utils/timestamp.util';
 export * from './lib/filters/grpc-exception.filter';
 export * from './lib/auth/public.decorator';
+export * from './lib/correlation';

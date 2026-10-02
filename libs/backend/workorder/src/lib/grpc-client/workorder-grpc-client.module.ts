@@ -1,10 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule } from '@nestjs/microservices';
-import { getWorkorderServiceOptions } from '@my-product-app/backend-shared';
+import {
+  getWorkorderServiceOptions,
+  SharedModule,
+} from '@my-product-app/backend-shared';
 import { WorkOrderGrpcClientService } from './workorder-grpc-client.service';
 
 @Module({
-  imports: [ClientsModule.register([getWorkorderServiceOptions()])],
+  imports: [
+    SharedModule,
+    ClientsModule.register([getWorkorderServiceOptions()]),
+  ],
   providers: [WorkOrderGrpcClientService],
   exports: [WorkOrderGrpcClientService],
 })
