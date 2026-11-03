@@ -26,6 +26,8 @@ type ItemCreateData = Prisma.ItemCreateInput;
 
 const MAX_BULK_ITEMS = 100;
 const MAX_CODE_NUMBER = 999999;
+const MAX_TRANSACTION_ATTEMPTS = 3;
+const RETRY_DELAY_MS = 50;
 
 const KIND_MAP = {
   [ProtoItemKind.RAW_MATERIAL]: 'RAW_MATERIAL',
@@ -196,72 +198,112 @@ export class ItemGrpcService {
   private async createPreparedItems(
     prepared: PreparedItem[],
   ): Promise<ItemRecord[]> {
-    // A transaction ensures either all items and sequence
-    // increments commit, or none of them do.
-    return this.prisma.client.$transaction(
-      async (tx) => {
-        const created: ItemRecord[] = [];
+    for (let attempt = 1; attempt <= MAX_TRANSACTION_ATTEMPTS; attempt++) {
+      try {
+        return await this.prisma.client.$transaction(
+          async (tx) => {
+            const created: ItemRecord[] = [];
 
-        // Allocate sequence numbers in a consistent prefix order
-        // to reduce deadlock risk in concurrent bulk requests.
-        const counts = new Map<string, number>();
+            // Count required codes per prefix.
+            const counts = new Map<string, number>();
 
-        for (const item of prepared) {
-          counts.set(item.prefix, (counts.get(item.prefix) ?? 0) + 1);
+            for (const item of prepared) {
+              counts.set(item.prefix, (counts.get(item.prefix) ?? 0) + 1);
+            }
+
+            const allocations = new Map<string, number>();
+
+            // Consistent ordering reduces deadlock risk.
+            for (const prefix of [...counts.keys()].sort()) {
+              const count = counts.get(prefix)!;
+
+              const sequence = await tx.itemCodeSequence.upsert({
+                where: { prefix },
+                create: {
+                  prefix,
+                  nextNumber: count + 1,
+                },
+                update: {
+                  nextNumber: { increment: count },
+                },
+              });
+
+              const firstNumber = sequence.nextNumber - count;
+
+              if (
+                firstNumber < 1 ||
+                sequence.nextNumber - 1 > MAX_CODE_NUMBER
+              ) {
+                return rpcError(
+                  status.RESOURCE_EXHAUSTED,
+                  `Item code sequence exhausted for ${prefix}`,
+                );
+              }
+
+              allocations.set(prefix, firstNumber);
+            }
+
+            // Create every item within the same transaction.
+            for (const preparedItem of prepared) {
+              const { prefix, ...data } = preparedItem;
+
+              const nextNumber = allocations.get(prefix)!;
+              allocations.set(prefix, nextNumber + 1);
+
+              const code = `${prefix}-${String(nextNumber).padStart(6, '0')}`;
+
+              const item = await tx.item.create({
+                data: {
+                  ...data,
+                  code,
+                },
+              });
+
+              created.push(item);
+            }
+
+            return created;
+          },
+          {
+            maxWait: 10000,
+            timeout: 30000,
+          },
+        );
+      } catch (error: unknown) {
+        // Preserve intentional gRPC business errors.
+        if (error instanceof RpcException) {
+          throw error;
         }
 
-        const allocations = new Map<string, number>();
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          const isRetryable = error.code === 'P2034' || error.code === 'P2002';
 
-        for (const prefix of [...counts.keys()].sort()) {
-          const count = counts.get(prefix)!;
+          if (isRetryable && attempt < MAX_TRANSACTION_ATTEMPTS) {
+            // Small exponential backoff before retrying.
+            const delay = RETRY_DELAY_MS * Math.pow(2, attempt - 1);
 
-          const sequence = await tx.itemCodeSequence.upsert({
-            where: { prefix },
-            create: {
-              prefix,
-              nextNumber: count + 1,
-            },
-            update: {
-              nextNumber: { increment: count },
-            },
-          });
+            await new Promise<void>((resolve) => setTimeout(resolve, delay));
 
-          const firstNumber = sequence.nextNumber - count;
-
-          if (firstNumber < 1 || sequence.nextNumber - 1 > MAX_CODE_NUMBER) {
-            return rpcError(
-              status.RESOURCE_EXHAUSTED,
-              `Item code sequence exhausted for ${prefix}`,
-            );
+            continue;
           }
 
-          allocations.set(prefix, firstNumber);
+          if (isRetryable) {
+            return rpcError(
+              status.ABORTED,
+              'Item creation conflicted with another request. Please retry.',
+            );
+          }
         }
 
-        for (const preparedItem of prepared) {
-          const { prefix, ...data } = preparedItem;
-          const nextNumber = allocations.get(prefix)!;
+        console.error('Item creation transaction failed:', error);
 
-          allocations.set(prefix, nextNumber + 1);
+        return rpcError(status.INTERNAL, 'Could not create items');
+      }
+    }
 
-          const code = `${prefix}-${String(nextNumber).padStart(6, '0')}`;
-
-          const item = await tx.item.create({
-            data: {
-              ...data,
-              code,
-            },
-          });
-
-          created.push(item);
-        }
-
-        return created;
-      },
-      {
-        maxWait: 10000,
-        timeout: 30000,
-      },
+    return rpcError(
+      status.ABORTED,
+      'Item creation could not complete. Please retry.',
     );
   }
 
