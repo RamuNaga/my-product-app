@@ -16,7 +16,7 @@ export class ProductGrpcController {
   async createProduct(data: CreateProductRequest) {
     console.log(
       '@GrpcMethod createProduct  in  ProductGrpcController in Product-service microservice is calling/not calling',
-      data
+      data,
     );
     return this.productService.createProduct(data);
   }
@@ -29,5 +29,10 @@ export class ProductGrpcController {
 
     const products = await this.productService.getAllProducts(data);
     return products;
+  }
+
+  @GrpcMethod('ProductService', 'GetProductById')
+  async getProductById(data: { value?: number }) {
+    return this.productService.getProductById(data);
   }
 }

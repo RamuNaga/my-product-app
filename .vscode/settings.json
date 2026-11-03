@@ -20,13 +20,16 @@
     "@nx/nest:*",
     "@nx/angular:*"
   ],
-   "nxConsole.enableTaskExecutionDryRunOnChange": true,
-   "nxConsole.moveGeneratorPatterns": {
+  "nxConsole.enableTaskExecutionDryRunOnChange": true,
+  "nxConsole.moveGeneratorPatterns": {
     "apps/**": "@nx/workspace:move",
     "libs/**": "@custom/generators:move"
   },
   "nxConsole.nxCloudNotifications": "errors",
   "nxConsole.enableDebugLogging": true,
-  "nxConsole.disableFileWatching": true
-  
+  "nxConsole.disableFileWatching": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "notebook.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "eslint.run": "onSave"
 }

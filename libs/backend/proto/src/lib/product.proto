@@ -42,3 +42,106 @@ service ProductService {
   rpc GetProductById (google.protobuf.Int32Value) returns (ProductResponse);
   rpc GetAllProducts (EmptyRequest) returns (ProductListResponse);
 }
+
+// --------------------------------------------------
+// ITEM MANAGEMENT
+// --------------------------------------------------
+
+enum ItemKind {
+  ITEM_KIND_UNSPECIFIED = 0;
+  RAW_MATERIAL = 1;
+  PURCHASED_PREPARED = 2;
+  MANUFACTURED_COMPONENT = 3;
+  SAUCE = 4;
+  GARNISH = 5;
+  PACKAGING = 6;
+  OTHER = 7;
+}
+
+enum SupplyType {
+  SUPPLY_TYPE_UNSPECIFIED = 0;
+  PURCHASED = 1;
+  MANUFACTURED = 2;
+  BOTH = 3;
+}
+
+enum ProcessType {
+  PROCESS_TYPE_UNSPECIFIED = 0;
+  NONE = 1;
+  OVEN = 2;
+  STEAM = 3;
+  SAUCE_PREPARATION = 4;
+  MIXING = 5;
+  OTHER_PROCESS = 6;
+}
+
+enum UnitOfMeasure {
+  UNIT_OF_MEASURE_UNSPECIFIED = 0;
+  G = 1;
+  KG = 2;
+  ML = 3;
+  L = 4;
+  EACH = 5;
+}
+
+message Item {
+  int32 id = 1;
+  string code = 2;
+  string name = 3;
+  string description = 4;
+  ItemKind kind = 5;
+  SupplyType supplyType = 6;
+  ProcessType processType = 7;
+  UnitOfMeasure baseUnit = 8;
+  string allergenDeclaration = 9;
+  string origin = 10;
+  string manufacturer = 11;
+  google.protobuf.Int32Value defaultSupplierId = 12;
+  string packSizeDescription = 13;
+  string netContentDescription = 14;
+  bool isActive = 15;
+  string createdAt = 16;
+  string updatedAt = 17;
+}
+
+message CreateItemRequest {
+  string name = 1;
+  string description = 2;
+  ItemKind kind = 3;
+  SupplyType supplyType = 4;
+  ProcessType processType = 5;
+  UnitOfMeasure baseUnit = 6;
+  string allergenDeclaration = 7;
+  string origin = 8;
+  string manufacturer = 9;
+  google.protobuf.Int32Value defaultSupplierId = 10;
+  string packSizeDescription = 11;
+  string netContentDescription = 12;
+}
+
+message GetItemByIdRequest {
+  int32 id = 1;
+}
+
+message ItemResponse {
+  Item item = 1;
+}
+
+message ItemListResponse {
+  repeated Item items = 1;
+}
+
+message CreateItemsRequest {
+  repeated CreateItemRequest items = 1;
+}
+
+message CreateItemsResponse {
+  repeated Item items = 1;
+}
+
+service ItemService {
+  rpc CreateItem (CreateItemRequest) returns (ItemResponse);
+  rpc GetItemById (GetItemByIdRequest) returns (ItemResponse);
+  rpc GetAllItems (EmptyRequest) returns (ItemListResponse);
+  rpc CreateItems(CreateItemsRequest) returns (CreateItemsResponse);
+}

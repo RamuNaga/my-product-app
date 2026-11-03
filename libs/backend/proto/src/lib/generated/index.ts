@@ -44,6 +44,18 @@ export {
   PRODUCT_SERVICE_NAME,
   EmptyRequest,
   ProductListResponse,
+  ItemServiceClient,
+  CreateItemRequest,
+  GetItemByIdRequest,
+  ItemResponse,
+  ItemListResponse,
+  CreateItemsRequest,
+  CreateItemsResponse,
+  ITEM_SERVICE_NAME,
+  ItemKind as ProtoItemKind,
+  SupplyType as ProtoSupplyType,
+  ProcessType as ProtoProcessType,
+  UnitOfMeasure as ProtoUnitOfMeasure,
 } from './product';
 
 // Wrappers (keep them all, no duplication issues here)

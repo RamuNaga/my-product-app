@@ -1,8 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import {
   CorrelationMiddleware,
+  DEFAULT_THROTTLE_LIMIT,
+  DEFAULT_THROTTLE_TTL,
   SharedModule,
-} from '@my-product-app/backend-shared'; // for JWT or utilities later
+} from '@my-product-app/backend-shared';
 import { RegistrationModule } from '@my-product-app/backend-registration'; // business logic
 import { GraphQLConfigModule } from './config/graphql.module';
 import { PingResolver } from './resolvers/ping.resolver';
@@ -17,6 +19,9 @@ import { CompanyResolver } from './company/resolver/company.resolver';
 import { ProductResolver } from './product/resolver/product.resolver';
 import { WorkorderResolver } from './workorder/resolver/workorder.resolver';
 import { RegistrationResolver } from './registration/resolver/registration.resolver';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { GraphqlThrottlerGuard } from './guards/graphql-throttler.guard';
 
 @Module({
   imports: [
@@ -28,6 +33,12 @@ import { RegistrationResolver } from './registration/resolver/registration.resol
     CompanyGrpcClientModule,
     WorkOrderGrpcClientModule,
     CompanyLocationGrpcClientModule,
+    ThrottlerModule.forRoot([
+      {
+        ttl: DEFAULT_THROTTLE_TTL,
+        limit: DEFAULT_THROTTLE_LIMIT,
+      },
+    ]),
   ],
   controllers: [],
   providers: [
@@ -38,6 +49,10 @@ import { RegistrationResolver } from './registration/resolver/registration.resol
     ProductResolver,
     WorkorderResolver,
     RegistrationResolver,
+    {
+      provide: APP_GUARD,
+      useClass: GraphqlThrottlerGuard,
+    },
   ],
 })
 export class BffModule implements NestModule {
