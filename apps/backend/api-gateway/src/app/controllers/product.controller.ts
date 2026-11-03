@@ -8,6 +8,7 @@ import {
   HttpStatus,
   UseGuards,
 } from '@nestjs/common';
+import { status } from '@grpc/grpc-js';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
@@ -36,11 +37,11 @@ export class ProductController {
             Date.now() + '-' + Math.round(Math.random() * 1e9);
           cb(
             null,
-            `${file.fieldname}-${uniqueSuffix}${extname(file.originalname)}`
+            `${file.fieldname}-${uniqueSuffix}${extname(file.originalname)}`,
           );
         },
       }),
-    })
+    }),
   )
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
@@ -52,7 +53,7 @@ export class ProductController {
       productWeight: string;
       price: number;
     },
-    @CurrentUser() user: any
+    @CurrentUser() user: any,
   ) {
     if (!file) {
       throw new HttpException('File is required', HttpStatus.BAD_REQUEST);
@@ -76,29 +77,49 @@ export class ProductController {
       const result = await this.productGrpcClient.createProduct(grpcData);
 
       return { status: 'success', data: result.product };
-    } catch (err) {
-      const message =
-        err instanceof Error
-          ? err.message
-          : (err as any)?.message ||
-            (err as any)?.response?.message ||
-            'Internal server error';
-      console.log('ProductController message', message);
-
+    } catch (err: unknown) {
+      // Remove the uploaded file if Product creation fails.
       try {
         fs.unlinkSync(file.path);
-      } catch {
-        console.warn('Failed to delete file after microservice error', err);
+      } catch (cleanupError) {
+        console.warn('Failed to delete uploaded product file:', cleanupError);
       }
 
-      if (message === 'Product code already exists') {
-        throw new HttpException(message, HttpStatus.CONFLICT);
-      }
+      const grpcError = err as {
+        code?: number | string;
+        message?: string;
+        details?: string;
+      };
 
-      throw new HttpException(
-        'Internal server error while creating product',
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
+      const grpcCode = Number(grpcError?.code);
+
+      const message =
+        grpcError?.details || grpcError?.message || 'Internal server error';
+
+      switch (grpcCode) {
+        case status.INVALID_ARGUMENT:
+          throw new HttpException(message, HttpStatus.BAD_REQUEST);
+
+        case status.ALREADY_EXISTS:
+          throw new HttpException(message, HttpStatus.CONFLICT);
+
+        case status.NOT_FOUND:
+          throw new HttpException(message, HttpStatus.NOT_FOUND);
+
+        case status.RESOURCE_EXHAUSTED:
+          throw new HttpException(
+            'Service resource limit reached',
+            HttpStatus.SERVICE_UNAVAILABLE,
+          );
+
+        default:
+          console.error('Product creation gRPC error:', err);
+
+          throw new HttpException(
+            'Internal server error while creating product',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+      }
     }
   }
 

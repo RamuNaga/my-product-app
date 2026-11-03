@@ -120,6 +120,32 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.ItemScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  description: 'description',
+  kind: 'kind',
+  supplyType: 'supplyType',
+  processType: 'processType',
+  baseUnit: 'baseUnit',
+  allergenDeclaration: 'allergenDeclaration',
+  origin: 'origin',
+  manufacturer: 'manufacturer',
+  defaultSupplierId: 'defaultSupplierId',
+  packSizeDescription: 'packSizeDescription',
+  netContentDescription: 'netContentDescription',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ItemCodeSequenceScalarFieldEnum = {
+  prefix: 'prefix',
+  nextNumber: 'nextNumber',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.ProductScalarFieldEnum = {
   id: 'id',
   productCode: 'productCode',
@@ -127,51 +153,73 @@ exports.Prisma.ProductScalarFieldEnum = {
   description: 'description',
   image: 'image',
   productWeight: 'productWeight',
+  netWeightG: 'netWeightG',
   price: 'price',
   companyId: 'companyId',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.IngredientScalarFieldEnum = {
+exports.Prisma.RecipeScalarFieldEnum = {
   id: 'id',
   code: 'code',
   name: 'name',
   description: 'description',
+  purpose: 'purpose',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RecipeRevisionScalarFieldEnum = {
+  id: 'id',
+  recipeId: 'recipeId',
+  revision: 'revision',
+  status: 'status',
+  referenceQuantity: 'referenceQuantity',
+  referenceUnit: 'referenceUnit',
+  outputItemId: 'outputItemId',
+  processType: 'processType',
+  effectiveFrom: 'effectiveFrom',
+  effectiveTo: 'effectiveTo',
+  approvedAt: 'approvedAt',
+  approvedById: 'approvedById',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RecipeLineScalarFieldEnum = {
+  id: 'id',
+  recipeRevisionId: 'recipeRevisionId',
+  lineNumber: 'lineNumber',
+  componentItemId: 'componentItemId',
+  quantity: 'quantity',
   unit: 'unit',
-  netWeight: 'netWeight',
-  origin: 'origin',
-  usedBy: 'usedBy',
-  batchCode: 'batchCode',
-  manufacturer: 'manufacturer',
-  vendor: 'vendor',
-  packSize: 'packSize',
-  netContent: 'netContent',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  processLossPercent: 'processLossPercent',
+  notes: 'notes'
 };
 
-exports.Prisma.ProductIngredientScalarFieldEnum = {
+exports.Prisma.ProductRecipeAssignmentScalarFieldEnum = {
   id: 'id',
   productId: 'productId',
-  ingredientId: 'ingredientId',
-  quantity: 'quantity'
+  recipeRevisionId: 'recipeRevisionId',
+  portionQuantity: 'portionQuantity',
+  portionUnit: 'portionUnit',
+  effectiveFrom: 'effectiveFrom',
+  effectiveTo: 'effectiveTo',
+  createdAt: 'createdAt'
 };
 
-exports.Prisma.SauceScalarFieldEnum = {
+exports.Prisma.ProductPackagingLineScalarFieldEnum = {
   id: 'id',
-  name: 'name',
   productId: 'productId',
-  description: 'description',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.SauceIngredientScalarFieldEnum = {
-  id: 'id',
-  sauceId: 'sauceId',
-  ingredientId: 'ingredientId',
-  quantity: 'quantity'
+  itemId: 'itemId',
+  quantity: 'quantity',
+  unit: 'unit',
+  effectiveFrom: 'effectiveFrom',
+  effectiveTo: 'effectiveTo'
 };
 
 exports.Prisma.TrayScalarFieldEnum = {
@@ -224,14 +272,59 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.ItemKind = exports.$Enums.ItemKind = {
+  RAW_MATERIAL: 'RAW_MATERIAL',
+  PURCHASED_PREPARED: 'PURCHASED_PREPARED',
+  MANUFACTURED_COMPONENT: 'MANUFACTURED_COMPONENT',
+  SAUCE: 'SAUCE',
+  GARNISH: 'GARNISH',
+  PACKAGING: 'PACKAGING',
+  OTHER: 'OTHER'
+};
 
+exports.SupplyType = exports.$Enums.SupplyType = {
+  PURCHASED: 'PURCHASED',
+  MANUFACTURED: 'MANUFACTURED',
+  BOTH: 'BOTH'
+};
+
+exports.ProcessType = exports.$Enums.ProcessType = {
+  NONE: 'NONE',
+  OVEN: 'OVEN',
+  STEAM: 'STEAM',
+  SAUCE_PREPARATION: 'SAUCE_PREPARATION',
+  MIXING: 'MIXING',
+  OTHER: 'OTHER'
+};
+
+exports.UnitOfMeasure = exports.$Enums.UnitOfMeasure = {
+  G: 'G',
+  KG: 'KG',
+  ML: 'ML',
+  L: 'L',
+  EACH: 'EACH'
+};
+
+exports.RecipePurpose = exports.$Enums.RecipePurpose = {
+  FINISHED_FOOD: 'FINISHED_FOOD',
+  INTERMEDIATE: 'INTERMEDIATE'
+};
+
+exports.RecipeStatus = exports.$Enums.RecipeStatus = {
+  DRAFT: 'DRAFT',
+  APPROVED: 'APPROVED',
+  RETIRED: 'RETIRED'
+};
 
 exports.Prisma.ModelName = {
+  Item: 'Item',
+  ItemCodeSequence: 'ItemCodeSequence',
   Product: 'Product',
-  Ingredient: 'Ingredient',
-  ProductIngredient: 'ProductIngredient',
-  Sauce: 'Sauce',
-  SauceIngredient: 'SauceIngredient',
+  Recipe: 'Recipe',
+  RecipeRevision: 'RecipeRevision',
+  RecipeLine: 'RecipeLine',
+  ProductRecipeAssignment: 'ProductRecipeAssignment',
+  ProductPackagingLine: 'ProductPackagingLine',
   Tray: 'Tray',
   Garnish: 'Garnish',
   Unit: 'Unit',
