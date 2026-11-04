@@ -276,7 +276,18 @@ export class ItemGrpcService {
         }
 
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          const isRetryable = error.code === 'P2034' || error.code === 'P2002';
+          const target = error.meta?.target;
+
+          const isSequenceConflict =
+            error.code === 'P2002' &&
+            ((Array.isArray(target) &&
+              target.length === 1 &&
+              target[0] === 'prefix') ||
+              (typeof target === 'string' &&
+                (target === 'ItemCodeSequence_pkey' ||
+                  target === 'ItemCodeSequence_prefix_key')));
+
+          const isRetryable = error.code === 'P2034' || isSequenceConflict;
 
           if (isRetryable && attempt < MAX_TRANSACTION_ATTEMPTS) {
             // Small exponential backoff before retrying.
@@ -291,6 +302,12 @@ export class ItemGrpcService {
             return rpcError(
               status.ABORTED,
               'Item creation conflicted with another request. Please retry.',
+            );
+          }
+          if (error.code === 'P2002') {
+            return rpcError(
+              status.ALREADY_EXISTS,
+              'An item with the same unique value already exists',
             );
           }
         }
