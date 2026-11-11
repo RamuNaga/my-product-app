@@ -216,7 +216,7 @@ export class ItemGrpcService {
 
             // Consistent ordering reduces deadlock risk.
             for (const prefix of [...counts.keys()].sort()) {
-              const count = counts.get(prefix)!;
+              const count = counts.get(prefix) ?? 0;
 
               const sequence = await tx.itemCodeSequence.upsert({
                 where: { prefix },
@@ -248,7 +248,15 @@ export class ItemGrpcService {
             for (const preparedItem of prepared) {
               const { prefix, ...data } = preparedItem;
 
-              const nextNumber = allocations.get(prefix)!;
+              const nextNumber = allocations.get(prefix);
+
+              if (nextNumber === undefined) {
+                return rpcError(
+                  status.INTERNAL,
+                  `Item code allocation missing for ${prefix}`,
+                );
+              }
+
               allocations.set(prefix, nextNumber + 1);
 
               const code = `${prefix}-${String(nextNumber).padStart(6, '0')}`;
@@ -342,6 +350,8 @@ export class ItemGrpcService {
   }
 
   async getAllItems(_request: EmptyRequest): Promise<ItemListResponse> {
+    void _request;
+
     const items = await this.prisma.client.item.findMany({
       orderBy: { id: 'asc' },
     });
