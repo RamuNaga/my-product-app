@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { status } from '@grpc/grpc-js';
-
 import {
   CreateItemRequest,
   CreateItemsRequest,
@@ -10,6 +9,8 @@ import {
   EmptyRequest,
   ItemResponse,
   ItemListResponse,
+  UpdateItemRequest,
+  ChangeItemActiveStatusRequest,
   ProtoItemKind,
   ProtoSupplyType,
   ProtoProcessType,
@@ -376,12 +377,201 @@ export class ItemGrpcService {
       allergenDeclaration: item.allergenDeclaration ?? '',
       origin: item.origin ?? '',
       manufacturer: item.manufacturer ?? '',
-      defaultSupplierId: item.defaultSupplierId ?? undefined,
+      defaultSupplierId:
+        item.defaultSupplierId === null
+          ? undefined
+          : ({ value: item.defaultSupplierId } as unknown as number),
       packSizeDescription: item.packSizeDescription ?? '',
       netContentDescription: item.netContentDescription ?? '',
       isActive: item.isActive,
       createdAt: item.createdAt.toISOString(),
       updatedAt: item.updatedAt.toISOString(),
     };
+  }
+
+  async updateItem(request: UpdateItemRequest): Promise<ItemResponse> {
+    if (!Number.isInteger(request.id) || request.id <= 0) {
+      return rpcError(status.INVALID_ARGUMENT, 'Valid Item ID is required');
+    }
+
+    if (
+      request.clearDefaultSupplierId &&
+      request.defaultSupplierId !== undefined &&
+      request.defaultSupplierId !== null
+    ) {
+      return rpcError(
+        status.INVALID_ARGUMENT,
+        'Cannot set and clear default supplier in the same request',
+      );
+    }
+
+    const data: Prisma.ItemUpdateInput = {};
+
+    if (request.name !== undefined) {
+      const name = request.name.trim();
+
+      if (!name) {
+        return rpcError(status.INVALID_ARGUMENT, 'Item name is required');
+      }
+
+      data.name = name;
+    }
+
+    if (request.description !== undefined) {
+      data.description = optionalText(request.description);
+    }
+
+    if (request.supplyType !== undefined) {
+      data.supplyType = enumValue(
+        request.supplyType,
+        SUPPLY_MAP,
+        'supply type',
+      );
+    }
+
+    if (request.processType !== undefined) {
+      data.processType = enumValue(
+        request.processType,
+        PROCESS_MAP,
+        'process type',
+      );
+    }
+
+    if (request.baseUnit !== undefined) {
+      data.baseUnit = enumValue(request.baseUnit, UNIT_MAP, 'base unit');
+    }
+
+    if (request.allergenDeclaration !== undefined) {
+      data.allergenDeclaration = optionalText(request.allergenDeclaration);
+    }
+
+    if (request.origin !== undefined) {
+      data.origin = optionalText(request.origin);
+    }
+
+    if (request.manufacturer !== undefined) {
+      data.manufacturer = optionalText(request.manufacturer);
+    }
+
+    if (request.clearDefaultSupplierId) {
+      data.defaultSupplierId = null;
+    } else if (request.defaultSupplierId !== undefined) {
+      if (
+        !Number.isInteger(request.defaultSupplierId) ||
+        request.defaultSupplierId <= 0
+      ) {
+        return rpcError(
+          status.INVALID_ARGUMENT,
+          'Default supplier ID must be a positive integer',
+        );
+      }
+
+      data.defaultSupplierId = request.defaultSupplierId;
+    }
+
+    if (request.packSizeDescription !== undefined) {
+      data.packSizeDescription = optionalText(request.packSizeDescription);
+    }
+
+    if (request.netContentDescription !== undefined) {
+      data.netContentDescription = optionalText(request.netContentDescription);
+    }
+
+    if (Object.keys(data).length === 0) {
+      return rpcError(
+        status.INVALID_ARGUMENT,
+        'At least one field must be provided for update',
+      );
+    }
+
+    const existing = await this.prisma.client.item.findUnique({
+      where: { id: request.id },
+    });
+
+    if (!existing) {
+      return rpcError(status.NOT_FOUND, 'Item not found');
+    }
+
+    // A base-unit change can invalidate quantities in existing references.
+    if (data.baseUnit !== undefined && data.baseUnit !== existing.baseUnit) {
+      const [componentLines, outputRevisions, packagingLines] =
+        await Promise.all([
+          this.prisma.client.recipeLine.count({
+            where: { componentItemId: request.id },
+          }),
+          this.prisma.client.recipeRevision.count({
+            where: { outputItemId: request.id },
+          }),
+          this.prisma.client.productPackagingLine.count({
+            where: { itemId: request.id },
+          }),
+        ]);
+
+      if (componentLines || outputRevisions || packagingLines) {
+        return rpcError(
+          status.FAILED_PRECONDITION,
+          'Cannot change base unit of an Item referenced by recipes or packaging',
+        );
+      }
+    }
+
+    try {
+      const item = await this.prisma.client.item.update({
+        where: { id: request.id },
+        data,
+      });
+
+      return { item: this.mapToProtoItem(item) };
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        return rpcError(status.NOT_FOUND, 'Item not found');
+      }
+
+      console.error('Item update failed:', error);
+      return rpcError(status.INTERNAL, 'Could not update Item');
+    }
+  }
+
+  async deactivateItem(
+    request: ChangeItemActiveStatusRequest,
+  ): Promise<ItemResponse> {
+    return this.changeItemActiveStatus(request, false);
+  }
+
+  async reactivateItem(
+    request: ChangeItemActiveStatusRequest,
+  ): Promise<ItemResponse> {
+    return this.changeItemActiveStatus(request, true);
+  }
+
+  private async changeItemActiveStatus(
+    request: ChangeItemActiveStatusRequest,
+    isActive: boolean,
+  ): Promise<ItemResponse> {
+    if (!Number.isInteger(request.id) || request.id <= 0) {
+      return rpcError(status.INVALID_ARGUMENT, 'Valid Item ID is required');
+    }
+
+    try {
+      const item = await this.prisma.client.item.update({
+        where: { id: request.id },
+        data: { isActive },
+      });
+
+      return { item: this.mapToProtoItem(item) };
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        return rpcError(status.NOT_FOUND, 'Item not found');
+      }
+
+      console.error('Item active-status update failed:', error);
+      return rpcError(status.INTERNAL, 'Could not change Item active status');
+    }
   }
 }

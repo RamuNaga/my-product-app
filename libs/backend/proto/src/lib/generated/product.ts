@@ -143,6 +143,26 @@ export interface CreateItemsResponse {
   items: Item[];
 }
 
+export interface UpdateItemRequest {
+  id: number;
+  name?: string | undefined;
+  description?: string | undefined;
+  supplyType?: SupplyType | undefined;
+  processType?: ProcessType | undefined;
+  baseUnit?: UnitOfMeasure | undefined;
+  allergenDeclaration?: string | undefined;
+  origin?: string | undefined;
+  manufacturer?: string | undefined;
+  defaultSupplierId: number | undefined;
+  packSizeDescription?: string | undefined;
+  netContentDescription?: string | undefined;
+  clearDefaultSupplierId: boolean;
+}
+
+export interface ChangeItemActiveStatusRequest {
+  id: number;
+}
+
 export const PRODUCT_PACKAGE_NAME = "product";
 
 function createBaseProduct(): Product {
@@ -1190,6 +1210,230 @@ export const CreateItemsResponse: MessageFns<CreateItemsResponse> = {
   },
 };
 
+function createBaseUpdateItemRequest(): UpdateItemRequest {
+  return { id: 0, defaultSupplierId: undefined, clearDefaultSupplierId: false };
+}
+
+export const UpdateItemRequest: MessageFns<UpdateItemRequest> = {
+  encode(message: UpdateItemRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.id !== 0) {
+      writer.uint32(8).int32(message.id);
+    }
+    if (message.name !== undefined) {
+      writer.uint32(18).string(message.name);
+    }
+    if (message.description !== undefined) {
+      writer.uint32(26).string(message.description);
+    }
+    if (message.supplyType !== undefined) {
+      writer.uint32(32).int32(message.supplyType);
+    }
+    if (message.processType !== undefined) {
+      writer.uint32(40).int32(message.processType);
+    }
+    if (message.baseUnit !== undefined) {
+      writer.uint32(48).int32(message.baseUnit);
+    }
+    if (message.allergenDeclaration !== undefined) {
+      writer.uint32(58).string(message.allergenDeclaration);
+    }
+    if (message.origin !== undefined) {
+      writer.uint32(66).string(message.origin);
+    }
+    if (message.manufacturer !== undefined) {
+      writer.uint32(74).string(message.manufacturer);
+    }
+    if (message.defaultSupplierId !== undefined) {
+      Int32Value.encode({ value: message.defaultSupplierId! }, writer.uint32(82).fork()).join();
+    }
+    if (message.packSizeDescription !== undefined) {
+      writer.uint32(90).string(message.packSizeDescription);
+    }
+    if (message.netContentDescription !== undefined) {
+      writer.uint32(98).string(message.netContentDescription);
+    }
+    if (message.clearDefaultSupplierId !== false) {
+      writer.uint32(104).bool(message.clearDefaultSupplierId);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): UpdateItemRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseUpdateItemRequest();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
+
+            message.id = reader.int32();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            message.name = reader.string();
+            continue;
+          }
+          case 3: {
+            if (tag !== 26) {
+              break;
+            }
+
+            message.description = reader.string();
+            continue;
+          }
+          case 4: {
+            if (tag !== 32) {
+              break;
+            }
+
+            message.supplyType = reader.int32() as any;
+            continue;
+          }
+          case 5: {
+            if (tag !== 40) {
+              break;
+            }
+
+            message.processType = reader.int32() as any;
+            continue;
+          }
+          case 6: {
+            if (tag !== 48) {
+              break;
+            }
+
+            message.baseUnit = reader.int32() as any;
+            continue;
+          }
+          case 7: {
+            if (tag !== 58) {
+              break;
+            }
+
+            message.allergenDeclaration = reader.string();
+            continue;
+          }
+          case 8: {
+            if (tag !== 66) {
+              break;
+            }
+
+            message.origin = reader.string();
+            continue;
+          }
+          case 9: {
+            if (tag !== 74) {
+              break;
+            }
+
+            message.manufacturer = reader.string();
+            continue;
+          }
+          case 10: {
+            if (tag !== 82) {
+              break;
+            }
+
+            message.defaultSupplierId = Int32Value.decode(reader, reader.uint32()).value;
+            continue;
+          }
+          case 11: {
+            if (tag !== 90) {
+              break;
+            }
+
+            message.packSizeDescription = reader.string();
+            continue;
+          }
+          case 12: {
+            if (tag !== 98) {
+              break;
+            }
+
+            message.netContentDescription = reader.string();
+            continue;
+          }
+          case 13: {
+            if (tag !== 104) {
+              break;
+            }
+
+            message.clearDefaultSupplierId = reader.bool();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
+  },
+};
+
+function createBaseChangeItemActiveStatusRequest(): ChangeItemActiveStatusRequest {
+  return { id: 0 };
+}
+
+export const ChangeItemActiveStatusRequest: MessageFns<ChangeItemActiveStatusRequest> = {
+  encode(message: ChangeItemActiveStatusRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.id !== 0) {
+      writer.uint32(8).int32(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ChangeItemActiveStatusRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseChangeItemActiveStatusRequest();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
+
+            message.id = reader.int32();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
+  },
+};
+
 export interface ProductServiceClient {
   createProduct(request: CreateProductRequest, metadata?: Metadata): Observable<ProductResponse>;
 
@@ -1278,6 +1522,12 @@ export interface ItemServiceClient {
   getAllItems(request: EmptyRequest, metadata?: Metadata): Observable<ItemListResponse>;
 
   createItems(request: CreateItemsRequest, metadata?: Metadata): Observable<CreateItemsResponse>;
+
+  updateItem(request: UpdateItemRequest, metadata?: Metadata): Observable<ItemResponse>;
+
+  deactivateItem(request: ChangeItemActiveStatusRequest, metadata?: Metadata): Observable<ItemResponse>;
+
+  reactivateItem(request: ChangeItemActiveStatusRequest, metadata?: Metadata): Observable<ItemResponse>;
 }
 
 export interface ItemServiceController {
@@ -1300,11 +1550,34 @@ export interface ItemServiceController {
     request: CreateItemsRequest,
     metadata?: Metadata,
   ): Promise<CreateItemsResponse> | Observable<CreateItemsResponse> | CreateItemsResponse;
+
+  updateItem(
+    request: UpdateItemRequest,
+    metadata?: Metadata,
+  ): Promise<ItemResponse> | Observable<ItemResponse> | ItemResponse;
+
+  deactivateItem(
+    request: ChangeItemActiveStatusRequest,
+    metadata?: Metadata,
+  ): Promise<ItemResponse> | Observable<ItemResponse> | ItemResponse;
+
+  reactivateItem(
+    request: ChangeItemActiveStatusRequest,
+    metadata?: Metadata,
+  ): Promise<ItemResponse> | Observable<ItemResponse> | ItemResponse;
 }
 
 export function ItemServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createItem", "getItemById", "getAllItems", "createItems"];
+    const grpcMethods: string[] = [
+      "createItem",
+      "getItemById",
+      "getAllItems",
+      "createItems",
+      "updateItem",
+      "deactivateItem",
+      "reactivateItem",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("ItemService", method)(constructor.prototype[method], method, descriptor);
@@ -1357,6 +1630,35 @@ export const ItemServiceService = {
     responseSerialize: (value: CreateItemsResponse): Buffer => Buffer.from(CreateItemsResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): CreateItemsResponse => CreateItemsResponse.decode(value),
   },
+  updateItem: {
+    path: "/product.ItemService/UpdateItem" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: UpdateItemRequest): Buffer => Buffer.from(UpdateItemRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): UpdateItemRequest => UpdateItemRequest.decode(value),
+    responseSerialize: (value: ItemResponse): Buffer => Buffer.from(ItemResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ItemResponse => ItemResponse.decode(value),
+  },
+  deactivateItem: {
+    path: "/product.ItemService/DeactivateItem" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ChangeItemActiveStatusRequest): Buffer =>
+      Buffer.from(ChangeItemActiveStatusRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ChangeItemActiveStatusRequest => ChangeItemActiveStatusRequest.decode(value),
+    responseSerialize: (value: ItemResponse): Buffer => Buffer.from(ItemResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ItemResponse => ItemResponse.decode(value),
+  },
+  reactivateItem: {
+    path: "/product.ItemService/ReactivateItem" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: ChangeItemActiveStatusRequest): Buffer =>
+      Buffer.from(ChangeItemActiveStatusRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): ChangeItemActiveStatusRequest => ChangeItemActiveStatusRequest.decode(value),
+    responseSerialize: (value: ItemResponse): Buffer => Buffer.from(ItemResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): ItemResponse => ItemResponse.decode(value),
+  },
 } as const;
 
 export interface ItemServiceServer extends UntypedServiceImplementation {
@@ -1364,6 +1666,9 @@ export interface ItemServiceServer extends UntypedServiceImplementation {
   getItemById: handleUnaryCall<GetItemByIdRequest, ItemResponse>;
   getAllItems: handleUnaryCall<EmptyRequest, ItemListResponse>;
   createItems: handleUnaryCall<CreateItemsRequest, CreateItemsResponse>;
+  updateItem: handleUnaryCall<UpdateItemRequest, ItemResponse>;
+  deactivateItem: handleUnaryCall<ChangeItemActiveStatusRequest, ItemResponse>;
+  reactivateItem: handleUnaryCall<ChangeItemActiveStatusRequest, ItemResponse>;
 }
 
 export interface MessageFns<T> {

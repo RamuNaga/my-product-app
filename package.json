@@ -13,7 +13,7 @@
     "studio": "pnpm prisma studio --schema=libs/backend/prisma/prisma/schema.prisma",
     "generate:schema": "graphql-codegen --config codegen.yml --schema http://localhost:3002/graphql --output libs/backend/graphql-types/src/lib/generated/schema.graphql",
     "generate": "graphql-codegen --config codegen.yml",
-    "proto:generate": "pnpm exec protoc --plugin=protoc-gen-ts_proto=%CD%\\node_modules\\.bin\\protoc-gen-ts_proto.cmd --ts_proto_out=libs/backend/proto/src/lib/generated --ts_proto_opt=nestJs=true,outputServices=grpc-js,grpcClients=grpc-js,addGrpcMetadata=true,outputDirFlatten=true -I=libs/backend/proto/src/lib ./libs/backend/proto/src/lib/*.proto",
+    "proto:generate": "node scripts/generate-proto.cjs",
     "clean": "rimraf dist",
     "build": "nx build",
     "test": "nx run-many --target=test --all",

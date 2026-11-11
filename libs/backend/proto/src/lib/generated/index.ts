@@ -51,6 +51,8 @@ export {
   ItemListResponse,
   CreateItemsRequest,
   CreateItemsResponse,
+  UpdateItemRequest,
+  ChangeItemActiveStatusRequest,
   ITEM_SERVICE_NAME,
   ItemKind as ProtoItemKind,
   SupplyType as ProtoSupplyType,
