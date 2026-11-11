@@ -197,6 +197,47 @@ function codeNumber(code) {
         'Valid rows were persisted despite bulk validation failure',
       );
     });
+
+    await test('Concurrent bulk requests generate unique Item codes', async () => {
+      const requestCount = 5;
+      const itemsPerRequest = 3;
+
+      const requests = Array.from(
+        { length: requestCount },
+        (_, requestIndex) => ({
+          items: Array.from({ length: itemsPerRequest }, (_, itemIndex) =>
+            makeItem(`Concurrent-${requestIndex}-${itemIndex}`),
+          ),
+        }),
+      );
+
+      const responses = await Promise.all(
+        requests.map((request) => call('createItems', request)),
+      );
+
+      const createdItems = responses.flatMap((response) => response.items);
+      const codes = createdItems.map((item) => item.code);
+      const uniqueCodes = new Set(codes);
+
+      assert(
+        createdItems.length === requestCount * itemsPerRequest,
+        'Expected 15 created Items',
+      );
+
+      assert(
+        uniqueCodes.size === codes.length,
+        'Duplicate Item codes detected',
+      );
+
+      for (const item of createdItems) {
+        const fetched = await call('getItemById', { id: item.id });
+
+        assert(
+          fetched.item.code === item.code,
+          `Item ${item.id} was not persisted correctly`,
+        );
+      }
+    });
   } catch (error) {
     console.error('SETUP ERROR:', error.message);
     failed++;
