@@ -41,6 +41,7 @@ export {
   ProductServiceClient,
   CreateProductRequest,
   ProductResponse,
+  Item as ProtoItem, // Add this line
   PRODUCT_SERVICE_NAME,
   EmptyRequest,
   ProductListResponse,
@@ -51,6 +52,8 @@ export {
   ItemListResponse,
   CreateItemsRequest,
   CreateItemsResponse,
+  UpdateItemRequest,
+  ChangeItemActiveStatusRequest,
   ITEM_SERVICE_NAME,
   ItemKind as ProtoItemKind,
   SupplyType as ProtoSupplyType,

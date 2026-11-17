@@ -63,6 +63,25 @@ export type CreateCompanyInput = {
   type: CompanyType;
 };
 
+export type CreateItemInput = {
+  allergenDeclaration?: InputMaybe<Scalars['String']['input']>;
+  baseUnit: UnitOfMeasure;
+  defaultSupplierId?: InputMaybe<Scalars['Int']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  kind: ItemKind;
+  manufacturer?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  netContentDescription?: InputMaybe<Scalars['String']['input']>;
+  origin?: InputMaybe<Scalars['String']['input']>;
+  packSizeDescription?: InputMaybe<Scalars['String']['input']>;
+  processType: ProcessType;
+  supplyType: SupplyType;
+};
+
+export type CreateItemsInput = {
+  items: Array<CreateItemInput>;
+};
+
 export type CreateLocationInput = {
   address: Scalars['String']['input'];
   city: Scalars['String']['input'];
@@ -101,6 +120,37 @@ export type CreateWorkorderInput = {
   vendorOrClient: Scalars['String']['input'];
 };
 
+export type Item = {
+  __typename?: 'Item';
+  allergenDeclaration: Scalars['String']['output'];
+  baseUnit: UnitOfMeasure;
+  code: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  defaultSupplierId?: Maybe<Scalars['Int']['output']>;
+  description: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  isActive: Scalars['Boolean']['output'];
+  kind: ItemKind;
+  manufacturer: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  netContentDescription: Scalars['String']['output'];
+  origin: Scalars['String']['output'];
+  packSizeDescription: Scalars['String']['output'];
+  processType: ProcessType;
+  supplyType: SupplyType;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export enum ItemKind {
+  Garnish = 'GARNISH',
+  ManufacturedComponent = 'MANUFACTURED_COMPONENT',
+  Other = 'OTHER',
+  Packaging = 'PACKAGING',
+  PurchasedPrepared = 'PURCHASED_PREPARED',
+  RawMaterial = 'RAW_MATERIAL',
+  Sauce = 'SAUCE'
+}
+
 export type LoginInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -117,11 +167,16 @@ export type Mutation = {
   approveWorkorder: WorkOrder;
   createCompany: Company;
   createCompanyLocation: CompanyLocation;
+  createItem: Item;
+  createItems: Array<Item>;
   createProduct: Product;
   createUser: User;
   createWorkOrder: WorkOrder;
+  deactivateItem: Item;
   login: LoginResponse;
+  reactivateItem: Item;
   registerCompanyUser: Scalars['Boolean']['output'];
+  updateItem: Item;
   updateWorkorder: WorkOrder;
 };
 
@@ -141,6 +196,16 @@ export type MutationCreateCompanyLocationArgs = {
 };
 
 
+export type MutationCreateItemArgs = {
+  input: CreateItemInput;
+};
+
+
+export type MutationCreateItemsArgs = {
+  input: CreateItemsInput;
+};
+
+
 export type MutationCreateProductArgs = {
   input: CreateProductInput;
 };
@@ -156,13 +221,28 @@ export type MutationCreateWorkOrderArgs = {
 };
 
 
+export type MutationDeactivateItemArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
 export type MutationLoginArgs = {
   loginInput: LoginInput;
 };
 
 
+export type MutationReactivateItemArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
 export type MutationRegisterCompanyUserArgs = {
   registerCompanyUserInput: RegisterCompanyUserInput;
+};
+
+
+export type MutationUpdateItemArgs = {
+  input: UpdateItemInput;
 };
 
 
@@ -185,6 +265,15 @@ export enum Priority {
   Medium = 'MEDIUM'
 }
 
+export enum ProcessType {
+  Mixing = 'MIXING',
+  None = 'NONE',
+  OtherProcess = 'OTHER_PROCESS',
+  Oven = 'OVEN',
+  SaucePreparation = 'SAUCE_PREPARATION',
+  Steam = 'STEAM'
+}
+
 export type Product = {
   __typename?: 'Product';
   companyId?: Maybe<Scalars['Int']['output']>;
@@ -202,6 +291,8 @@ export type Product = {
 export type Query = {
   __typename?: 'Query';
   companyLocations: Array<CompanyLocation>;
+  item: Item;
+  items: Array<Item>;
   ping: Scalars['String']['output'];
   products: Array<Product>;
   searchCompanies: Array<Company>;
@@ -212,6 +303,11 @@ export type Query = {
 
 export type QueryCompanyLocationsArgs = {
   companyId: Scalars['Int']['input'];
+};
+
+
+export type QueryItemArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -239,6 +335,36 @@ export type RegisterCompanyUserInput = {
   existingCompanyId?: InputMaybe<Scalars['Float']['input']>;
   location?: InputMaybe<CreateLocationInput>;
   user: CreateUserInput;
+};
+
+export enum SupplyType {
+  Both = 'BOTH',
+  Manufactured = 'MANUFACTURED',
+  Purchased = 'PURCHASED'
+}
+
+export enum UnitOfMeasure {
+  Each = 'EACH',
+  G = 'G',
+  Kg = 'KG',
+  L = 'L',
+  Ml = 'ML'
+}
+
+export type UpdateItemInput = {
+  allergenDeclaration?: InputMaybe<Scalars['String']['input']>;
+  baseUnit?: InputMaybe<UnitOfMeasure>;
+  clearDefaultSupplierId?: InputMaybe<Scalars['Boolean']['input']>;
+  defaultSupplierId?: InputMaybe<Scalars['Int']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  manufacturer?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  netContentDescription?: InputMaybe<Scalars['String']['input']>;
+  origin?: InputMaybe<Scalars['String']['input']>;
+  packSizeDescription?: InputMaybe<Scalars['String']['input']>;
+  processType?: InputMaybe<ProcessType>;
+  supplyType?: InputMaybe<SupplyType>;
 };
 
 export type UpdateWorkorderInput = {
@@ -354,6 +480,53 @@ export type CreateUserMutationVariables = Exact<{
 
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: number, email: string, username: string, role: UserRole } };
+
+export type CreateItemMutationVariables = Exact<{
+  input: CreateItemInput;
+}>;
+
+
+export type CreateItemMutation = { __typename?: 'Mutation', createItem: { __typename?: 'Item', id: number, code: string, name: string, kind: ItemKind, supplyType: SupplyType, processType: ProcessType, baseUnit: UnitOfMeasure, isActive: boolean } };
+
+export type CreateItemsMutationVariables = Exact<{
+  input: CreateItemsInput;
+}>;
+
+
+export type CreateItemsMutation = { __typename?: 'Mutation', createItems: Array<{ __typename?: 'Item', id: number, code: string, name: string, kind: ItemKind, isActive: boolean }> };
+
+export type UpdateItemMutationVariables = Exact<{
+  input: UpdateItemInput;
+}>;
+
+
+export type UpdateItemMutation = { __typename?: 'Mutation', updateItem: { __typename?: 'Item', id: number, code: string, name: string, description: string, kind: ItemKind, supplyType: SupplyType, processType: ProcessType, baseUnit: UnitOfMeasure, allergenDeclaration: string, origin: string, manufacturer: string, defaultSupplierId?: number | null, packSizeDescription: string, netContentDescription: string, isActive: boolean, updatedAt: any } };
+
+export type DeactivateItemMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type DeactivateItemMutation = { __typename?: 'Mutation', deactivateItem: { __typename?: 'Item', id: number, code: string, name: string, isActive: boolean } };
+
+export type ReactivateItemMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type ReactivateItemMutation = { __typename?: 'Mutation', reactivateItem: { __typename?: 'Item', id: number, code: string, name: string, isActive: boolean } };
+
+export type GetItemsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetItemsQuery = { __typename?: 'Query', items: Array<{ __typename?: 'Item', id: number, code: string, name: string, description: string, kind: ItemKind, supplyType: SupplyType, processType: ProcessType, baseUnit: UnitOfMeasure, allergenDeclaration: string, origin: string, manufacturer: string, defaultSupplierId?: number | null, packSizeDescription: string, netContentDescription: string, isActive: boolean, createdAt: any, updatedAt: any }> };
+
+export type GetItemByIdQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type GetItemByIdQuery = { __typename?: 'Query', item: { __typename?: 'Item', id: number, code: string, name: string, description: string, kind: ItemKind, supplyType: SupplyType, processType: ProcessType, baseUnit: UnitOfMeasure, allergenDeclaration: string, origin: string, manufacturer: string, defaultSupplierId?: number | null, packSizeDescription: string, netContentDescription: string, isActive: boolean, createdAt: any, updatedAt: any } };
 
 export type FindAllProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -478,7 +651,7 @@ export const CreateCompanyLocationDocument = gql`
   })
   export class CreateCompanyLocationGQL extends Apollo.Mutation<CreateCompanyLocationMutation, CreateCompanyLocationMutationVariables> {
     document = CreateCompanyLocationDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -497,7 +670,7 @@ export const GetCompanyLocationsDocument = gql`
   })
   export class GetCompanyLocationsGQL extends Apollo.Query<GetCompanyLocationsQuery, GetCompanyLocationsQueryVariables> {
     document = GetCompanyLocationsDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -518,7 +691,7 @@ export const CreateCompanyDocument = gql`
   })
   export class CreateCompanyGQL extends Apollo.Mutation<CreateCompanyMutation, CreateCompanyMutationVariables> {
     document = CreateCompanyDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -543,7 +716,7 @@ export const LoginDocument = gql`
   })
   export class LoginGQL extends Apollo.Mutation<LoginMutation, LoginMutationVariables> {
     document = LoginDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -559,7 +732,7 @@ export const RegisterCompanyUserDocument = gql`
   })
   export class RegisterCompanyUserGQL extends Apollo.Mutation<RegisterCompanyUserMutation, RegisterCompanyUserMutationVariables> {
     document = RegisterCompanyUserDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -580,7 +753,197 @@ export const CreateUserDocument = gql`
   })
   export class CreateUserGQL extends Apollo.Mutation<CreateUserMutation, CreateUserMutationVariables> {
     document = CreateUserDocument;
-    
+
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateItemDocument = gql`
+    mutation CreateItem($input: CreateItemInput!) {
+  createItem(input: $input) {
+    id
+    code
+    name
+    kind
+    supplyType
+    processType
+    baseUnit
+    isActive
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateItemGQL extends Apollo.Mutation<CreateItemMutation, CreateItemMutationVariables> {
+    document = CreateItemDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateItemsDocument = gql`
+    mutation CreateItems($input: CreateItemsInput!) {
+  createItems(input: $input) {
+    id
+    code
+    name
+    kind
+    isActive
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateItemsGQL extends Apollo.Mutation<CreateItemsMutation, CreateItemsMutationVariables> {
+    document = CreateItemsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateItemDocument = gql`
+    mutation UpdateItem($input: UpdateItemInput!) {
+  updateItem(input: $input) {
+    id
+    code
+    name
+    description
+    kind
+    supplyType
+    processType
+    baseUnit
+    allergenDeclaration
+    origin
+    manufacturer
+    defaultSupplierId
+    packSizeDescription
+    netContentDescription
+    isActive
+    updatedAt
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateItemGQL extends Apollo.Mutation<UpdateItemMutation, UpdateItemMutationVariables> {
+    document = UpdateItemDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeactivateItemDocument = gql`
+    mutation DeactivateItem($id: Int!) {
+  deactivateItem(id: $id) {
+    id
+    code
+    name
+    isActive
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeactivateItemGQL extends Apollo.Mutation<DeactivateItemMutation, DeactivateItemMutationVariables> {
+    document = DeactivateItemDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ReactivateItemDocument = gql`
+    mutation ReactivateItem($id: Int!) {
+  reactivateItem(id: $id) {
+    id
+    code
+    name
+    isActive
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ReactivateItemGQL extends Apollo.Mutation<ReactivateItemMutation, ReactivateItemMutationVariables> {
+    document = ReactivateItemDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetItemsDocument = gql`
+    query GetItems {
+  items {
+    id
+    code
+    name
+    description
+    kind
+    supplyType
+    processType
+    baseUnit
+    allergenDeclaration
+    origin
+    manufacturer
+    defaultSupplierId
+    packSizeDescription
+    netContentDescription
+    isActive
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetItemsGQL extends Apollo.Query<GetItemsQuery, GetItemsQueryVariables> {
+    document = GetItemsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetItemByIdDocument = gql`
+    query GetItemById($id: Int!) {
+  item(id: $id) {
+    id
+    code
+    name
+    description
+    kind
+    supplyType
+    processType
+    baseUnit
+    allergenDeclaration
+    origin
+    manufacturer
+    defaultSupplierId
+    packSizeDescription
+    netContentDescription
+    isActive
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetItemByIdGQL extends Apollo.Query<GetItemByIdQuery, GetItemByIdQueryVariables> {
+    document = GetItemByIdDocument;
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -605,7 +968,7 @@ export const FindAllProductsDocument = gql`
   })
   export class FindAllProductsGQL extends Apollo.Query<FindAllProductsQuery, FindAllProductsQueryVariables> {
     document = FindAllProductsDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -623,7 +986,7 @@ export const ApproveWorkOrderDocument = gql`
   })
   export class ApproveWorkOrderGQL extends Apollo.Mutation<ApproveWorkOrderMutation, ApproveWorkOrderMutationVariables> {
     document = ApproveWorkOrderDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -641,7 +1004,7 @@ export const CreateWorkOrderDocument = gql`
   })
   export class CreateWorkOrderGQL extends Apollo.Mutation<CreateWorkOrderMutation, CreateWorkOrderMutationVariables> {
     document = CreateWorkOrderDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -668,7 +1031,7 @@ export const GetWorkOrdersDocument = gql`
   })
   export class GetWorkOrdersGQL extends Apollo.Query<GetWorkOrdersQuery, GetWorkOrdersQueryVariables> {
     document = GetWorkOrdersDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -686,7 +1049,7 @@ export const UpdateWorkOrderDocument = gql`
   })
   export class UpdateWorkOrderGQL extends Apollo.Mutation<UpdateWorkOrderMutation, UpdateWorkOrderMutationVariables> {
     document = UpdateWorkOrderDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }

@@ -4,6 +4,7 @@ module.exports = [
   ...baseConfig,
   {
     files: ['**/*.{ts,js,tsx,jsx}'],
+    ignores: ['**/eslint.config.{js,cjs,mjs}'],
     rules: {
       '@nx/enforce-module-boundaries': [
         'error',

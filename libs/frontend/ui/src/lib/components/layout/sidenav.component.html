@@ -18,9 +18,22 @@
   <a
     mat-list-item
     class="hover:bg-green-200"
+    [routerLink]="['/', routes.HOME, routes.ITEMS, 'list']"
+    routerLinkActive="active-link"
+    [ngClass]="{
+      'active-link': isActive(`/${routes.HOME}/${routes.ITEMS}`),
+    }"
+  >
+    Items
+  </a>
+  <a
+    mat-list-item
+    class="hover:bg-green-200"
     [routerLink]="['/', routes.HOME, routes.WORK_ORDERS]"
     routerLinkActive="active-link"
-    [ngClass]="{ 'active-link': isActive(`/${routes.HOME}/${routes.WORK_ORDERS}`) }"
+    [ngClass]="{
+      'active-link': isActive(`/${routes.HOME}/${routes.WORK_ORDERS}`),
+    }"
     >Work Orders</a
   >
   <a

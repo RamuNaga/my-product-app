@@ -1,0 +1,43 @@
+query GetItems {
+  items {
+    id
+    code
+    name
+    description
+    kind
+    supplyType
+    processType
+    baseUnit
+    allergenDeclaration
+    origin
+    manufacturer
+    defaultSupplierId
+    packSizeDescription
+    netContentDescription
+    isActive
+    createdAt
+    updatedAt
+  }
+}
+
+query GetItemById($id: Int!) {
+  item(id: $id) {
+    id
+    code
+    name
+    description
+    kind
+    supplyType
+    processType
+    baseUnit
+    allergenDeclaration
+    origin
+    manufacturer
+    defaultSupplierId
+    packSizeDescription
+    netContentDescription
+    isActive
+    createdAt
+    updatedAt
+  }
+}

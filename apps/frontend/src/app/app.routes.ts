@@ -10,16 +10,16 @@ export const appRoutes: Routes = [
   {
     path: APP_ROUTES.LOGIN,
     loadComponent: () =>
-      import(
-        '@my-product-app/frontend-ui/components/auth/auth-form.component'
-      ).then((m) => m.AuthFormComponent),
+      import('@my-product-app/frontend-ui/components/auth/auth-form.component').then(
+        (m) => m.AuthFormComponent,
+      ),
   },
   {
     path: APP_ROUTES.HOME,
     loadComponent: () =>
-      import(
-        '@my-product-app/frontend-ui/components/layout/shell.component'
-      ).then((m) => m.ShellComponent),
+      import('@my-product-app/frontend-ui/components/layout/shell.component').then(
+        (m) => m.ShellComponent,
+      ),
     canActivate: [authGuard],
     children: [
       {
@@ -30,23 +30,30 @@ export const appRoutes: Routes = [
       {
         path: APP_ROUTES.DASHBOARD,
         loadComponent: () =>
-          import(
-            '@my-product-app/frontend-ui/components/dashboard/dashboard.component'
-          ).then((m) => m.DashboardComponent),
+          import('@my-product-app/frontend-ui/components/dashboard/dashboard.component').then(
+            (m) => m.DashboardComponent,
+          ),
       },
       {
         path: APP_ROUTES.PRODUCTS,
         loadChildren: () =>
-          import(
-            '@my-product-app/frontend-ui/components/product/product.routes'
-          ).then((m) => m.productRoutes),
+          import('@my-product-app/frontend-ui/components/product/product.routes').then(
+            (m) => m.productRoutes,
+          ),
+      },
+      {
+        path: APP_ROUTES.ITEMS,
+        loadChildren: () =>
+          import('@my-product-app/frontend-ui/components/item/item.routes').then(
+            (m) => m.itemRoutes,
+          ),
       },
       {
         path: APP_ROUTES.WORK_ORDERS,
         loadChildren: () =>
-          import(
-            '@my-product-app/frontend-ui/components/workorder/workorder.routes'
-          ).then((m) => m.workOrderRoutes),
+          import('@my-product-app/frontend-ui/components/workorder/workorder.routes').then(
+            (m) => m.workOrderRoutes,
+          ),
       },
       //Lazy-load other routes here...
     ],

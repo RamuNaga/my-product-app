@@ -139,9 +139,36 @@ message CreateItemsResponse {
   repeated Item items = 1;
 }
 
+message UpdateItemRequest {
+  int32 id = 1;
+
+  optional string name = 2;
+  optional string description = 3;
+
+  optional SupplyType supplyType = 4;
+  optional ProcessType processType = 5;
+  optional UnitOfMeasure baseUnit = 6;
+
+  optional string allergenDeclaration = 7;
+  optional string origin = 8;
+  optional string manufacturer = 9;
+
+  google.protobuf.Int32Value defaultSupplierId = 10;
+
+  optional string packSizeDescription = 11;
+  optional string netContentDescription = 12;
+  bool clearDefaultSupplierId = 13;
+}
+
+message ChangeItemActiveStatusRequest {
+  int32 id = 1;
+}
 service ItemService {
   rpc CreateItem (CreateItemRequest) returns (ItemResponse);
   rpc GetItemById (GetItemByIdRequest) returns (ItemResponse);
   rpc GetAllItems (EmptyRequest) returns (ItemListResponse);
   rpc CreateItems(CreateItemsRequest) returns (CreateItemsResponse);
+  rpc UpdateItem (UpdateItemRequest) returns (ItemResponse);
+  rpc DeactivateItem (ChangeItemActiveStatusRequest) returns (ItemResponse);
+  rpc ReactivateItem (ChangeItemActiveStatusRequest) returns (ItemResponse);
 }

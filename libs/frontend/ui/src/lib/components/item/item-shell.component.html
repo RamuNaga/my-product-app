@@ -1,0 +1,11 @@
+<mat-tab-group
+  [selectedIndex]="selectedIndex()"
+  (selectedIndexChange)="onTabChange($event)"
+  class="item-tab-group"
+>
+  @for (tab of tabs; track tab.path) {
+    <mat-tab [label]="tab.label"></mat-tab>
+  }
+</mat-tab-group>
+
+<router-outlet></router-outlet>

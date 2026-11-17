@@ -22,6 +22,7 @@ import { RegistrationResolver } from './registration/resolver/registration.resol
 import { ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { GraphqlThrottlerGuard } from './guards/graphql-throttler.guard';
+import { ItemResolver } from './item/resolver/item.resolver';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { GraphqlThrottlerGuard } from './guards/graphql-throttler.guard';
     UserResolver,
     CompanyResolver,
     ProductResolver,
+    ItemResolver,
     WorkorderResolver,
     RegistrationResolver,
     {

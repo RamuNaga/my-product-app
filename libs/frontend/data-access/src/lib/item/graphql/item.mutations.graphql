@@ -1,0 +1,61 @@
+mutation CreateItem($input: CreateItemInput!) {
+  createItem(input: $input) {
+    id
+    code
+    name
+    kind
+    supplyType
+    processType
+    baseUnit
+    isActive
+  }
+}
+
+mutation CreateItems($input: CreateItemsInput!) {
+  createItems(input: $input) {
+    id
+    code
+    name
+    kind
+    isActive
+  }
+}
+
+mutation UpdateItem($input: UpdateItemInput!) {
+  updateItem(input: $input) {
+    id
+    code
+    name
+    description
+    kind
+    supplyType
+    processType
+    baseUnit
+    allergenDeclaration
+    origin
+    manufacturer
+    defaultSupplierId
+    packSizeDescription
+    netContentDescription
+    isActive
+    updatedAt
+  }
+}
+
+mutation DeactivateItem($id: Int!) {
+  deactivateItem(id: $id) {
+    id
+    code
+    name
+    isActive
+  }
+}
+
+mutation ReactivateItem($id: Int!) {
+  reactivateItem(id: $id) {
+    id
+    code
+    name
+    isActive
+  }
+}

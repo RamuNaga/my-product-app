@@ -25,3 +25,4 @@ export * from './lib/components/workorder/workorder-shell.component';
 export * from './lib/components/workorder/workorder-list.component';
 export * from './lib/components/workorder/workorder.routes.const';
 export * from './lib/components/workorder/create-workorder.component';
+export * from './lib/components/item/index';
