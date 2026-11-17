@@ -1,0 +1,172 @@
+<section class="item-bulk-create">
+  <h2>Bulk Create Items</h2>
+  <p>Add up to {{ maxItems }} items in one submission.</p>
+
+  @if (facade.saving()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div formArrayName="items">
+      @for (row of rows.controls; track row; let i = $index) {
+        <div class="item-bulk-create__row" [formGroupName]="i">
+          <div class="item-bulk-create__row-header">
+            <h3>Item {{ i + 1 }}</h3>
+
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="removeRow(i)"
+              [disabled]="rows.length === 1 || facade.saving()"
+            >
+              Remove
+            </button>
+          </div>
+
+          <div class="item-bulk-create__grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Item Name</mat-label>
+              <input matInput formControlName="name" />
+
+              @if (row.controls.name.hasError('required')) {
+                <mat-error>Item name is required</mat-error>
+              }
+              @if (row.controls.name.hasError('maxlength')) {
+                <mat-error>Maximum 255 characters allowed</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Item Kind</mat-label>
+              <mat-select formControlName="kind">
+                @for (kind of itemKinds; track kind) {
+                  <mat-option [value]="kind">{{ kind }}</mat-option>
+                }
+              </mat-select>
+              <mat-error>Item kind is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Supply Type</mat-label>
+              <mat-select formControlName="supplyType">
+                @for (type of supplyTypes; track type) {
+                  <mat-option [value]="type">{{ type }}</mat-option>
+                }
+              </mat-select>
+              <mat-error>Supply type is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Process Type</mat-label>
+              <mat-select formControlName="processType">
+                @for (type of processTypes; track type) {
+                  <mat-option [value]="type">{{ type }}</mat-option>
+                }
+              </mat-select>
+              <mat-error>Process type is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Base Unit</mat-label>
+              <mat-select formControlName="baseUnit">
+                @for (unit of units; track unit) {
+                  <mat-option [value]="unit">{{ unit }}</mat-option>
+                }
+              </mat-select>
+              <mat-error>Base unit is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Default Supplier ID</mat-label>
+              <input
+                matInput
+                type="number"
+                min="1"
+                step="1"
+                formControlName="defaultSupplierId"
+              />
+              @if (row.controls.defaultSupplierId.invalid) {
+                <mat-error>Enter a valid positive integer</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description</mat-label>
+              <textarea
+                matInput
+                formControlName="description"
+                rows="2"
+              ></textarea>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Allergen Declaration</mat-label>
+              <input matInput formControlName="allergenDeclaration" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Origin</mat-label>
+              <input matInput formControlName="origin" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Manufacturer</mat-label>
+              <input matInput formControlName="manufacturer" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Pack Size Description</mat-label>
+              <input matInput formControlName="packSizeDescription" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Net Content Description</mat-label>
+              <input matInput formControlName="netContentDescription" />
+            </mat-form-field>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="item-bulk-create__add">
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="addRow()"
+        [disabled]="rows.length >= maxItems || facade.saving()"
+      >
+        Add Row
+      </button>
+      <span>{{ rows.length }} / {{ maxItems }} items</span>
+    </div>
+
+    @if (facade.error()) {
+      <p class="item-bulk-create__error" role="alert">
+        {{ facade.error() }}
+      </p>
+    }
+
+    <div class="item-bulk-create__actions">
+      <button
+        mat-stroked-button
+        type="button"
+        routerLink="/home/items/list"
+        [disabled]="facade.saving()"
+      >
+        Cancel
+      </button>
+
+      <button
+        mat-flat-button
+        type="submit"
+        [disabled]="facade.saving() || facade.loading()"
+      >
+        {{
+          facade.saving()
+            ? 'Creating Items...'
+            : 'Create ' + rows.length + ' Item(s)'
+        }}
+      </button>
+    </div>
+  </form>
+</section>

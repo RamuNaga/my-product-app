@@ -26,6 +26,13 @@ export const itemRoutes: Routes = [
           import('./item-form.component').then((m) => m.ItemFormComponent),
       },
       {
+        path: ITEM_ROUTES.BULK_CREATE,
+        loadComponent: () =>
+          import('./item-bulk-create.component').then(
+            (m) => m.ItemBulkCreateComponent,
+          ),
+      },
+      {
         path: '',
         redirectTo: ITEM_ROUTES.LIST,
         pathMatch: 'full',

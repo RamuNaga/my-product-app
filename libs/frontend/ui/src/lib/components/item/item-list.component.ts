@@ -47,6 +47,10 @@ export class ItemListComponent implements OnInit {
     void this.router.navigate(['/home/items/form']);
   }
 
+  onBulkCreate(): void {
+    void this.router.navigate(['/home/items/bulk-create']);
+  }
+
   onEdit(id: number): void {
     void this.router.navigate(['/home/items/edit', id]);
   }

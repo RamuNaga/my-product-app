@@ -2,7 +2,11 @@
   <div class="item-list__header">
     <h2>Item Management</h2>
 
-    <button mat-flat-button (click)="onCreate()">Create Item</button>
+    <div class="item-list__header-actions">
+      <button mat-flat-button (click)="onCreate()">Create Item</button>
+
+      <button mat-stroked-button (click)="onBulkCreate()">Bulk Create</button>
+    </div>
   </div>
 
   <div class="item-list__filters">
