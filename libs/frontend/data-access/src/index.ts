@@ -9,3 +9,4 @@ export * from './lib/auth/company/search-company';
 export * from './lib/workorder/services/workorder.service';
 export * from './lib/workorder/workorder.model';
 export * from './lib/workorder/workorder.mapper';
+export * from './lib/item/item.service';

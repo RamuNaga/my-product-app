@@ -1,0 +1,35 @@
+.item-list {
+  padding: 24px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  &__table {
+    overflow-x: auto;
+
+    table {
+      width: 100%;
+    }
+  }
+
+  &__error {
+    color: #b00020;
+    margin: 16px 0;
+  }
+
+  &__empty {
+    padding: 24px;
+    text-align: center;
+  }
+}

@@ -1,7 +1,7 @@
 import { GqlModuleOptions } from '@nestjs/graphql';
 import { ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 export const graphqlConfig: GqlModuleOptions & ApolloDriverConfig = {
   path: '/graphql', // 👈 add this
@@ -10,5 +10,8 @@ export const graphqlConfig: GqlModuleOptions & ApolloDriverConfig = {
   playground: true,
   debug: false,
   installSubscriptionHandlers: true,
-  context: ({ req }: { req: Request }) => ({ req }),
+  context: ({ req, res }: { req: Request; res: Response }) => ({
+    req,
+    res,
+  }),
 };

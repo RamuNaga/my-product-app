@@ -1,4 +1,5 @@
 {
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "target": "es2022",
     "forceConsistentCasingInFileNames": true,
@@ -11,7 +12,8 @@
     "module": "preserve",
     "moduleResolution": "bundler"
   },
-  "include": [],
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts", "**/*.ngtypecheck.ts"],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,

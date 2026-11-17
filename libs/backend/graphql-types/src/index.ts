@@ -21,3 +21,8 @@ export * from './lib/workorder/dto/update-workorder.input';
 export * from './lib/workorder/dto/workorder.output';
 export * from './lib/workorder/graphql/workorder-list.model';
 export * from './lib/workorder/graphql/workorder.model';
+export * from './lib/item/graphql/item.enums';
+export * from './lib/item/graphql/item.model';
+export * from './lib/item/dto/create-item.input';
+export * from './lib/item/dto/create-items.input';
+export * from './lib/item/dto/update-item.input';

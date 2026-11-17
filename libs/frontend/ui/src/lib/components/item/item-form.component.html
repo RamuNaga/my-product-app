@@ -1,0 +1,140 @@
+<section class="item-form">
+  <h2>{{ isEditMode ? 'Edit Item' : 'Create Item' }}</h2>
+  @if (facade.loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="item-form__grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Item Name</mat-label>
+        <input matInput formControlName="name" />
+        @if (form.controls.name.hasError('required')) {
+          <mat-error>Item name is required</mat-error>
+        }
+        @if (form.controls.name.hasError('maxlength')) {
+          <mat-error>Maximum 255 characters allowed</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Item Kind</mat-label>
+        <mat-select formControlName="kind">
+          @for (kind of itemKinds; track kind) {
+            <mat-option [value]="kind">{{ kind }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Item kind is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Supply Type</mat-label>
+        <mat-select formControlName="supplyType">
+          @for (type of supplyTypes; track type) {
+            <mat-option [value]="type">{{ type }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Supply type is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Process Type</mat-label>
+        <mat-select formControlName="processType">
+          @for (type of processTypes; track type) {
+            <mat-option [value]="type">{{ type }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Process type is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Base Unit</mat-label>
+        <mat-select formControlName="baseUnit">
+          @for (unit of units; track unit) {
+            <mat-option [value]="unit">{{ unit }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Base unit is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Default Supplier ID</mat-label>
+        <input
+          matInput
+          type="number"
+          min="1"
+          step="1"
+          formControlName="defaultSupplierId"
+        />
+        @if (form.controls.defaultSupplierId.invalid) {
+          <mat-error>Enter a valid positive integer</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="3"></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Allergen Declaration</mat-label>
+        <input matInput formControlName="allergenDeclaration" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Origin</mat-label>
+        <input matInput formControlName="origin" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Manufacturer</mat-label>
+        <input matInput formControlName="manufacturer" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Pack Size Description</mat-label>
+        <input matInput formControlName="packSizeDescription" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Net Content Description</mat-label>
+        <input matInput formControlName="netContentDescription" />
+      </mat-form-field>
+    </div>
+
+    @if (facade.error()) {
+      <p class="item-form__error" role="alert">
+        {{ facade.error() }}
+      </p>
+    }
+
+    <div class="item-form__actions">
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="facade.saving()"
+        routerLink="/home/items/list"
+      >
+        Cancel
+      </button>
+
+      <button
+        mat-flat-button
+        type="submit"
+        [disabled]="
+          facade.saving() ||
+          facade.loading() ||
+          (isEditMode && facade.selectedItem()?.id !== itemId)
+        "
+      >
+        {{
+          facade.saving()
+            ? 'Saving...'
+            : isEditMode
+              ? 'Update Item'
+              : 'Create Item'
+        }}
+      </button>
+    </div>
+  </form>
+</section>

@@ -10,3 +10,5 @@ export * from './lib/state/company/search-company-store';
 export * from './lib/state/login/login.model';
 export * from './lib/state/login/login.store';
 export * from './lib/state/workorder/workorder-list-store';
+export * from './lib/state/item/item.store';
+export * from './lib/state/item/item.facade';

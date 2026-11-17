@@ -41,6 +41,7 @@ export {
   ProductServiceClient,
   CreateProductRequest,
   ProductResponse,
+  Item as ProtoItem, // Add this line
   PRODUCT_SERVICE_NAME,
   EmptyRequest,
   ProductListResponse,
