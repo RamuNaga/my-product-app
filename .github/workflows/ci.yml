@@ -14,62 +14,90 @@ permissions:
 jobs:
   main:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci_password
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci -d postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     env:
-      NX_CLOUD_AUTH_TOKEN: ${{ secrets.NX_CLOUD_AUTH_TOKEN }} #  Add this here
+      NX_CLOUD: 'false'
+      DATABASE_URL_PRODUCT: postgresql://ci:ci_password@localhost:5432/my-product-app-product
+      DATABASE_URL_USER: postgresql://ci:ci_password@localhost:5432/my-product-app-user
+      DATABASE_URL_COMPANY: postgresql://ci:ci_password@localhost:5432/my-product-app-company
+      DATABASE_URL_COMPANY_LOCATION: postgresql://ci:ci_password@localhost:5432/my-product-app-company-location
+      DATABASE_URL_WORKORDER: postgresql://ci:ci_password@localhost:5432/my-product-app-workorder
+      CI: 'true'
 
     steps:
-      # 1. Checkout full history for Nx affected
-      - uses: actions/checkout@v4
+      # 1. Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 2. Setup PNPM v10 (adds pnpm to PATH)
-      - uses: pnpm/action-setup@v4
+      # 2. Setup pnpm from package.json
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
         with:
           run_install: false
 
-      # 3. Setup Node.js and enable pnpm caching
-      - uses: actions/setup-node@v4
+      # 3. Setup Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: pnpm
 
-      # 4. Debug step: confirm pnpm is available and pnpm-workspace.yaml exists
-      - name: Debug pnpm setup
-        run: |
-          which pnpm
-          pnpm --version
-          echo "Current directory: $(pwd)"
-          ls -la
-          cat pnpm-workspace.yaml || echo "pnpm-workspace.yaml not found"
-
-      # 5. Set Nx SHAs for affected commands
-      - uses: nrwl/nx-set-shas@v4
-
-      # 6. Install dependencies
+      # 4. Install dependencies
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 7. Generate Prisma client before any backend build
-      - name: Generate Prisma client
+      # 5. Create PostgreSQL databases
+      - name: Create application databases
+        env:
+          PGHOST: localhost
+          PGPORT: '5432'
+          PGUSER: ci
+          PGPASSWORD: ci_password
+          PGDATABASE: postgres
+        run: psql -v ON_ERROR_STOP=1 -f docker/init.sql
+
+      # 6. Generate Prisma clients
+      - name: Generate Prisma clients
         run: pnpm prisma:generate:all
 
-      # # 8. Install Cypress binary
-      # - run: pnpm exec cypress install
+      # 7. Apply Prisma migrations
+      - name: Apply Prisma migrations
+        run: |
+          pnpm exec prisma migrate deploy --config libs/backend/product-prisma/prisma/prisma.config.ts
+          pnpm exec prisma migrate deploy --config libs/backend/user-prisma/prisma/prisma.config.ts
+          pnpm exec prisma migrate deploy --config libs/backend/company-prisma/prisma/prisma.config.ts
+          pnpm exec prisma migrate deploy --config libs/backend/company-location-prisma/prisma/prisma.config.ts
+          pnpm exec prisma migrate deploy --config libs/backend/workorder-prisma/prisma/prisma.config.ts
 
-      # 9. Start Nx Cloud distributed agents (optional, if using Nx Cloud)
-      - run: pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
+      # 8. Set Nx affected SHAs
+      - name: Set Nx affected SHAs
+        uses: nrwl/nx-set-shas@v4
 
-      # 10. Run lint in parallel
-      - run: pnpm exec nx affected -t lint --parallel=3
+      # 9. Lint
+      - name: Lint affected projects
+        run: pnpm exec nx affected -t lint --parallel=3
 
-      # 11. Run tests in parallel
-      - run: pnpm exec nx affected -t test --parallel=3 --configuration=ci
+      # 10. Test
+      - name: Test affected projects
+        run: pnpm exec nx affected -t test --parallel=3
 
-      # 12. Run build in parallel
-      - run: pnpm exec nx affected -t build --parallel=3
-
-        # # 13. Run e2e tests in parallel
-        # - run: pnpm exec nx affected -t e2e --parallel=3 --configuration=ci
-        env:
-          CI: true
+      # 11. Build
+      - name: Build affected projects
+        run: pnpm exec nx affected -t build --parallel=3
